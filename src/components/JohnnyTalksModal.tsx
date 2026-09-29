@@ -28,12 +28,46 @@ const STARTER_PROMPTS = [
   "Tell me about your academic degree and elite certifications at IIT Kanpur & IIT Kharagpur",
 ]
 
+const INITIAL_WELCOME: Message = {
+  id: "msg-welcome",
+  role: "assistant",
+  content: `### 1. Executive Diagnosis & Direct Answer
+I am **Johnny-Talks**, the personal cognitive digital twin and strategic technical advisor of **Karre John Hyde (Johnny)**.
+
+I reason directly through the verified lens of Johnny's real-world projects (**Study2AI**, **Expense AI**, **Cognitive Learning**, **MedTwin**), his elite certifications from **IIT Kanpur** and **IIT Kharagpur**, and his core architectural playbook.
+
+#### What would you like to examine today?
+- **RAG & Agentic Systems**: Chunking strategies, MMR retrieval, and cold-start latency reduction.
+- **Cloud & Databases**: Serverless DynamoDB vs PostgreSQL single-table design and concurrency.
+- **Applied Machine Learning**: Unsupervised clustering, PCA dimensionality reduction, and student profiling.
+- **Advisory & Consulting**: Architectural blueprints, Greenfield vs High-Constraint trade-offs, and technical evaluations.`,
+  sources: [
+    {
+      source: "johnny_technical_playbook_and_creds.md",
+      page: 1,
+      chunkIndex: 0,
+      category: "philosophy",
+      excerpt: "Johnny's 4 Core Execution Principles: Strict Grounding Over Hallucination, Production-Grade Simplicity, First-Person Accountability...",
+      score: 0.98,
+    },
+    {
+      source: "study2ai_rag_architecture.md",
+      page: 1,
+      chunkIndex: 0,
+      category: "projects",
+      excerpt: "Study2AI RAG Pipeline with MMR retrieval and zero-hallucination guardrails...",
+      score: 0.95,
+    },
+  ],
+  timestamp: "Ready",
+}
+
 export default function JohnnyTalksModal({
   isOpen,
   onClose,
   initialQuestion,
 }: JohnnyTalksModalProps) {
-  const [messages, setMessages] = useState<Message[]>([])
+  const [messages, setMessages] = useState<Message[]>([INITIAL_WELCOME])
   const [input, setInput] = useState("")
   const [loading, setLoading] = useState(false)
   const [activeTab, setActiveTab] = useState<"chat" | "knowledge">("chat")
@@ -44,81 +78,7 @@ export default function JohnnyTalksModal({
 
   const chatBottomRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLTextAreaElement>(null)
-
-  // Check backend health on mount
-  useEffect(() => {
-    if (isOpen) {
-      checkBackendHealth().then((res) => setBackendOnline(res.online))
-    }
-  }, [isOpen])
-
-  // Initialize welcome message
-  useEffect(() => {
-    if (isOpen && messages.length === 0) {
-      const welcomeMsg: Message = {
-        id: "msg-welcome",
-        role: "assistant",
-        content: `### 1. Executive Diagnosis & Direct Answer
-I am **Johnny-Talks**, the personal cognitive digital twin and strategic technical advisor of **Karre John Hyde (Johnny)**.
-
-I reason directly through the verified lens of Johnny's real-world projects (**Study2AI**, **Expense AI**, **Cognitive Learning**, **MedTwin**), his elite certifications from **IIT Kanpur** and **IIT Kharagpur**, and his core architectural playbook.
-
-#### What would you like to examine today?
-- **RAG & Agentic Systems**: Chunking strategies, MMR retrieval, and cold-start latency reduction.
-- **Cloud & Databases**: Serverless DynamoDB vs PostgreSQL single-table design and concurrency.
-- **Applied Machine Learning**: Unsupervised clustering, PCA dimensionality reduction, and student profiling.
-- **Advisory & Consulting**: Architectural blueprints, Greenfield vs High-Constraint trade-offs, and technical evaluations.`,
-        sources: [
-          {
-            source: "johnny_technical_playbook_and_creds.md",
-            page: 1,
-            chunkIndex: 0,
-            category: "philosophy",
-            excerpt: "Johnny's 4 Core Execution Principles: Strict Grounding Over Hallucination, Production-Grade Simplicity, First-Person Accountability...",
-            score: 0.98,
-          },
-          {
-            source: "study2ai_rag_architecture.md",
-            page: 1,
-            chunkIndex: 0,
-            category: "projects",
-            excerpt: "Study2AI RAG Pipeline with MMR retrieval and zero-hallucination guardrails...",
-            score: 0.95,
-          },
-        ],
-        timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-      }
-      setMessages([welcomeMsg])
-    }
-  }, [isOpen, messages.length])
-
-  // Handle initial question if provided
-  useEffect(() => {
-    if (isOpen && initialQuestion && messages.length <= 1) {
-      handleSend(initialQuestion)
-    }
-  }, [isOpen, initialQuestion])
-
-  // Auto-scroll
-  useEffect(() => {
-    chatBottomRef.current?.scrollIntoView({ behavior: "smooth" })
-  }, [messages, loading])
-
-  // Focus input and handle ESC
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose()
-    }
-    if (isOpen) {
-      document.body.style.overflow = "hidden"
-      window.addEventListener("keydown", handleKeyDown)
-      setTimeout(() => inputRef.current?.focus(), 150)
-    }
-    return () => {
-      document.body.style.overflow = "unset"
-      window.removeEventListener("keydown", handleKeyDown)
-    }
-  }, [isOpen, onClose])
+  const initialHandledRef = useRef<string | null>(null)
 
   const handleSend = async (textToSend?: string) => {
     const query = (textToSend || input).trim()
@@ -164,6 +124,42 @@ I encountered a temporary connection interruption. However, my grounded offline 
       setLoading(false)
     }
   }
+
+  // Check backend health on mount
+  useEffect(() => {
+    if (isOpen) {
+      checkBackendHealth().then((res) => setBackendOnline(res.online))
+    }
+  }, [isOpen])
+
+  // Handle initial question if provided
+  useEffect(() => {
+    if (isOpen && initialQuestion && initialHandledRef.current !== initialQuestion) {
+      initialHandledRef.current = initialQuestion
+      handleSend(initialQuestion)
+    }
+  }, [isOpen, initialQuestion])
+
+  // Auto-scroll
+  useEffect(() => {
+    chatBottomRef.current?.scrollIntoView({ behavior: "smooth" })
+  }, [messages, loading])
+
+  // Focus input and handle ESC
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose()
+    }
+    if (isOpen) {
+      document.body.style.overflow = "hidden"
+      window.addEventListener("keydown", handleKeyDown)
+      setTimeout(() => inputRef.current?.focus(), 150)
+    }
+    return () => {
+      document.body.style.overflow = "unset"
+      window.removeEventListener("keydown", handleKeyDown)
+    }
+  }, [isOpen, onClose])
 
   const handleCopy = (id: string, text: string) => {
     navigator.clipboard.writeText(text).then(() => {

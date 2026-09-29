@@ -24,3 +24,9 @@ logs/
 
 .vercel
 .env*
+ 
+__pycache__/
+*.pyc
+backend/data/
+backend/.venv/
+.venv/

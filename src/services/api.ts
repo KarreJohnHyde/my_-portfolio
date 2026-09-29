@@ -29,40 +29,46 @@ export async function askJohnny(
 ): Promise<ChatResponse> {
   const startTime = performance.now()
 
-  // Attempt FastAPI Backend call first
-  try {
-    const controller = new AbortController()
-    const timeoutId = setTimeout(() => controller.abort(), 3500) // fast 3.5s timeout for local backend
+  const isHttps = typeof window !== "undefined" && window.location.protocol === "https:"
+  const isLocalBackend = API_URL.startsWith("http://localhost") || API_URL.startsWith("http://127.0.0.1")
 
-    const response = await fetch(`${API_URL}/chat/`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      signal: controller.signal,
-      body: JSON.stringify({
-        question,
-        chat_history: chatHistory.slice(-6),
-        scenario_mode: scenarioMode,
-      }),
-    })
+  // Only attempt network fetch if not blocked by browser mixed-content policy
+  const canAttemptFetch = !isHttps || !isLocalBackend
 
-    clearTimeout(timeoutId)
+  if (canAttemptFetch) {
+    try {
+      const controller = new AbortController()
+      const timeoutId = setTimeout(() => controller.abort(), 2000)
 
-    if (response.ok) {
-      const data = await response.json()
-      const latencyMs = Math.round(performance.now() - startTime)
-      return {
-        answer: data.answer,
-        sources: data.sources || [],
-        isLiveBackend: true,
-        latencyMs,
-        conversationId: data.conversation_id,
+      const response = await fetch(`${API_URL}/chat/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        signal: controller.signal,
+        body: JSON.stringify({
+          question,
+          chat_history: chatHistory.slice(-6),
+          scenario_mode: scenarioMode,
+        }),
+      })
+
+      clearTimeout(timeoutId)
+
+      if (response.ok) {
+        const data = await response.json()
+        const latencyMs = Math.round(performance.now() - startTime)
+        return {
+          answer: data.answer,
+          sources: data.sources || [],
+          isLiveBackend: true,
+          latencyMs,
+          conversationId: data.conversation_id,
+        }
       }
+    } catch {
+      // Backend offline or unreachable, fall back to edge grounded RAG
     }
-  } catch (err) {
-    // Backend offline or running in Vercel client-only mode
-    // Gracefully fall back to client-side grounded RAG engine
   }
 
   // Grounded client-side cognitive twin response
@@ -78,8 +84,14 @@ export async function askJohnny(
 }
 
 export async function checkBackendHealth(): Promise<{ online: boolean; details?: any }> {
+  const isHttps = typeof window !== "undefined" && window.location.protocol === "https:"
+  const isLocalBackend = API_URL.startsWith("http://localhost") || API_URL.startsWith("http://127.0.0.1")
+  if (isHttps && isLocalBackend) {
+    return { online: false }
+  }
+
   try {
-    const res = await fetch(`${API_URL}/health`, { signal: AbortSignal.timeout(2000) })
+    const res = await fetch(`${API_URL}/health`, { signal: AbortSignal.timeout(1500) })
     if (res.ok) {
       const data = await res.json()
       return { online: true, details: data }
