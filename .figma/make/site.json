@@ -1,0 +1,11 @@
+{
+  "title": "Karre John Hyde — AI / ML Engineer",
+  "description": "Portfolio of Karre John Hyde, an AI and machine learning engineer building intelligent, useful digital products.",
+  "robots": {
+    "index": true
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
