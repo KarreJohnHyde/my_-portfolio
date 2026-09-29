@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "backend": "python -m uvicorn app.main:app --app-dir backend --port 8000 --host 127.0.0.1 --reload",
+    "ingest": "python backend/ingest_data.py",
     "build": "vite build",
     "preview": "vite preview",
     "format": "oxfmt"

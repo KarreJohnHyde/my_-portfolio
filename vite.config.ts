@@ -36,6 +36,32 @@ react(),
       host: process.env.FIGMA_DEV_SERVER_HOST || '0.0.0.0',
       port: parseInt(process.env.PORT || '8443'),
       strictPort: true,
+      proxy: {
+        '/chat': {
+          target: 'http://127.0.0.1:8000',
+          changeOrigin: true,
+        },
+        '/health': {
+          target: 'http://127.0.0.1:8000',
+          changeOrigin: true,
+        },
+        '/docs': {
+          target: 'http://127.0.0.1:8000',
+          changeOrigin: true,
+        },
+        '/openapi.json': {
+          target: 'http://127.0.0.1:8000',
+          changeOrigin: true,
+        },
+        '/documents': {
+          target: 'http://127.0.0.1:8000',
+          changeOrigin: true,
+        },
+        '/admin': {
+          target: 'http://127.0.0.1:8000',
+          changeOrigin: true,
+        },
+      },
       watch: {
         ignored: [
           '**/.figma/**',
