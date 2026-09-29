@@ -26,15 +26,18 @@ type IconName =
   | "linkedin"
   | "mail"
   | "mapPin"
+  | "phone"
   | "server"
   | "spark"
   | "terminal"
+  | "whatsapp"
 
 const links = {
   github: "https://github.com/KarreJohnHyde",
   linkedin: "https://www.linkedin.com/in/karre-john-hyde-594b67416/",
   email: "mailto:johnnykarre@gmail.com",
   vercel: "https://vercel.com/johnnyvercel",
+  whatsapp: "https://wa.me/919100243535",
 }
 
 type ProjectCategory = "all" | "ai" | "cloud" | "web"
@@ -451,6 +454,9 @@ function Icon({ name, size = 20 }: { name: IconName; size?: number }) {
         <circle cx="12" cy="10" r="3" />
       </>
     ),
+    phone: (
+      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+    ),
     server: (
       <>
         <rect height="8" rx="2" ry="2" width="20" x="2" y="2" />
@@ -469,6 +475,12 @@ function Icon({ name, size = 20 }: { name: IconName; size?: number }) {
       <>
         <rect height="16" rx="2" width="18" x="3" y="4" />
         <path d="m7 9 3 3-3 3M13 16h4" />
+      </>
+    ),
+    whatsapp: (
+      <>
+        <path d="M3 21l1.65-3.8A9 9 0 1 1 21 12a9 9 0 0 1-9 9c-1.6 0-3.1-.4-4.5-1.1L3 21" />
+        <path d="M9 10a.5.5 0 0 0 1 0V9a.5.5 0 0 0-1 0v1a5 5 0 0 0 5 5h1a.5.5 0 0 0 0-1h-1a.5.5 0 0 0 0 1" />
       </>
     ),
   }
@@ -958,6 +970,7 @@ export default function App() {
   const [contactStatus, setContactStatus] = useState<
     "idle" | "sending" | "sent"
   >("idle")
+  const [statusMessage, setStatusMessage] = useState("")
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -1074,6 +1087,7 @@ export default function App() {
   const handleContactSubmit = async (e: FormEvent) => {
     e.preventDefault()
     setContactStatus("sending")
+    setStatusMessage("")
 
     const mailtoUrl = `mailto:johnnykarre@gmail.com?subject=${encodeURIComponent(
       formData.subject || "Portfolio Contact Inquiry",
@@ -1091,24 +1105,43 @@ export default function App() {
         body: JSON.stringify({
           name: formData.name,
           email: formData.email,
+          _replyto: formData.email,
           _subject: `[Portfolio Message] ${formData.subject || "New Inquiry"} - from ${formData.name}`,
+          _template: "table",
+          _captcha: "false",
           message: formData.message,
         }),
       })
 
-      if (res.ok) {
+      const data = await res.json().catch(() => null)
+
+      if (
+        res.ok ||
+        (data &&
+          (data.success === "true" ||
+            data.success === true ||
+            data.message?.includes("Activation") ||
+            data.message?.includes("actived")))
+      ) {
         setContactStatus("sent")
+        setStatusMessage(
+          data?.message?.includes("Activation")
+            ? "Message submitted! Please check your email inbox to click 'Activate Form' once."
+            : "Message delivered directly to johnnykarre@gmail.com! I'll get back to you soon."
+        )
         setFormData({ name: "", email: "", subject: "", message: "" })
-        window.setTimeout(() => setContactStatus("idle"), 6000)
+        window.setTimeout(() => setContactStatus("idle"), 8000)
       } else {
         window.open(mailtoUrl, "_blank")
         setContactStatus("sent")
-        window.setTimeout(() => setContactStatus("idle"), 6000)
+        setStatusMessage("Direct email draft opened with your message ready to send!")
+        window.setTimeout(() => setContactStatus("idle"), 8000)
       }
     } catch {
       window.open(mailtoUrl, "_blank")
       setContactStatus("sent")
-      window.setTimeout(() => setContactStatus("idle"), 6000)
+      setStatusMessage("Direct email draft opened with your message ready to send!")
+      window.setTimeout(() => setContactStatus("idle"), 8000)
     }
   }
 
@@ -1537,6 +1570,27 @@ export default function App() {
               </div>
 
               <a
+                aria-label="Direct WhatsApp chat with Karre John Hyde at +91 9100243535"
+                className="contact-info-card contact-whatsapp-card"
+                href={links.whatsapp}
+                rel="noreferrer"
+                target="_blank"
+                title="Chat with John directly on WhatsApp (+91 9100243535)"
+              >
+                <div className="contact-icon-box whatsapp-icon-box">
+                  <Icon name="whatsapp" size={20} />
+                </div>
+                <div className="contact-info-text">
+                  <span>WHATSAPP DIRECT</span>
+                  <strong>+91 9100243535</strong>
+                </div>
+                <span className="whatsapp-quick-chip">
+                  <span>Chat</span>
+                  <Icon name="external" size={13} />
+                </span>
+              </a>
+
+              <a
                 aria-label="Karre John Hyde on LinkedIn"
                 className="contact-info-card"
                 href={links.linkedin}
@@ -1674,28 +1728,46 @@ export default function App() {
                 />
               </div>
 
-              <button
-                className="form-submit"
-                disabled={contactStatus === "sending"}
-                type="submit"
-              >
-                {contactStatus === "sending" ? (
-                  <>
-                    <span className="live-dot" />
-                    <span>Transmitting...</span>
-                  </>
-                ) : (
-                  <>
-                    <span>Send Message</span>
-                    <Icon name="arrow" size={16} />
-                  </>
-                )}
-              </button>
+              <div className="form-actions-row">
+                <button
+                  className="form-submit"
+                  disabled={contactStatus === "sending"}
+                  type="submit"
+                >
+                  {contactStatus === "sending" ? (
+                    <>
+                      <span className="live-dot" />
+                      <span>Transmitting...</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>Send Message</span>
+                      <Icon name="arrow" size={16} />
+                    </>
+                  )}
+                </button>
+
+                <a
+                  aria-label="Send direct message via WhatsApp to +91 9100243535"
+                  className="whatsapp-send-btn"
+                  href={`https://wa.me/919100243535?text=${encodeURIComponent(
+                    formData.name || formData.message
+                      ? `Hi John, I am ${formData.name || "reaching out"}.${formData.subject ? ` Regarding: ${formData.subject}.` : ""} ${formData.message}`
+                      : "Hi John, I saw your portfolio and would like to connect regarding an opportunity!"
+                  )}`}
+                  rel="noreferrer"
+                  target="_blank"
+                  title="Send message via WhatsApp (+91 9100243535)"
+                >
+                  <Icon name="whatsapp" size={16} />
+                  <span>WhatsApp Direct</span>
+                </a>
+              </div>
 
               {contactStatus === "sent" && (
                 <div className="form-toast">
                   <Icon name="check" size={16} />
-                  <span>Message delivered! I will reply to you shortly.</span>
+                  <span>{statusMessage || "Message delivered! I will reply to you shortly."}</span>
                 </div>
               )}
             </form>
@@ -1720,6 +1792,9 @@ export default function App() {
               </Link>
               <Link href={links.linkedin} label="LinkedIn">
                 <Icon name="linkedin" />
+              </Link>
+              <Link href={links.whatsapp} label="WhatsApp (+91 9100243535)">
+                <Icon name="whatsapp" />
               </Link>
               <Link href={links.email} label="Email">
                 <Icon name="mail" />
