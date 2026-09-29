@@ -94,13 +94,13 @@ export const neuralVertexShader = `
       pos = mix(aBeamPoint, aLatticePoint, t);
     }
 
-    // Procedural fluid noise perturbation
-    float noise = snoise(pos * uNoiseFrequency + vec3(uTime * 0.35));
-    pos += normalize(pos + vec3(0.001)) * noise * 0.22;
+    // Procedural fluid noise perturbation - calmed and smoothed for professional AI/ML manifold aesthetic
+    float noise = snoise(pos * uNoiseFrequency + vec3(uTime * 0.12));
+    pos += normalize(pos + vec3(0.001)) * noise * 0.085;
 
-    // Torus orbital spin speed increases during context injection (Stage 3)
-    float spinSpeed = 0.25 + smoothstep(0.4, 0.75, uProgress) * 0.85;
-    float angle = uTime * spinSpeed + uProgress * 6.28318;
+    // Torus orbital spin speed - modest, professional, and graceful
+    float spinSpeed = 0.12 + smoothstep(0.4, 0.75, uProgress) * 0.18;
+    float angle = uTime * spinSpeed + uProgress * 3.14159;
     float cosA = cos(angle);
     float sinA = sin(angle);
     mat2 rotY = mat2(cosA, -sinA, sinA, cosA);
@@ -109,10 +109,10 @@ export const neuralVertexShader = `
     vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
     gl_Position = projectionMatrix * mvPosition;
 
-    // Dynamic point size scaled with camera depth and DPR
-    float depthScale = 24.0 / -mvPosition.z;
-    float pulse = 0.85 + sin(uTime * 2.5 + aRandom * 6.28) * 0.25;
-    gl_PointSize = aSize * depthScale * pulse * (uDpr * 0.55);
+    // Dynamic point size scaled with camera depth and DPR - gentle harmonious breathing
+    float depthScale = 22.0 / -mvPosition.z;
+    float pulse = 0.92 + sin(uTime * 1.1 + aRandom * 3.14159) * 0.12;
+    gl_PointSize = aSize * depthScale * pulse * (uDpr * 0.52);
 
     // Color gradient across stages:
     // Stage 1: Shimmering raw vector white/cyan
@@ -134,7 +134,8 @@ export const neuralVertexShader = `
       vColor = mix(cCyan, cViolet, (uProgress - 0.75) / 0.25);
     }
 
-    vAlpha = 0.6 + 0.4 * sin(uTime * 2.0 + aRandom * 6.28318);
+    // Calmer, non-strobe opacity shimmer
+    vAlpha = 0.72 + 0.28 * sin(uTime * 0.9 + aRandom * 3.14159);
   }
 `
 
@@ -162,10 +163,10 @@ export const energyBeamVertexShader = `
 
   void main() {
     vec3 pos = position;
-    // Axial beam scales and intensifies on Stage 3
+    // Axial beam scales and intensifies gracefully on Stage 3
     float stageIntensity = smoothstep(0.45, 0.65, uProgress) * (1.0 - smoothstep(0.8, 0.98, uProgress));
-    pos.x += sin(uTime * 8.0 + pos.y * 2.0) * 0.08 * stageIntensity;
-    pos.z += cos(uTime * 8.0 + pos.y * 2.0) * 0.08 * stageIntensity;
+    pos.x += sin(uTime * 2.2 + pos.y * 1.0) * 0.04 * stageIntensity;
+    pos.z += cos(uTime * 2.2 + pos.y * 1.0) * 0.04 * stageIntensity;
 
     vIntensity = stageIntensity;
     gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);

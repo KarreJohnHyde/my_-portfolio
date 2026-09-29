@@ -193,88 +193,72 @@ export default function StoryOverlay({
         </div>
       </header>
 
-      {/* Center Layer: Continuous Scroll-Linked Story Cards */}
+      {/* Center Layer: one focused chapter card at a time. Rendering inactive
+          cards beneath it created an unreadable ghosting effect on bright WebGL scenes. */}
       <main className="story-content-layer">
         <div className="story-cards-stack">
-          {storyStages.map((stage, i) => {
-            // Precise continuous scroll proximity math
-            const center = i / storyStages.length
-            const distance = Math.abs(progress - center)
-            const isVisible = distance < 0.28
-            const opacity = Math.max(0, Math.min(1, 1 - distance * 3.8))
-            const translateY = (progress - center) * -45
-            const scale = 1 - distance * 0.18
-
-            return (
-              <article
-                className={`story-card ${activeStage === i ? "is-active" : ""}`}
-                key={stage.index}
+          <article
+            aria-live="polite"
+            className="story-card is-active"
+            key={currentStage.index}
+            style={{ borderLeftColor: currentStage.color }}
+          >
+            <div className="story-card-header">
+              <span className="story-stage-index">/{currentStage.index}</span>
+              <span
+                className="story-kicker-pill"
                 style={{
-                  opacity: isVisible ? opacity : 0,
-                  transform: `translateY(${translateY}px) scale(${scale})`,
-                  visibility: isVisible ? "visible" : "hidden",
-                  pointerEvents: isVisible && opacity > 0.4 ? "auto" : "none",
-                  borderLeftColor: stage.color,
+                  color: currentStage.color,
+                  borderColor: `${currentStage.color}44`,
+                  backgroundColor: `${currentStage.color}14`,
                 }}
               >
-                <div className="story-card-header">
-                  <span className="story-stage-index">/{stage.index}</span>
-                  <span
-                    className="story-kicker-pill"
-                    style={{
-                      color: stage.color,
-                      borderColor: `${stage.color}44`,
-                      backgroundColor: `${stage.color}14`,
-                    }}
-                  >
-                    {stage.kicker}
-                  </span>
-                </div>
+                {currentStage.kicker}
+              </span>
+            </div>
 
-                <h2 className="story-card-title">{stage.title}</h2>
-                <p className="story-card-desc">{stage.description}</p>
+            <h2 className="story-card-title">{currentStage.title}</h2>
+            <p className="story-card-desc">{currentStage.description}</p>
 
-                <div className="story-metrics-grid">
-                  {stage.metrics.map((m) => (
-                    <div className="story-metric-item" key={m.label}>
-                      <div className="metric-val-wrapper">
-                        <strong className="story-metric-val" style={{ color: stage.color }}>
-                          {m.value}
-                        </strong>
-                      </div>
-                      <span className="story-metric-lbl">{m.label}</span>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="story-tags-row">
-                  {stage.tags.map((t) => (
-                    <span className="story-tag-chip" key={t}>
-                      {t}
-                    </span>
-                  ))}
-                </div>
-
-                {stage.liveUrl && (
-                  <div className="story-card-footer">
-                    <a
-                      className="story-action-btn"
-                      href={stage.liveUrl}
-                      rel="noreferrer"
-                      style={{
-                        background: stage.color,
-                        color: "#0a0a0c",
-                      }}
-                      target="_blank"
-                    >
-                      <span>Explore Production Demo</span>
-                      <span className="action-arrow">↗</span>
-                    </a>
+            <div className="story-metrics-grid">
+              {currentStage.metrics.map((metric) => (
+                <div className="story-metric-item" key={metric.label}>
+                  <div className="metric-val-wrapper">
+                    <strong className="story-metric-val" style={{ color: currentStage.color }}>
+                      {metric.value}
+                    </strong>
                   </div>
-                )}
-              </article>
-            )
-          })}
+                  <span className="story-metric-lbl">{metric.label}</span>
+                </div>
+              ))}
+            </div>
+
+            <div className="story-tags-row">
+              {currentStage.tags.map((tag) => (
+                <span className="story-tag-chip" key={tag}>
+                  {tag}
+                </span>
+              ))}
+            </div>
+
+            {currentStage.liveUrl && (
+              <div className="story-card-footer">
+                <a
+                  className="story-action-btn"
+                  href={currentStage.liveUrl}
+                  rel="noreferrer"
+                  style={{
+                    background: currentStage.color,
+                    color: "#0a0a0c",
+                  }}
+                  target="_blank"
+                >
+                  <span>Explore Production Demo</span>
+                  <span className="action-arrow">↗</span>
+                </a>
+              </div>
+            )}
+          </article>
         </div>
       </main>
 

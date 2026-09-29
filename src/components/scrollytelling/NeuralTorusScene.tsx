@@ -180,10 +180,10 @@ function NeuralTorusParticles({ progress, inspectMode, mouseX, mouseY, lowPower 
     }
 
     if (torusWireframeRef.current) {
-      torusWireframeRef.current.rotation.z = time * 0.12 + progress * Math.PI
-      torusWireframeRef.current.rotation.x = Math.PI / 2.5 + Math.sin(time * 0.4) * 0.08
-      // Fade wireframe in only during Stage 2 & 3
-      const wireOpacity = smoothstep(0.18, 0.4, progress) * (1.0 - smoothstep(0.8, 0.98, progress)) * 0.22
+      torusWireframeRef.current.rotation.z = time * 0.05 + progress * Math.PI * 0.5
+      torusWireframeRef.current.rotation.x = Math.PI / 2.5 + Math.sin(time * 0.2) * 0.04
+      // Fade wireframe in smoothly during Stage 2 & 3
+      const wireOpacity = smoothstep(0.18, 0.4, progress) * (1.0 - smoothstep(0.8, 0.98, progress)) * 0.16
       const mat = torusWireframeRef.current.material as THREE.MeshBasicMaterial
       if (mat) mat.opacity = wireOpacity
     }
@@ -195,34 +195,34 @@ function NeuralTorusParticles({ progress, inspectMode, mouseX, mouseY, lowPower 
       let targetX = 0.0
 
       if (progress < 0.25) {
-        // Stage 1: Wide, floating overview of raw vector space
-        targetZ = 9.2 + Math.sin(progress * Math.PI * 4) * 0.4
-        targetY = 0.4
-        targetX = mouseX * 0.8
+        // Stage 1: Wide, balanced overview of raw vector space
+        targetZ = 9.0 + Math.sin(progress * Math.PI * 2) * 0.25
+        targetY = 0.3
+        targetX = mouseX * 0.45
       } else if (progress < 0.50) {
-        // Stage 2: Dynamic dolly zoom pitching into a primary cluster
+        // Stage 2: Smooth dolly zoom pitching into a primary cluster
         const p2 = (progress - 0.25) / 0.25
-        targetZ = THREE.MathUtils.lerp(9.2, 5.8, p2)
-        targetY = THREE.MathUtils.lerp(0.4, 1.4, p2)
-        targetX = THREE.MathUtils.lerp(0.0, 1.2, p2) + mouseX * 0.6
+        targetZ = THREE.MathUtils.lerp(9.0, 6.4, p2)
+        targetY = THREE.MathUtils.lerp(0.3, 1.0, p2)
+        targetX = THREE.MathUtils.lerp(0.0, 0.8, p2) + mouseX * 0.4
       } else if (progress < 0.75) {
-        // Stage 3: Orbiting macro shot following axial energy beam
+        // Stage 3: Professional orbiting perspective following axial energy beam
         const p3 = (progress - 0.50) / 0.25
-        const orbitAngle = p3 * Math.PI * 1.5
-        targetZ = 6.2 + Math.cos(orbitAngle) * 1.2
-        targetX = Math.sin(orbitAngle) * 2.2 + mouseX * 0.5
-        targetY = 0.8 + Math.sin(p3 * Math.PI) * 0.6
+        const orbitAngle = p3 * Math.PI * 1.0
+        targetZ = 6.4 + Math.cos(orbitAngle) * 0.8
+        targetX = Math.sin(orbitAngle) * 1.4 + mouseX * 0.35
+        targetY = 0.7 + Math.sin(p3 * Math.PI) * 0.35
       } else {
         // Stage 4: Smooth pullback to neutral balanced perspective
         const p4 = (progress - 0.75) / 0.25
-        targetZ = THREE.MathUtils.lerp(6.2, 8.4, p4)
-        targetY = THREE.MathUtils.lerp(0.8, 0.0, p4)
-        targetX = THREE.MathUtils.lerp(1.0, 0.0, p4) + mouseX * 0.4
+        targetZ = THREE.MathUtils.lerp(6.4, 8.4, p4)
+        targetY = THREE.MathUtils.lerp(0.7, 0.0, p4)
+        targetX = THREE.MathUtils.lerp(0.8, 0.0, p4) + mouseX * 0.3
       }
 
-      camera.position.x = THREE.MathUtils.damp(camera.position.x, targetX, 4.0, animationDelta)
-      camera.position.y = THREE.MathUtils.damp(camera.position.y, targetY + mouseY * 0.6, 4.0, animationDelta)
-      camera.position.z = THREE.MathUtils.damp(camera.position.z, targetZ, 4.0, animationDelta)
+      camera.position.x = THREE.MathUtils.damp(camera.position.x, targetX, 2.8, animationDelta)
+      camera.position.y = THREE.MathUtils.damp(camera.position.y, targetY + mouseY * 0.35, 2.8, animationDelta)
+      camera.position.z = THREE.MathUtils.damp(camera.position.z, targetZ, 2.8, animationDelta)
       camera.lookAt(0, 0, 0)
     }
   })

@@ -18,6 +18,8 @@ import { scrollToTarget } from "./lib/smoothScroll"
 const ThreeDStorySection = React.lazy(
   () => import("./components/scrollytelling/ThreeDStorySection"),
 )
+import CustomCursor from "./components/CustomCursor"
+import ProjectDetailPage from "./components/ProjectDetailPage"
 
 type IconName =
   | "arrow"
@@ -910,7 +912,15 @@ function SlackCard({ card, delay }: { card: typeof slackCards[0]; delay: number 
 /* ═══════════════════════════════════════════════════════
    PROJECT CARD (with tilt parallax)
    ═══════════════════════════════════════════════════════ */
-function ProjectCard({ project, delay }: { project: ProjectItem; delay: number }) {
+function ProjectCard({
+  project,
+  delay,
+  onOpenDetail,
+}: {
+  project: ProjectItem
+  delay: number
+  onOpenDetail: (title: string) => void
+}) {
   const [x, setX] = useState(50)
   const [y, setY] = useState(50)
   const { ref, isVisible } = useScrollReveal()
@@ -922,9 +932,18 @@ function ProjectCard({ project, delay }: { project: ProjectItem; delay: number }
 
   return (
     <div
+      aria-label={`View detailed architecture breakdown for ${project.title}`}
       className={`project-card ${project.tone} ${isVisible ? "is-revealed" : ""}`}
+      onClick={() => onOpenDetail(project.title)}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault()
+          onOpenDetail(project.title)
+        }
+      }}
       onMouseMove={move}
       ref={ref}
+      role="button"
       style={
         {
           "--card-x": `${x}%`,
@@ -932,8 +951,10 @@ function ProjectCard({ project, delay }: { project: ProjectItem; delay: number }
           transitionDelay: `${delay}ms`,
         } as React.CSSProperties
       }
+      tabIndex={0}
     >
-      <div>
+      <div className="project-card-inner">
+        {/* Top bar with index, status, and icon */}
         <div className="project-top">
           <div className="project-top-meta">
             <span className="project-number">/{project.number}</span>
@@ -942,35 +963,57 @@ function ProjectCard({ project, delay }: { project: ProjectItem; delay: number }
               {project.status}
             </span>
           </div>
+          <span className="project-badge-tag">{project.label}</span>
           <span className="project-icon">
-            <Icon name={project.icon} size={22} />
+            <Icon name={project.icon} size={20} />
           </span>
         </div>
 
-        <div className="project-visual" aria-hidden="true">
-          <div className="visual-grid" />
-          <div className="visual-orbit orbit-one" />
-          <div className="visual-orbit orbit-two" />
-          <div className="visual-core">
-            <Icon name={project.icon} size={30} />
-          </div>
-          <span>{project.label}</span>
-        </div>
-
-        <div className="project-copy">
+        {/* Title Bar: Visible by default */}
+        <div className="project-title-header">
           <div className="project-title" role="heading" aria-level={3}>
             {project.title}
           </div>
-          <div className="project-description">{project.description}</div>
-          <div className="tag-row">
-            {project.tags.map((tag) => (
-              <span key={tag}>{tag}</span>
-            ))}
+          <div className="project-card-expand-indicator" aria-hidden="true">
+            <span className="expand-indicator-dot" />
+            <span className="expand-indicator-text">HOVER TO EXPAND</span>
+            <span className="expand-indicator-arrow">▾</span>
+          </div>
+        </div>
+
+        {/* Collapsible / Expand-on-hover Content: reveals graphic, description, tags & deep dive prompt */}
+        <div className="project-expandable-drawer">
+          <div className="project-visual" aria-hidden="true">
+            <div className="visual-grid" />
+            <div className="visual-orbit orbit-one" />
+            <div className="visual-orbit orbit-two" />
+            <div className="visual-core">
+              <Icon name={project.icon} size={28} />
+            </div>
+            <span>{project.label}</span>
+          </div>
+
+          <div className="project-copy">
+            <div className="project-description">{project.description}</div>
+            <div className="tag-row">
+              {project.tags.map((tag) => (
+                <span key={tag}>{tag}</span>
+              ))}
+            </div>
+          </div>
+
+          <div className="project-deepdive-banner">
+            <span className="deepdive-text">EXPLORE ARCHITECTURE BREAKDOWN</span>
+            <span className="deepdive-arrow">↗</span>
           </div>
         </div>
       </div>
 
-      <div className="project-actions">
+      {/* Action links */}
+      <div
+        className="project-actions"
+        onClick={(e) => e.stopPropagation()}
+      >
         {project.liveUrl && project.liveUrl !== project.githubUrl ? (
           <Link
             className="project-btn-primary"
@@ -1267,6 +1310,7 @@ export default function App() {
   const [transitioning, setTransitioning] = useState(false)
   const [active, setActive] = useState("home")
   const [activeCategory, setActiveCategory] = useState<ProjectCategory>("all")
+  const [selectedProjectTitle, setSelectedProjectTitle] = useState<string | null>(null)
   const [copiedEmail, setCopiedEmail] = useState(false)
   const [resumeModalOpen, setResumeModalOpen] = useState(false)
   const [contactStatus, setContactStatus] = useState<
@@ -1353,30 +1397,92 @@ export default function App() {
     return () => window.clearInterval(interval)
   }, [loaded])
 
+  // Dynamic Navigation scroll position tracking covering:
+  // "01 home", "02 3d Story", "03 work", "04 about", "05 path", "06 creds", and contact "Let's talk"
   useEffect(() => {
-    const sections = [
-      "home",
-      "scrollytelling",
-      "work",
-      "about",
-      "journey",
-      "credentials",
-      "contact",
+    const navSections = [
+      { id: "home", navId: "home" },
+      { id: "scrollytelling", navId: "scrollytelling" },
+      { id: "work", navId: "work" },
+      { id: "about", navId: "about" },
+      { id: "journey", navId: "journey" },
+      { id: "credentials", navId: "credentials" },
+      { id: "contact", navId: "contact" },
     ]
+
+    let ticking = false
+
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const scrollY = window.scrollY || document.documentElement.scrollTop
+          const viewportHeight = window.innerHeight
+          const docHeight = document.documentElement.scrollHeight
+
+          // Top of page boundary -> home
+          if (scrollY < 140) {
+            setActive("home")
+            ticking = false
+            return
+          }
+
+          // Bottom of page boundary -> contact
+          if (scrollY + viewportHeight >= docHeight - 90) {
+            setActive("contact")
+            ticking = false
+            return
+          }
+
+          // Precision raycast at 38% viewport height
+          const targetY = scrollY + viewportHeight * 0.38
+          let matched = ""
+
+          for (let i = navSections.length - 1; i >= 0; i--) {
+            const section = document.getElementById(navSections[i].id)
+            if (section) {
+              const top = section.offsetTop
+              const height = section.offsetHeight
+              if (targetY >= top && targetY <= top + height) {
+                matched = navSections[i].navId
+                break
+              }
+            }
+          }
+
+          if (matched) {
+            setActive(matched)
+          }
+
+          ticking = false
+        })
+        ticking = true
+      }
+    }
+
+    window.addEventListener("scroll", handleScroll, { passive: true })
+    handleScroll()
+
     const observer = new IntersectionObserver(
       (entries) => {
         const visible = entries
           .filter((entry) => entry.isIntersecting)
           .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0]
-        if (visible) setActive(visible.target.id)
+        if (visible) {
+          const match = navSections.find((s) => s.id === visible.target.id)
+          if (match) setActive(match.navId)
+        }
       },
-      { rootMargin: "-25% 0px -55%", threshold: [0.1, 0.3, 0.6] },
+      { rootMargin: "-20% 0px -50%", threshold: [0.15, 0.4, 0.7] },
     )
-    sections.forEach((id) => {
+    navSections.forEach(({ id }) => {
       const section = document.getElementById(id)
       if (section) observer.observe(section)
     })
-    return () => observer.disconnect()
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll)
+      observer.disconnect()
+    }
   }, [])
 
   const navigate = useCallback((id: string) => {
@@ -1526,17 +1632,21 @@ export default function App() {
             { id: "credentials", label: "creds", index: "06" },
           ].map((item) => (
             <Action
-              className={active === item.id ? "active" : ""}
+              className={`nav-link-btn ${active === item.id ? "active" : ""}`}
               key={item.id}
               onClick={() => navigate(item.id)}
             >
-              <span>{item.index}</span>
-              {item.label}
+              <span className="nav-item-num">{item.index}</span>
+              <span className="nav-item-label">{item.label}</span>
+              {active === item.id && <span className="nav-active-lime-glow" aria-hidden="true" />}
             </Action>
           ))}
         </nav>
-        <Action className="contact-pill" onClick={() => navigate("contact")}>
-          Let&apos;s talk
+        <Action
+          className={`contact-pill ${active === "contact" ? "active" : ""}`}
+          onClick={() => navigate("contact")}
+        >
+          <span>Let&apos;s talk</span>
           <span className="live-dot" />
         </Action>
       </header>
@@ -1656,7 +1766,7 @@ export default function App() {
         {/* WORK SECTION */}
         <section className={`work section-frame ${workReveal.isVisible ? "section-revealed" : ""}`} id="work" ref={workReveal.ref}>
           <SectionLabel index="03">SELECTED WORK</SectionLabel>
-          <div className="section-heading">
+          <div className={`section-heading ${workReveal.isVisible ? "title-revealed" : ""}`}>
             <div role="heading" aria-level={2}>
               Ideas, engineered
               <br />
@@ -1704,7 +1814,12 @@ export default function App() {
           {/* PROJECT GRID */}
           <div className="project-grid">
             {filteredProjects.map((project, i) => (
-              <ProjectCard key={project.title} project={project} delay={i * 80} />
+              <ProjectCard
+                key={project.title}
+                project={project}
+                delay={i * 60}
+                onOpenDetail={(title) => setSelectedProjectTitle(title)}
+              />
             ))}
           </div>
         </section>
@@ -1713,7 +1828,7 @@ export default function App() {
         <section className={`about section-frame ${aboutReveal.isVisible ? "section-revealed" : ""}`} id="about" ref={aboutReveal.ref}>
           <SectionLabel index="03">MY OPERATING SYSTEM</SectionLabel>
           <div className="about-grid">
-            <div className="about-statement">
+            <div className={`about-statement ${aboutReveal.isVisible ? "title-revealed" : ""}`}>
               <div role="heading" aria-level={2}>
                 Curious by default.
                 <br />
@@ -1835,7 +1950,7 @@ export default function App() {
         {/* EXPERIENCE TIMELINE SECTION */}
         <section className={`journey section-frame ${journeyReveal.isVisible ? "section-revealed" : ""}`} id="journey" ref={journeyReveal.ref}>
           <SectionLabel index="04">EXPERIENCE TIMELINE</SectionLabel>
-          <div className="journey-heading">
+          <div className={`journey-heading ${journeyReveal.isVisible ? "title-revealed" : ""}`}>
             <div role="heading" aria-level={2}>
               Learning in public.
               <br />
@@ -1863,7 +1978,7 @@ export default function App() {
         {/* CERTIFICATIONS & CREDENTIALS SECTION */}
         <section className={`credentials section-frame ${credsReveal.isVisible ? "section-revealed" : ""}`} id="credentials" ref={credsReveal.ref}>
           <SectionLabel index="05">CERTIFICATIONS &amp; CREDENTIALS</SectionLabel>
-          <div className="credentials-heading">
+          <div className={`credentials-heading ${credsReveal.isVisible ? "title-revealed" : ""}`}>
             <div role="heading" aria-level={2}>
               Curiosity,
               <br />
@@ -1922,7 +2037,7 @@ export default function App() {
             <span className="live-dot" />
             OPEN TO INTERNSHIPS &amp; COLLABORATIONS · 2026
           </div>
-          <div className="contact-title" role="heading" aria-level={2}>
+          <div className={`contact-title ${contactReveal.isVisible ? "title-revealed" : ""}`} role="heading" aria-level={2}>
             Have a problem worth
             <br />
             <em className="wave-word">solving together?</em>
@@ -2207,6 +2322,13 @@ export default function App() {
         isOpen={resumeModalOpen}
         onClose={() => setResumeModalOpen(false)}
       />
+      <CustomCursor />
+      {selectedProjectTitle && (
+        <ProjectDetailPage
+          projectTitle={selectedProjectTitle}
+          onClose={() => setSelectedProjectTitle(null)}
+        />
+      )}
     </div>
     </SmoothScrollProvider>
   )
