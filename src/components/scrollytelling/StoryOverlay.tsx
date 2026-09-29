@@ -186,7 +186,8 @@ export default function StoryOverlay({
                     className="story-kicker-pill"
                     style={{
                       color: stage.color,
-                      borderColor: `${stage.color}33`,
+                      borderColor: `${stage.color}44`,
+                      backgroundColor: `${stage.color}14`,
                     }}
                   >
                     {stage.kicker}
@@ -199,8 +200,12 @@ export default function StoryOverlay({
                 <div className="story-metrics-grid">
                   {stage.metrics.map((m) => (
                     <div className="story-metric-item" key={m.label}>
-                      <strong style={{ color: stage.color }}>{m.value}</strong>
-                      <span>{m.label}</span>
+                      <div className="metric-val-wrapper">
+                        <strong className="story-metric-val" style={{ color: stage.color }}>
+                          {m.value}
+                        </strong>
+                      </div>
+                      <span className="story-metric-lbl">{m.label}</span>
                     </div>
                   ))}
                 </div>
@@ -262,6 +267,7 @@ export default function StoryOverlay({
                 type="button"
               >
                 <span className="step-num">{st.index}</span>
+                <span className="step-sep">·</span>
                 <span className="step-title">{st.title.split(" ")[0]}</span>
               </button>
             ))}

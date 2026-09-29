@@ -3674,10 +3674,10 @@ html.lenis body {
 
 .story-metrics-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
   padding: 16px 0;
-  margin-bottom: 18px;
+  margin-bottom: 20px;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
@@ -3685,57 +3685,80 @@ html.lenis body {
 .story-metric-item {
   display: flex;
   flex-direction: column;
+  gap: 4px;
+  padding: 12px 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 10px;
 }
 
-.story-metric-item strong {
+.metric-val-wrapper {
+  display: block;
+}
+
+.story-metric-val {
+  display: block;
+  font-family: var(--font-mono, "DM Mono", monospace);
   font-size: 1.35rem;
   font-weight: 800;
-  font-family: var(--font-mono, "DM Mono", monospace);
-  line-height: 1.1;
+  line-height: 1.15;
+  letter-spacing: 0.02em;
 }
 
-.story-metric-item span {
-  font-size: 0.65rem;
+.story-metric-lbl {
+  display: block;
   font-family: var(--font-mono, "DM Mono", monospace);
-  color: rgba(255, 255, 255, 0.45);
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.55);
   letter-spacing: 0.08em;
-  margin-top: 4px;
+  text-transform: uppercase;
+  line-height: 1.3;
 }
 
 .story-tags-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 22px;
+  gap: 8px 10px;
+  margin-bottom: 24px;
 }
 
 .story-tag-chip {
+  display: inline-flex;
+  align-items: center;
   font-family: var(--font-mono, "DM Mono", monospace);
-  font-size: 0.68rem;
-  color: rgba(255, 255, 255, 0.68);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  color: rgba(255, 255, 255, 0.78);
   background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 6px;
-  padding: 4px 10px;
+  padding: 5px 11px;
+  white-space: nowrap;
 }
 
 .story-card-footer {
   display: flex;
   align-items: center;
   justify-content: flex-start;
+  margin-top: 4px;
 }
 
 .story-action-btn {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  font-size: 0.84rem;
+  gap: 10px;
+  font-family: var(--font-sans, "Manrope", sans-serif);
+  font-size: 0.88rem;
   font-weight: 700;
+  letter-spacing: 0.02em;
   border-radius: 999px;
-  padding: 11px 20px;
+  padding: 12px 22px;
   text-decoration: none;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  white-space: nowrap;
 }
 
 .story-action-btn:hover {
@@ -3745,8 +3768,14 @@ html.lenis body {
 }
 
 .story-action-btn .action-arrow {
-  font-size: 1rem;
+  display: inline-block;
+  font-size: 1.05rem;
   line-height: 1;
+  transition: transform 0.2s ease;
+}
+
+.story-action-btn:hover .action-arrow {
+  transform: translate(2px, -2px);
 }
 
 /* BOTTOM HUD & STEPPER */
@@ -3759,7 +3788,7 @@ html.lenis body {
   padding: 16px 36px 24px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
   pointer-events: auto;
 }
 
@@ -3789,7 +3818,7 @@ html.lenis body {
 .story-stage-stepper {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   overflow-x: auto;
   scrollbar-width: none;
 }
@@ -3802,35 +3831,45 @@ html.lenis body {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 8px;
-  padding: 8px 14px;
-  color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  padding: 8px 16px;
+  color: rgba(255, 255, 255, 0.65);
   font-family: var(--font-mono, "DM Mono", monospace);
-  font-size: 0.72rem;
-  letter-spacing: 0.06em;
+  font-size: 0.74rem;
+  letter-spacing: 0.04em;
   cursor: pointer;
   transition: all 0.25s ease;
   white-space: nowrap;
 }
 
 .story-step-pill:hover {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.09);
   color: #ffffff;
-  border-color: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
 .story-step-pill.is-active {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.12);
   color: #ffffff;
   border-color: var(--stage-color, #00FF66);
   box-shadow: 0 0 16px -4px var(--stage-color, #00FF66);
 }
 
 .story-step-pill .step-num {
-  font-weight: 700;
-  opacity: 0.8;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.story-step-pill .step-sep {
+  opacity: 0.4;
+  margin: 0 2px;
+}
+
+.story-step-pill .step-title {
+  font-weight: 500;
+  letter-spacing: 0.02em;
 }
 
 .story-depth-readout {
