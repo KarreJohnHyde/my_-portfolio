@@ -216,32 +216,25 @@ const certifications: CertificationItem[] = [
     credentialUrl: "https://civil-orange-hyw3u80v.edgeone.dev/",
   },
   {
-    label: "Cloud",
-    name: "Cloud Computing & Distributed Systems · Elite",
+    label: "AI / ML",
+    name: "Generative AI & Agentic Architectures",
+    issuer: "HERE AND NOW AI · with Sathyabama IST",
+    year: "2025",
+    credentialUrl: "https://eventual-chocolate-6jxt4lqw.edgeone.dev/",
+  },
+  {
+    label: "Cloud & Systems",
+    name: "Cloud Computing and Distributed Systems (Elite)",
     issuer: "NPTEL · IIT Kanpur",
     year: "2026",
     credentialUrl: "https://thorough-harlequin-v56d50g3.edgeone.dev/",
   },
   {
-    label: "AI / ML",
-    name: "Generative AI & Agentic Architectures",
-    issuer: "HERE AND NOW AI · Sathyabama IST",
-    year: "2025",
-    credentialUrl: "https://eventual-chocolate-6jxt4lqw.edgeone.dev/",
-  },
-  {
-    label: "Data",
-    name: "Database Management System",
-    issuer: "NPTEL · IIT Kharagpur",
-    year: "2025",
-    credentialUrl: "https://professional-teal-fbj1bwy3.edgeone.dev/",
-  },
-  {
-    label: "Programming",
-    name: "Python for Data Science",
-    issuer: "IBM · CognitiveClass.ai",
-    year: "2024",
-    credentialUrl: "https://pregnant-indigo-9tamhpek.edgeone.dev/",
+    label: "DevOps",
+    name: "DevOps Training",
+    issuer: "Zero2Infynite Security & Research",
+    year: "2026",
+    credentialUrl: "https://compulsory-moccasin-tvscvhwn.edgeone.dev/",
   },
   {
     label: "Programming",
@@ -251,74 +244,117 @@ const certifications: CertificationItem[] = [
     credentialUrl: "https://colonial-lavender-ryxeasj8.edgeone.dev/",
   },
   {
-    label: "Hackathon",
-    name: "Cognitive Learning & Applied AI · Innoverse'26",
-    issuer: "Sathyabama IST · 24-Hr Hackathon Award",
-    year: "2026",
-    credentialUrl: "https://compulsory-moccasin-tvscvhwn.edgeone.dev/",
+    label: "Data & Systems",
+    name: "Database Management System",
+    issuer: "NPTEL · IIT Kharagpur",
+    year: "2025",
+    credentialUrl: "https://professional-teal-fbj1bwy3.edgeone.dev/",
   },
   {
-    label: "AI / ML",
-    name: "Advanced Deep Learning & Neural Architectures",
-    issuer: "Specialized Technical Credential",
-    year: "2025",
+    label: "Data Science",
+    name: "Python for Data Science",
+    issuer: "IBM · CognitiveClass.ai",
+    year: "2024",
+    credentialUrl: "https://pregnant-indigo-9tamhpek.edgeone.dev/",
+  },
+  {
+    label: "Programming",
+    name: "Programming for Everybody",
+    issuer: "University of Michigan · Coursera",
+    year: "2026",
     credentialUrl: "https://frequent-amaranth-azxtib3b.edgeone.dev/",
   },
   {
-    label: "Systems",
-    name: "Modern Full-Stack & Cloud Architecture",
-    issuer: "Engineering Verification Credential",
+    label: "Math & Computing",
+    name: "Linear Algebra & Matrix Computations with MATLAB",
+    issuer: "MathWorks (Certificate 1 & 2)",
     year: "2024",
     credentialUrl: "https://faithful-rose-vspdozlo.edgeone.dev/",
+  },
+]
+
+const educationHistory = [
+  {
+    degree: "B.E., Computer Science and Engineering (AI & ML)",
+    period: "2023 – 2027 (Present, Sem 6)",
+    institution: "Sathyabama Institute of Science and Technology, Chennai, Tamil Nadu",
+    score: "CGPA: 8.45",
+    type: "Undergraduate Degree · Full-time",
+  },
+  {
+    degree: "Intermediate (12th)",
+    period: "2021 – 2023",
+    institution: "Sri Vishwa Junior College, Visakhapatnam, AP (Board of Intermediate Education, AP)",
+    score: "Score: 88%",
+    type: "Higher Secondary · Full-time",
+  },
+  {
+    degree: "10th Standard (Secondary)",
+    period: "2020 – 2021",
+    institution: "Dr. KKR's Gowtham Concept School, Gudivada, AP (Board of Secondary Education, AP)",
+    score: "Score: 99.83%",
+    type: "Secondary School · Full-time",
   },
 ]
 
 const journey = [
   {
     year: "2026",
-    title: "Independent AI & Full-Stack Builder",
+    title: "Elite Cloud & Distributed Systems (IIT Kanpur) & DevOps",
     detail:
-      "Shipping applied learning systems, serverless fintech applications, and interactive web architectures while seeking an AI/ML or full-stack engineering internship.",
+      "Earned NPTEL Elite Certification in Cloud Computing and Distributed Systems from IIT Kanpur, DevOps Training with Zero2Infynite Security & Research, and Programming for Everybody from University of Michigan.",
   },
   {
     year: "2026",
     title: "Cognitive Learning · Innoverse'26 Hackathon",
     detail:
-      "Built a live adaptive learning intelligence dashboard in a 24-hour sprint using K-Means clustering, PCA, behavioral signal processing, and recommendation pipelines.",
+      "Built a 4-tier pipeline extracting 8+ behavioral metrics to classify students into 5 cognitive profiles using rule-based ML (K-Means, PCA) with adaptive recommendations on a live Streamlit dashboard.",
   },
   {
-    year: "2025 — Present",
-    title: "B.E. Computer Science (AI & ML Specialization)",
+    year: "2025",
+    title: "Generative AI, Agentic Architectures & Machine Learning",
     detail:
-      "Cultivating strong algorithmic foundations, deep learning intuition, and software engineering practices at Sathyabama Institute of Science and Technology, Chennai. Current CGPA: 8.45.",
+      "Certified in Introduction to Machine Learning (NPTEL, IIT Kharagpur), Generative AI & Agentic Architectures (HERE AND NOW AI / Sathyabama IST), and DBMS (NPTEL, IIT Kharagpur). Built Study2AI and Expense AI.",
   },
   {
     year: "2024",
-    title: "Open Source Contributor & Applied Data Science",
+    title: "Core Java, Python Data Science & Matrix Computations",
     detail:
-      "Engineered automated utilities, machine learning notebooks, and explored cloud deployment paradigms across AWS, Vercel, and Hugging Face.",
+      "Certified in Programming in Java (NPTEL, IIT Kharagpur), Python for Data Science (IBM / CognitiveClass.ai), and Linear Algebra & Matrix Computations with MATLAB (MathWorks).",
+  },
+  {
+    year: "2023 — 2027",
+    title: "B.E., Computer Science and Engineering (AI & ML Specialization)",
+    detail:
+      "Sathyabama Institute of Science and Technology, Chennai (Present, Sem 6). Maintaining 8.45 CGPA across algorithmic problem solving, machine learning systems, and software engineering.",
+  },
+  {
+    year: "2020 — 2023",
+    title: "Secondary & Higher Secondary Academic Excellence",
+    detail:
+      "Intermediate 12th: 88% from Sri Vishwa Junior College, Visakhapatnam. 10th Standard: 99.83% from Dr. KKR's Gowtham Concept School, Gudivada.",
   },
 ]
 
 const skills = [
   {
-    name: "AI & ML Systems",
-    value: "LLMs · RAG · LangChain · FAISS · scikit-learn · K-Means · PCA",
+    name: "AI / ML & LLMs",
+    value: "LLMs · RAG · NLP · Deep Learning · LangChain · FAISS · scikit-learn",
     icon: "brain" as IconName,
   },
   {
-    name: "Full Stack & Web",
-    value: "React 19 · Next.js · TypeScript · Tailwind CSS v4 · HTML5/CSS3",
+    name: "Frameworks & Web",
+    value: "Streamlit · Gradio · Next.js · React 19 · HTML & CSS · TypeScript",
     icon: "grid" as IconName,
   },
   {
-    name: "Cloud & Serverless",
-    value: "AWS (DynamoDB, S3) · Vercel · Hugging Face Spaces · Streamlit Cloud",
+    name: "Tools & Cloud Platforms",
+    value: "Git/GitHub · Jupyter · MATLAB · Vercel · Hugging Face · AWS",
     icon: "cloud" as IconName,
   },
   {
-    name: "Languages & Core",
-    value: "Python · Java · SQL · DBMS · REST APIs · Git & GitHub",
+    name: "Core Subjects & Languages",
+    value: "Python · Java · SQL · DSA · OOP · DBMS · Machine Learning",
     icon: "terminal" as IconName,
   },
 ]
@@ -959,6 +995,262 @@ function ProjectCard({ project, delay }: { project: ProjectItem; delay: number }
 }
 
 /* ═══════════════════════════════════════════════════════
+   RESUME VIEWER MODAL
+   ═══════════════════════════════════════════════════════ */
+function ResumeModal({
+  isOpen,
+  onClose,
+}: {
+  isOpen: boolean
+  onClose: () => void
+}) {
+  const [tab, setTab] = useState<"doc" | "pdf">("doc")
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose()
+    }
+    if (isOpen) {
+      document.body.style.overflow = "hidden"
+      window.addEventListener("keydown", handleKeyDown)
+    }
+    return () => {
+      document.body.style.overflow = "unset"
+      window.removeEventListener("keydown", handleKeyDown)
+    }
+  }, [isOpen, onClose])
+
+  if (!isOpen) return null
+
+  return (
+    <div
+      aria-labelledby="resume-modal-title"
+      aria-modal="true"
+      className="resume-modal-backdrop"
+      onClick={onClose}
+      role="dialog"
+    >
+      <div
+        className="resume-modal-container"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="resume-modal-header">
+          <div>
+            <span className="resume-modal-kicker">CURRICULUM VITAE</span>
+            <h3 id="resume-modal-title">Karre John Hyde · Resume</h3>
+          </div>
+
+          <div className="resume-modal-controls">
+            <div className="resume-tab-switch">
+              <button
+                className={`resume-tab-btn ${tab === "doc" ? "active" : ""}`}
+                onClick={() => setTab("doc")}
+                type="button"
+              >
+                Executive View
+              </button>
+              <button
+                className={`resume-tab-btn ${tab === "pdf" ? "active" : ""}`}
+                onClick={() => setTab("pdf")}
+                type="button"
+              >
+                Original PDF
+              </button>
+            </div>
+
+            <a
+              className="resume-download-btn"
+              download="Karre_John_Hyde_Resume.pdf"
+              href={resume}
+              title="Download official PDF resume"
+            >
+              <Icon name="download" size={15} />
+              <span>Download PDF</span>
+            </a>
+
+            <button
+              aria-label="Close resume preview"
+              className="resume-close-btn"
+              onClick={onClose}
+              type="button"
+            >
+              ✕
+            </button>
+          </div>
+        </div>
+
+        <div className="resume-modal-body">
+          {tab === "pdf" ? (
+            <div className="resume-pdf-frame">
+              <iframe
+                src={`${resume}#toolbar=0`}
+                title="Karre John Hyde Resume PDF"
+              />
+            </div>
+          ) : (
+            <article className="resume-document">
+              {/* Document Header */}
+              <header className="resume-doc-header">
+                <h1>KARRE JOHN HYDE</h1>
+                <p className="resume-contact-line">
+                  <span>Chennai, Tamil Nadu, India</span>
+                  <span className="dot-sep">•</span>
+                  <a href="tel:+919100243535">+91 9100243535</a>
+                  <span className="dot-sep">•</span>
+                  <a href="mailto:johnnykarre@gmail.com">johnnykarre@gmail.com</a>
+                </p>
+                <div className="resume-links-line">
+                  <a href={links.linkedin} rel="noreferrer" target="_blank">
+                    LinkedIn
+                  </a>
+                  <span className="dot-sep">•</span>
+                  <a href={links.github} rel="noreferrer" target="_blank">
+                    GitHub
+                  </a>
+                  <span className="dot-sep">•</span>
+                  <a href={links.whatsapp} rel="noreferrer" target="_blank">
+                    WhatsApp (+91 9100243535)
+                  </a>
+                </div>
+              </header>
+
+              {/* Summary */}
+              <section className="resume-doc-section">
+                <h2>SUMMARY</h2>
+                <p>
+                  Final-year CSE student specializing in AI &amp; ML, with hands-on experience building and deploying full-stack AI projects in Python. Comfortable across the stack, from OOP and databases to RAG systems and cloud deployment. Adaptable and eager to bring strong problem-solving skills to a team.
+                </p>
+              </section>
+
+              {/* Education */}
+              <section className="resume-doc-section">
+                <h2>EDUCATION</h2>
+                <div className="resume-entry">
+                  <div className="entry-header">
+                    <strong>B.E., Computer Science and Engineering (AI &amp; ML) — Full-time</strong>
+                    <span>2023 – 2027 (Present, Sem 6)</span>
+                  </div>
+                  <div className="entry-sub">
+                    <span>Sathyabama Institute of Science and Technology, Chennai, Tamil Nadu</span>
+                    <strong>CGPA: 8.45</strong>
+                  </div>
+                </div>
+
+                <div className="resume-entry">
+                  <div className="entry-header">
+                    <strong>Intermediate (12th) — Full-time</strong>
+                    <span>2021 – 2023</span>
+                  </div>
+                  <div className="entry-sub">
+                    <span>Sri Vishwa Junior College, Visakhapatnam, AP (Board of Intermediate Education, AP)</span>
+                    <strong>Score: 88%</strong>
+                  </div>
+                </div>
+
+                <div className="resume-entry">
+                  <div className="entry-header">
+                    <strong>10th Standard — Full-time</strong>
+                    <span>2020 – 2021</span>
+                  </div>
+                  <div className="entry-sub">
+                    <span>Dr. KKR&apos;s Gowtham Concept School, Gudivada, AP (Board of Secondary Education, AP)</span>
+                    <strong>Score: 99.83%</strong>
+                  </div>
+                </div>
+              </section>
+
+              {/* Technical Skills */}
+              <section className="resume-doc-section">
+                <h2>TECHNICAL SKILLS</h2>
+                <ul className="resume-skills-list">
+                  <li><strong>Languages:</strong> Python, Java, SQL, HTML &amp; CSS</li>
+                  <li><strong>Frameworks:</strong> Streamlit, Gradio, Next.js, React</li>
+                  <li><strong>AI / ML:</strong> LLMs, RAG, NLP, Deep Learning</li>
+                  <li><strong>Tools &amp; Platforms:</strong> Git/GitHub, Jupyter, MATLAB, Vercel, Hugging Face, AWS</li>
+                  <li><strong>Strong Subjects:</strong> DSA, OOP, DBMS, Machine Learning</li>
+                </ul>
+              </section>
+
+              {/* Projects */}
+              <section className="resume-doc-section">
+                <h2>PROJECTS</h2>
+                <div className="resume-project-item">
+                  <div className="entry-header">
+                    <strong>Study2AI — RAG Chatbot for Education</strong>
+                    <span>Python, LangChain, FAISS, Gradio</span>
+                  </div>
+                  <ul className="resume-bullet-list">
+                    <li>Built a full-stack RAG system with a FAISS vector database to answer complex educational queries with grounded, context-aware responses.</li>
+                    <li>Used asynchronous Python pipelines to keep document retrieval and answer generation fast.</li>
+                  </ul>
+                  <div className="resume-entry-links">
+                    <a href="https://github.com/KarreJohnHyde/STUDY2AI" rel="noreferrer" target="_blank">Code: GitHub</a>
+                    <span>|</span>
+                    <a href="https://huggingface.co/spaces/Johnny2005/Final_Project" rel="noreferrer" target="_blank">Live Demo: Hugging Face Space</a>
+                  </div>
+                </div>
+
+                <div className="resume-project-item">
+                  <div className="entry-header">
+                    <strong>Expense AI — Smart Expense Tracker</strong>
+                    <span>Full-Stack, AWS, Vercel</span>
+                  </div>
+                  <ul className="resume-bullet-list">
+                    <li>Built a serverless expense platform on AWS (API Gateway, Lambda, DynamoDB) with full CRUD, OCR receipt scanning, and QR-based payments.</li>
+                    <li>Added interactive spending visualizations with Chart.js/Recharts.</li>
+                  </ul>
+                  <div className="resume-entry-links">
+                    <a href="https://github.com/KarreJohnHyde/Expense_Tracker" rel="noreferrer" target="_blank">Code: GitHub</a>
+                    <span>|</span>
+                    <a href="https://expense-tracker-rho-olive-10.vercel.app" rel="noreferrer" target="_blank">Live: Vercel</a>
+                  </div>
+                </div>
+
+                <div className="resume-project-item">
+                  <div className="entry-header">
+                    <strong>Cognitive Learning</strong>
+                    <span>Streamlit, scikit-learn, Hackathon Project</span>
+                  </div>
+                  <ul className="resume-bullet-list">
+                    <li>Built a 4-tier pipeline that extracts 8+ behavioral metrics and classifies students into 5 cognitive profiles using rule-based ML (K-Means, PCA).</li>
+                    <li>Generated adaptive recommendations and score predictions on a live dashboard during a 24-hour hackathon (Innoverse&apos;26).</li>
+                  </ul>
+                  <div className="resume-entry-links">
+                    <a href="https://github.com/KarreJohnHyde/cognitive_learning" rel="noreferrer" target="_blank">Code: GitHub</a>
+                    <span>|</span>
+                    <a href="https://cognitivelearning-5zqpetkfjexgbjx5kdappgk.streamlit.app/" rel="noreferrer" target="_blank">Live Demo: Streamlit App</a>
+                  </div>
+                </div>
+              </section>
+
+              {/* Certifications & Training */}
+              <section className="resume-doc-section">
+                <h2>CERTIFICATIONS &amp; TRAINING</h2>
+                <div className="resume-cert-category">
+                  <p><strong>AI/ML:</strong> Introduction to Machine Learning – NPTEL, IIT Kharagpur (2025); Generative AI &amp; Agentic Architectures – HERE AND NOW AI, with Sathyabama IST (2025)</p>
+                  <p><strong>Cloud &amp; DevOps:</strong> Cloud Computing and Distributed Systems (Elite) – NPTEL, IIT Kanpur (2026); DevOps Training – Zero2Infynite Security &amp; Research (2026)</p>
+                  <p><strong>Programming &amp; Data Science:</strong> Programming in Java – NPTEL, IIT Kharagpur (2024); Database Management System – NPTEL, IIT Kharagpur (2025); Python for Data Science – IBM/CognitiveClass.ai (2024); Programming for Everybody – University of Michigan, Coursera (2026); Linear Algebra &amp; Matrix Computations with MATLAB – MathWorks (2024, Certificate 1 &amp; 2)</p>
+                </div>
+              </section>
+
+              {/* Additional Information */}
+              <section className="resume-doc-section">
+                <h2>ADDITIONAL INFORMATION</h2>
+                <ul className="resume-skills-list">
+                  <li><strong>Languages:</strong> English, Telugu, Hindi</li>
+                  <li><strong>Soft Skills:</strong> Problem-Solving, Team Collaboration, Communication, Time Management</li>
+                  <li><strong>Internship:</strong> None yet — actively seeking AI/ML or full-stack internship opportunities.</li>
+                </ul>
+              </section>
+            </article>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+/* ═══════════════════════════════════════════════════════
    MAIN APP
    ═══════════════════════════════════════════════════════ */
 export default function App() {
@@ -967,6 +1259,7 @@ export default function App() {
   const [active, setActive] = useState("home")
   const [activeCategory, setActiveCategory] = useState<ProjectCategory>("all")
   const [copiedEmail, setCopiedEmail] = useState(false)
+  const [resumeModalOpen, setResumeModalOpen] = useState(false)
   const [contactStatus, setContactStatus] = useState<
     "idle" | "sending" | "sent"
   >("idle")
@@ -1232,15 +1525,15 @@ export default function App() {
                   <Icon name="arrow" />
                 </span>
               </Action>
-              <Link
-                className="text-action"
-                download="Karre_John_Hyde_Resume.pdf"
-                href={resume}
-                label="Download John Hyde's Resume PDF"
+              <button
+                aria-label="View and download Karre John Hyde's official resume"
+                className="text-action resume-trigger-btn"
+                onClick={() => setResumeModalOpen(true)}
+                type="button"
               >
                 <Icon name="download" size={18} />
-                Download résumé
-              </Link>
+                View &amp; download résumé
+              </button>
             </div>
           </div>
 
@@ -1408,21 +1701,50 @@ export default function App() {
 
           <div className="education-strip">
             <div>
-              <span>EDUCATION · 2025 — 2027</span>
-              <strong>B.E. Computer Science · AI &amp; ML</strong>
-              <small>Sathyabama Institute of Science and Technology</small>
+              <span>EDUCATION · 2023 — 2027 (SEM 6)</span>
+              <strong>B.E. Computer Science &amp; Engineering (AI &amp; ML)</strong>
+              <small>Sathyabama Institute of Science and Technology, Chennai</small>
             </div>
             <div className="metric">
               <strong>8.45</strong>
               <span>CURRENT CGPA</span>
             </div>
             <div className="metric">
-              <strong>10+</strong>
-              <span>DEPLOYED APPS</span>
+              <strong>88%</strong>
+              <span>12TH INTERMEDIATE</span>
             </div>
             <div className="metric">
-              <strong>09</strong>
-              <span>VERIFIED CERTS</span>
+              <strong>99.83%</strong>
+              <span>10TH SECONDARY</span>
+            </div>
+          </div>
+
+          <div className="academic-grid">
+            {educationHistory.map((edu) => (
+              <div className="academic-card" key={edu.degree}>
+                <div className="academic-meta">
+                  <span>{edu.type}</span>
+                  <span>{edu.period}</span>
+                </div>
+                <h4>{edu.degree}</h4>
+                <p className="academic-institution">{edu.institution}</p>
+                <div className="academic-badge">{edu.score}</div>
+              </div>
+            ))}
+          </div>
+
+          <div className="resume-highlights-strip">
+            <div className="highlight-pill">
+              <span className="pill-label">LANGUAGES</span>
+              <span className="pill-val">English · Telugu · Hindi</span>
+            </div>
+            <div className="highlight-pill">
+              <span className="pill-label">SOFT SKILLS</span>
+              <span className="pill-val">Problem-Solving · Team Collaboration · Communication · Time Management</span>
+            </div>
+            <div className="highlight-pill highlight-active">
+              <span className="pill-label">STATUS</span>
+              <span className="pill-val">Actively seeking AI/ML &amp; Full-Stack Internships · 2026</span>
             </div>
           </div>
 
@@ -1482,13 +1804,23 @@ export default function App() {
               <br />
               <em className="wave-word">credentialed.</em>
             </div>
-            <Link
-              className="inline-link"
-              download="Karre_John_Hyde_Resume.pdf"
-              href={resume}
-            >
-              Download full résumé <Icon name="download" size={18} />
-            </Link>
+            <div className="credentials-resume-actions">
+              <button
+                aria-label="Preview official resume"
+                className="inline-link resume-trigger-btn"
+                onClick={() => setResumeModalOpen(true)}
+                type="button"
+              >
+                Preview full résumé <Icon name="external" size={16} />
+              </button>
+              <Link
+                className="inline-link"
+                download="Karre_John_Hyde_Resume.pdf"
+                href={resume}
+              >
+                Download PDF <Icon name="download" size={18} />
+              </Link>
+            </div>
           </div>
           <div className="cert-grid">
             {certifications.map((cert, i) => (
@@ -1804,6 +2136,10 @@ export default function App() {
           </div>
         </section>
       </main>
+      <ResumeModal
+        isOpen={resumeModalOpen}
+        onClose={() => setResumeModalOpen(false)}
+      />
     </div>
   )
 }
