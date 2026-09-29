@@ -20,6 +20,8 @@ const ThreeDStorySection = React.lazy(
 )
 import CustomCursor from "./components/CustomCursor"
 import ProjectDetailPage from "./components/ProjectDetailPage"
+import JohnnyTalksModal from "./components/JohnnyTalksModal"
+import plushieAvatar from "./assets/johnny-plushie.jpg"
 
 type IconName =
   | "arrow"
@@ -1313,6 +1315,8 @@ export default function App() {
   const [selectedProjectTitle, setSelectedProjectTitle] = useState<string | null>(null)
   const [copiedEmail, setCopiedEmail] = useState(false)
   const [resumeModalOpen, setResumeModalOpen] = useState(false)
+  const [johnnyModalOpen, setJohnnyModalOpen] = useState(false)
+  const [initialJohnnyQuery, setInitialJohnnyQuery] = useState<string | undefined>(undefined)
   const [contactStatus, setContactStatus] = useState<
     "idle" | "sending" | "sent"
   >("idle")
@@ -1642,13 +1646,29 @@ export default function App() {
             </Action>
           ))}
         </nav>
-        <Action
-          className={`contact-pill ${active === "contact" ? "active" : ""}`}
-          onClick={() => navigate("contact")}
-        >
-          <span>Let&apos;s talk</span>
-          <span className="live-dot" />
-        </Action>
+        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+          <button
+            className="johnny-nav-pill"
+            onClick={() => {
+              setInitialJohnnyQuery(undefined)
+              setJohnnyModalOpen(true)
+            }}
+            type="button"
+            title="Open Johnny-Talks Personal Digital Twin & Advisory Engine"
+          >
+            <img src={plushieAvatar} alt="Johnny Plushie" className="johnny-nav-avatar" />
+            <span className="johnny-nav-text">Johnny-Talks AI</span>
+            <span className="johnny-nav-pulse" aria-hidden="true" />
+          </button>
+
+          <Action
+            className={`contact-pill ${active === "contact" ? "active" : ""}`}
+            onClick={() => navigate("contact")}
+          >
+            <span>Let&apos;s talk</span>
+            <span className="live-dot" />
+          </Action>
+        </div>
       </header>
 
       <main>
@@ -1689,6 +1709,36 @@ export default function App() {
                   <Icon name="arrow" />
                 </span>
               </Action>
+              <button
+                aria-label="Consult Johnny-Talks Digital Twin & Advisory Engine"
+                className="text-action resume-trigger-btn"
+                onClick={() => {
+                  setInitialJohnnyQuery("What is your core technical architecture for RAG and distributed systems?")
+                  setJohnnyModalOpen(true)
+                }}
+                type="button"
+                style={{
+                  borderColor: "rgba(163, 230, 53, 0.4)",
+                  background: "rgba(163, 230, 53, 0.08)",
+                  color: "#ffffff",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "8px",
+                }}
+              >
+                <img
+                  alt="Johnny Plushie"
+                  src={plushieAvatar}
+                  style={{
+                    width: "22px",
+                    height: "22px",
+                    borderRadius: "50%",
+                    objectFit: "cover",
+                    border: "1.5px solid #a3e635",
+                  }}
+                />
+                <span>Consult Johnny-Talks AI</span>
+              </button>
               <button
                 aria-label="View and download Karre John Hyde's official resume"
                 className="text-action resume-trigger-btn"
@@ -2329,6 +2379,36 @@ export default function App() {
           onClose={() => setSelectedProjectTitle(null)}
         />
       )}
+
+      {/* Persistent Floating Johnny-Talks Launcher */}
+      <button
+        aria-label="Open Johnny-Talks Personal Digital Twin"
+        className="johnny-floating-launcher"
+        onClick={() => {
+          setInitialJohnnyQuery(undefined)
+          setJohnnyModalOpen(true)
+        }}
+        type="button"
+      >
+        <div className="floating-avatar-box">
+          <img
+            alt="Johnny Plushie Avatar"
+            className="floating-plushie-img"
+            src={plushieAvatar}
+          />
+          <span className="floating-pulse-ring" />
+        </div>
+        <div className="floating-launcher-copy">
+          <span className="floating-title">Johnny-Talks AI</span>
+          <span className="floating-subtitle">Ask Digital Twin ↗</span>
+        </div>
+      </button>
+
+      <JohnnyTalksModal
+        isOpen={johnnyModalOpen}
+        onClose={() => setJohnnyModalOpen(false)}
+        initialQuestion={initialJohnnyQuery}
+      />
     </div>
     </SmoothScrollProvider>
   )

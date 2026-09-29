@@ -1,0 +1,27 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - APP_NAME=Johnny-Talks
+      - APP_ENV=production
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - DATABASE_URL=sqlite:///./data/johnny.db
+      - CHROMA_DIR=./data/chroma
+      - ALLOWED_ORIGINS=http://localhost:5173,http://localhost:8443,https://my-portfolio-beige-eta-a97xqb58zd.vercel.app
+    volumes:
+      - ./backend/data:/app/data
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://localhost:8000
+    depends_on:
+      - backend
