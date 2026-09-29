@@ -774,7 +774,7 @@ export default function App() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    subject: "AI / ML Project Discussion",
+    subject: "",
     message: "",
   })
 
@@ -827,26 +827,85 @@ export default function App() {
     }, 260)
   }
 
-  const handleCopyEmail = () => {
-    navigator.clipboard.writeText("johnnykarre@gmail.com")
-    setCopiedEmail(true)
-    window.setTimeout(() => setCopiedEmail(false), 2400)
+  const handleCopyEmail = (e?: ReactMouseEvent) => {
+    if (e) e.stopPropagation()
+    const emailToCopy = "johnnykarre@gmail.com"
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard
+        .writeText(emailToCopy)
+        .then(() => {
+          setCopiedEmail(true)
+          window.setTimeout(() => setCopiedEmail(false), 2600)
+        })
+        .catch(() => fallbackCopy(emailToCopy))
+    } else {
+      fallbackCopy(emailToCopy)
+    }
+
+    function fallbackCopy(text: string) {
+      const textArea = document.createElement("textarea")
+      textArea.value = text
+      textArea.style.position = "fixed"
+      textArea.style.opacity = "0"
+      document.body.appendChild(textArea)
+      textArea.select()
+      try {
+        document.execCommand("copy")
+        setCopiedEmail(true)
+        window.setTimeout(() => setCopiedEmail(false), 2600)
+      } catch (err) {
+        console.error("Clipboard copy failed", err)
+      }
+      document.body.removeChild(textArea)
+    }
   }
 
-  const handleContactSubmit = (e: FormEvent) => {
+  const handleContactSubmit = async (e: FormEvent) => {
     e.preventDefault()
     setContactStatus("sending")
-    window.setTimeout(() => {
-      setContactStatus("sent")
-      setFormData({
-        name: "",
-        email: "",
-        subject: "AI / ML Project Discussion",
-        message: "",
+
+    const mailtoUrl = `mailto:johnnykarre@gmail.com?subject=${encodeURIComponent(
+      formData.subject || "Portfolio Contact Inquiry",
+    )}&body=${encodeURIComponent(
+      `From: ${formData.name} (${formData.email})\n\nMessage:\n${formData.message}`,
+    )}`
+
+    try {
+      const res = await fetch("https://formsubmit.co/ajax/johnnykarre@gmail.com", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          _subject: `[Portfolio Message] ${formData.subject || "New Inquiry"} - from ${formData.name}`,
+          message: formData.message,
+        }),
       })
-      window.setTimeout(() => setContactStatus("idle"), 5000)
-    }, 900)
+
+      if (res.ok) {
+        setContactStatus("sent")
+        setFormData({
+          name: "",
+          email: "",
+          subject: "AI / ML Project Discussion",
+          message: "",
+        })
+        window.setTimeout(() => setContactStatus("idle"), 6000)
+      } else {
+        window.open(mailtoUrl, "_blank")
+        setContactStatus("sent")
+        window.setTimeout(() => setContactStatus("idle"), 6000)
+      }
+    } catch {
+      window.open(mailtoUrl, "_blank")
+      setContactStatus("sent")
+      window.setTimeout(() => setContactStatus("idle"), 6000)
+    }
   }
+
 
   const filteredProjects =
     activeCategory === "all"
@@ -1217,7 +1276,21 @@ export default function App() {
           <div className="contact-container">
             {/* Contact info channels */}
             <div className="contact-info-panel">
-              <div className="contact-info-card">
+              <div
+                aria-label="Send direct email to johnnykarre@gmail.com"
+                className="contact-info-card contact-email-card"
+                onClick={() => {
+                  window.location.href = links.email
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    window.location.href = links.email
+                  }
+                }}
+                role="button"
+                tabIndex={0}
+                title="Click to write email directly, or click Copy to copy address"
+              >
                 <div className="contact-icon-box">
                   <Icon name="mail" size={20} />
                 </div>
@@ -1226,8 +1299,13 @@ export default function App() {
                   <strong>johnnykarre@gmail.com</strong>
                 </div>
                 <button
-                  className="copy-btn"
-                  onClick={handleCopyEmail}
+                  aria-label="Copy email address to clipboard"
+                  className={`copy-btn ${copiedEmail ? "copied" : ""}`}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    handleCopyEmail(e)
+                  }}
+                  title="Copy email to clipboard"
                   type="button"
                 >
                   <Icon name={copiedEmail ? "check" : "copy"} size={13} />
@@ -1236,10 +1314,12 @@ export default function App() {
               </div>
 
               <a
+                aria-label="Karre John Hyde on LinkedIn"
                 className="contact-info-card"
                 href={links.linkedin}
                 rel="noreferrer"
                 target="_blank"
+                title="Open LinkedIn profile"
               >
                 <div className="contact-icon-box">
                   <Icon name="linkedin" size={20} />
@@ -1252,10 +1332,12 @@ export default function App() {
               </a>
 
               <a
+                aria-label="Karre John Hyde on GitHub"
                 className="contact-info-card"
                 href={links.github}
                 rel="noreferrer"
                 target="_blank"
+                title="Open GitHub profile"
               >
                 <div className="contact-icon-box">
                   <Icon name="github" size={20} />
@@ -1268,10 +1350,12 @@ export default function App() {
               </a>
 
               <a
+                aria-label="Karre John Hyde on Vercel"
                 className="contact-info-card"
                 href={links.vercel}
                 rel="noreferrer"
                 target="_blank"
+                title="Open Vercel dashboard"
               >
                 <div className="contact-icon-box">
                   <Icon name="cloud" size={20} />
@@ -1283,7 +1367,14 @@ export default function App() {
                 <Icon name="external" size={14} />
               </a>
 
-              <div className="contact-info-card">
+              <a
+                aria-label="Chennai, India on Google Maps"
+                className="contact-info-card"
+                href="https://www.google.com/maps/place/Chennai,+Tamil+Nadu/"
+                rel="noreferrer"
+                target="_blank"
+                title="View Chennai on Google Maps"
+              >
                 <div className="contact-icon-box">
                   <Icon name="mapPin" size={20} />
                 </div>
@@ -1291,7 +1382,8 @@ export default function App() {
                   <span>LOCATION &amp; TIMEZONE</span>
                   <strong>Chennai, India · IST (UTC+5:30)</strong>
                 </div>
-              </div>
+                <Icon name="external" size={14} />
+              </a>
             </div>
 
             {/* Interactive message form */}
@@ -1301,6 +1393,7 @@ export default function App() {
                 <input
                   className="form-input"
                   id="contact-name"
+                  name="name"
                   onChange={(e) =>
                     setFormData({ ...formData, name: e.target.value })
                   }
@@ -1316,6 +1409,7 @@ export default function App() {
                 <input
                   className="form-input"
                   id="contact-email"
+                  name="email"
                   onChange={(e) =>
                     setFormData({ ...formData, email: e.target.value })
                   }
@@ -1331,6 +1425,7 @@ export default function App() {
                 <input
                   className="form-input"
                   id="contact-subject"
+                  name="subject"
                   onChange={(e) =>
                     setFormData({ ...formData, subject: e.target.value })
                   }
@@ -1345,6 +1440,7 @@ export default function App() {
                 <textarea
                   className="form-textarea"
                   id="contact-message"
+                  name="message"
                   onChange={(e) =>
                     setFormData({ ...formData, message: e.target.value })
                   }
@@ -1385,7 +1481,15 @@ export default function App() {
           <div className="contact-footer">
             <div>
               <span>BASED IN</span>
-              Chennai, India · IST
+              <a
+                href="https://www.google.com/maps/place/Chennai,+Tamil+Nadu/"
+                rel="noreferrer"
+                style={{ color: "inherit", textDecoration: "none" }}
+                target="_blank"
+                title="View Chennai on Google Maps"
+              >
+                Chennai, India · IST ↗
+              </a>
             </div>
             <div className="socials">
               <Link href={links.github} label="GitHub">

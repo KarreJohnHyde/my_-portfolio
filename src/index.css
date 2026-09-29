@@ -1297,12 +1297,14 @@ em {
   backdrop-filter: blur(12px);
   text-decoration: none;
   color: inherit;
-  transition: transform 0.25s, background 0.25s;
+  cursor: pointer;
+  transition: transform 0.25s, background 0.25s, box-shadow 0.25s;
 }
 
 .contact-info-card:hover {
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.9);
   transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(9, 10, 10, 0.08);
 }
 
 .contact-icon-box {
@@ -1420,19 +1422,48 @@ em {
 }
 
 
+.copy-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  border: 1px solid rgba(9, 10, 10, 0.18);
+  border-radius: 8px;
+  background: rgba(9, 10, 10, 0.06);
+  color: var(--night);
+  font: 600 10px/1 var(--font-mono);
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.copy-btn:hover {
+  background: var(--night);
+  color: var(--acid);
+  border-color: var(--night);
+  transform: translateY(-1px);
+}
+
+.copy-btn.copied {
+  background: #14532d;
+  color: #86efac;
+  border-color: #166534;
+}
+
 .contact-footer {
-  position: absolute !important;
-  right: max(40px, calc((100vw - 1320px) / 2));
-  bottom: 26px;
-  left: max(40px, calc((100vw - 1320px) / 2));
+  position: relative !important;
+  width: 100%;
+  max-width: 1100px;
+  margin-top: 48px;
   display: grid;
   grid-template-columns: 1fr auto 1fr;
-  align-items: end;
+  align-items: center;
   border-top: 1px solid rgba(9, 10, 10, 0.16);
-  padding-top: 20px;
+  padding-top: 24px;
   text-align: left;
   font-size: 10px;
 }
+
 
 .contact-footer > div:first-child {
   display: grid;
@@ -1794,15 +1825,27 @@ em {
   }
 
   .contact-footer {
-    right: 17px;
-    bottom: 18px;
-    left: 17px;
-    grid-template-columns: 1fr auto;
+    width: 100%;
+    margin-top: 36px;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    text-align: center;
+  }
+
+  .contact-footer > div:first-child {
+    justify-items: center;
+  }
+
+  .contact-footer .socials {
+    justify-content: center;
   }
 
   .contact-footer > span {
-    display: none;
+    display: block;
+    justify-self: center;
+    opacity: 0.6;
   }
+
 }
 
 @media (prefers-reduced-motion: reduce) {
