@@ -1,4 +1,5 @@
 import React, {
+  useCallback,
   useEffect,
   useRef,
   useState,
@@ -319,6 +320,50 @@ const skills = [
   },
 ]
 
+/* ═══════════════════════════════════════════════════════
+   SLACK-STYLE CARDS DATA
+   ═══════════════════════════════════════════════════════ */
+const slackCards = [
+  {
+    channel: "#ai-engineering",
+    user: "John Hyde",
+    avatar: "JH",
+    time: "today at 2:14 PM",
+    message: "Just shipped a new RAG pipeline with 94% retrieval accuracy using LangChain + FAISS. The vector embeddings are giving us incredible context-aware responses 🧠",
+    reactions: [
+      { emoji: "🔥", count: 12 },
+      { emoji: "🧠", count: 8 },
+      { emoji: "🚀", count: 5 },
+    ],
+    thread: 4,
+  },
+  {
+    channel: "#deployments",
+    user: "John Hyde",
+    avatar: "JH",
+    time: "yesterday at 11:30 AM",
+    message: "Pushed Expense AI to production on Vercel. DynamoDB integration is clean, OCR pipeline handles receipts in < 200ms. Zero downtime deployment ✅",
+    reactions: [
+      { emoji: "✅", count: 9 },
+      { emoji: "⚡", count: 6 },
+    ],
+    thread: 7,
+  },
+  {
+    channel: "#hackathons",
+    user: "John Hyde",
+    avatar: "JH",
+    time: "2 days ago",
+    message: "Won the Cognitive Learning track at Innoverse'26! Built an adaptive ML dashboard with K-Means clustering in 24 hours. The PCA visualization really sealed the demo 🏆",
+    reactions: [
+      { emoji: "🏆", count: 24 },
+      { emoji: "🎉", count: 18 },
+      { emoji: "💪", count: 11 },
+    ],
+    thread: 15,
+  },
+]
+
 function Icon({ name, size = 20 }: { name: IconName; size?: number }) {
   const paths: Record<IconName, ReactNode> = {
     arrow: (
@@ -500,8 +545,51 @@ function Action({
   )
 }
 
-const particleSymbols = ["(", ")", "*", "-", "/", "+", "&", "="]
-const particleColors = ["#cbff47", "#5ee7f0", "#a98cff", "#ff8fb3", "#ffcf70"]
+/* ═══════════════════════════════════════════════════════
+   MULTILINGUAL CODING CURSOR TRAIL
+   Coding icons + alphabets from 12+ world languages
+   ═══════════════════════════════════════════════════════ */
+
+// Coding symbols and operators
+const codeSymbols = [
+  "</>", "{ }", "=>", "&&", "||", "!=", "==", "++", "--",
+  "/**", "*/", "//", "[]", "()", "::", "->", "<<", ">>",
+  "fn", "λ", "∑", "∫", "π", "Δ",
+  "#!", "#!/", "@", "$", "%", "^",
+]
+
+// Alphabets from multiple languages
+const multilingualChars = [
+  // Hindi / Devanagari
+  "अ", "आ", "इ", "क", "ख", "ग", "म", "न", "प", "र",
+  // Tamil
+  "அ", "ஆ", "இ", "உ", "எ", "ஒ", "க", "ச", "ட", "ப",
+  // Telugu
+  "అ", "ఆ", "ఇ", "ఈ", "క", "గ", "చ", "జ", "ట", "డ",
+  // Japanese (Katakana + Hiragana)
+  "ア", "カ", "サ", "タ", "ナ", "ハ", "マ", "ヤ", "ラ", "ワ",
+  "あ", "い", "う", "え", "お",
+  // Korean (Hangul)
+  "가", "나", "다", "라", "마", "바", "사", "아", "자", "하",
+  // Chinese (Mandarin)
+  "人", "大", "中", "天", "地", "水", "火", "木", "金", "土",
+  // Arabic
+  "ا", "ب", "ت", "ث", "ج", "ح", "خ", "د", "ذ", "ر",
+  // Russian (Cyrillic)
+  "А", "Б", "В", "Г", "Д", "Е", "Ж", "З", "К", "Л",
+  // Greek
+  "α", "β", "γ", "δ", "ε", "ζ", "η", "θ", "κ", "μ",
+  // Thai
+  "ก", "ข", "ค", "ง", "จ", "ฉ", "ช", "ซ", "ด", "ต",
+  // Hebrew
+  "א", "ב", "ג", "ד", "ה", "ו", "ז", "ח", "ט", "י",
+  // Georgian
+  "ა", "ბ", "გ", "დ", "ე", "ვ", "ზ", "თ", "ი", "კ",
+]
+
+// Combined pool: ~40% code symbols, ~60% multilingual characters
+const allTrailSymbols = [...codeSymbols, ...multilingualChars]
+const particleColors = ["#cbff47", "#5ee7f0", "#a98cff", "#ff8fb3", "#ffcf70", "#7dd3fc", "#fbbf24"]
 
 type TrailParticle = {
   x: number
@@ -515,6 +603,7 @@ type TrailParticle = {
   maxLife: number
   color: string
   symbol: string
+  isCode: boolean
 }
 
 function ParticleTrail() {
@@ -551,31 +640,32 @@ function ParticleTrail() {
 
     const spawn = (x: number, y: number, intensity = 1) => {
       if (!canAnimate) return
-
       const distance = Math.hypot(x - pointer.lastX, y - pointer.lastY)
       if (distance < 7 && intensity < 2) return
 
-      const amount = Math.min(4, Math.max(1, Math.ceil(distance / 20)))
+      const amount = Math.min(5, Math.max(1, Math.ceil(distance / 16)))
       for (let index = 0; index < amount; index += 1) {
-        const size = 12 + Math.random() * 13
-        const maxLife = 680 + Math.random() * 500
+        const isCode = Math.random() < 0.4
+        const symbolPool = isCode ? codeSymbols : multilingualChars
+        const symbol = symbolPool[Math.floor(Math.random() * symbolPool.length)]
+        const size = isCode ? 11 + Math.random() * 10 : 14 + Math.random() * 16
+        const maxLife = 800 + Math.random() * 600
+
         particles.push({
-          x: x + (Math.random() - 0.5) * 8,
-          y: y + (Math.random() - 0.5) * 8,
-          vx: (Math.random() - 0.5) * 1.7 + (x - pointer.lastX) * 0.015,
-          vy: -0.9 - Math.random() * 1.9,
+          x: x + (Math.random() - 0.5) * 12,
+          y: y + (Math.random() - 0.5) * 12,
+          vx: (Math.random() - 0.5) * 2.0 + (x - pointer.lastX) * 0.018,
+          vy: -1.0 - Math.random() * 2.2,
           size,
-          rotation: (Math.random() - 0.5) * 0.8,
-          spin: (Math.random() - 0.5) * 0.006,
+          rotation: (Math.random() - 0.5) * 0.9,
+          spin: (Math.random() - 0.5) * 0.007,
           life: maxLife,
           maxLife,
-          color:
-            particleColors[Math.floor(Math.random() * particleColors.length)],
-          symbol:
-            particleSymbols[Math.floor(Math.random() * particleSymbols.length)],
+          color: particleColors[Math.floor(Math.random() * particleColors.length)],
+          symbol,
+          isCode,
         })
       }
-
       pointer.lastX = x
       pointer.lastY = y
     }
@@ -589,7 +679,14 @@ function ParticleTrail() {
     const handlePointerDown = (event: PointerEvent) => {
       pointer.lastX = event.clientX - 20
       pointer.lastY = event.clientY - 20
-      spawn(event.clientX, event.clientY, 2)
+      // Burst on click: spawn many particles
+      for (let i = 0; i < 8; i++) {
+        spawn(
+          event.clientX + (Math.random() - 0.5) * 40,
+          event.clientY + (Math.random() - 0.5) * 40,
+          3,
+        )
+      }
     }
 
     const draw = (time: number) => {
@@ -606,30 +703,44 @@ function ParticleTrail() {
         }
 
         const step = delta / 16.67
-        particle.vy += 0.105 * step
+        particle.vy += 0.09 * step
         particle.x += particle.vx * step
         particle.y += particle.vy * step
         particle.rotation += particle.spin * delta
 
         const progress = 1 - particle.life / particle.maxLife
-        const opacity = Math.sin(Math.min(progress, 1) * Math.PI) * 0.84
-        const half = particle.size / 2
+        const opacity = Math.sin(Math.min(progress, 1) * Math.PI) * 0.88
 
         context.save()
         context.translate(particle.x, particle.y)
         context.rotate(particle.rotation)
         context.globalAlpha = opacity
-        context.shadowColor = particle.color
-        context.shadowBlur = 14
-        context.fillStyle = particle.color
-        context.fillRect(-half, -half, particle.size, particle.size)
-        context.shadowBlur = 0
-        context.globalAlpha = opacity * 0.8
-        context.fillStyle = "#090a0a"
-        context.font = `600 ${Math.max(10, particle.size * 0.6)}px 'DM Mono', monospace`
-        context.textAlign = "center"
-        context.textBaseline = "middle"
-        context.fillText(particle.symbol, 0, 1)
+
+        if (particle.isCode) {
+          // Code symbols: glowing square background
+          const half = particle.size / 2
+          context.shadowColor = particle.color
+          context.shadowBlur = 16
+          context.fillStyle = particle.color
+          context.fillRect(-half, -half, particle.size, particle.size)
+          context.shadowBlur = 0
+          context.globalAlpha = opacity * 0.85
+          context.fillStyle = "#090a0a"
+          context.font = `700 ${Math.max(8, particle.size * 0.55)}px 'DM Mono', monospace`
+          context.textAlign = "center"
+          context.textBaseline = "middle"
+          context.fillText(particle.symbol, 0, 1)
+        } else {
+          // Multilingual chars: floating text with glow
+          context.shadowColor = particle.color
+          context.shadowBlur = 20
+          context.fillStyle = particle.color
+          context.font = `600 ${particle.size}px 'Noto Sans', 'Manrope', sans-serif`
+          context.textAlign = "center"
+          context.textBaseline = "middle"
+          context.fillText(particle.symbol, 0, 0)
+        }
+
         context.restore()
       }
 
@@ -638,12 +749,8 @@ function ParticleTrail() {
 
     resize()
     window.addEventListener("resize", resize)
-    window.addEventListener("pointermove", handlePointerMove, {
-      passive: true,
-    })
-    window.addEventListener("pointerdown", handlePointerDown, {
-      passive: true,
-    })
+    window.addEventListener("pointermove", handlePointerMove, { passive: true })
+    window.addEventListener("pointerdown", handlePointerDown, { passive: true })
     if (canAnimate) animationFrame = window.requestAnimationFrame(draw)
 
     return () => {
@@ -657,6 +764,32 @@ function ParticleTrail() {
   return (
     <canvas ref={canvasRef} className="particle-trail" aria-hidden="true" />
   )
+}
+
+/* ═══════════════════════════════════════════════════════
+   SECTION REVEAL ON SCROLL (IntersectionObserver)
+   ═══════════════════════════════════════════════════════ */
+function useScrollReveal() {
+  const ref = useRef<HTMLDivElement>(null)
+  const [isVisible, setIsVisible] = useState(false)
+
+  useEffect(() => {
+    const element = ref.current
+    if (!element) return
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true)
+          observer.unobserve(element)
+        }
+      },
+      { rootMargin: "-60px 0px", threshold: 0.08 },
+    )
+    observer.observe(element)
+    return () => observer.disconnect()
+  }, [])
+
+  return { ref, isVisible }
 }
 
 function SectionLabel({
@@ -675,9 +808,55 @@ function SectionLabel({
   )
 }
 
-function ProjectCard({ project }: { project: ProjectItem }) {
+/* ═══════════════════════════════════════════════════════
+   SLACK-STYLE MESSAGE CARD
+   ═══════════════════════════════════════════════════════ */
+function SlackCard({ card, delay }: { card: typeof slackCards[0]; delay: number }) {
+  const { ref, isVisible } = useScrollReveal()
+  return (
+    <div
+      className={`slack-card ${isVisible ? "is-revealed" : ""}`}
+      ref={ref}
+      style={{ transitionDelay: `${delay}ms` }}
+    >
+      <div className="slack-channel">
+        <span className="slack-hash">#</span>
+        {card.channel.slice(1)}
+      </div>
+      <div className="slack-body">
+        <div className="slack-avatar">{card.avatar}</div>
+        <div className="slack-content">
+          <div className="slack-meta">
+            <strong>{card.user}</strong>
+            <time>{card.time}</time>
+          </div>
+          <p>{card.message}</p>
+          <div className="slack-reactions">
+            {card.reactions.map((r) => (
+              <span className="slack-reaction" key={r.emoji}>
+                <span>{r.emoji}</span>
+                <span>{r.count}</span>
+              </span>
+            ))}
+            {card.thread > 0 && (
+              <span className="slack-thread">
+                💬 {card.thread} replies
+              </span>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+/* ═══════════════════════════════════════════════════════
+   PROJECT CARD (with tilt parallax)
+   ═══════════════════════════════════════════════════════ */
+function ProjectCard({ project, delay }: { project: ProjectItem; delay: number }) {
   const [x, setX] = useState(50)
   const [y, setY] = useState(50)
+  const { ref, isVisible } = useScrollReveal()
   const move = (event: ReactMouseEvent<HTMLDivElement>) => {
     const box = event.currentTarget.getBoundingClientRect()
     setX(((event.clientX - box.left) / box.width) * 100)
@@ -686,10 +865,15 @@ function ProjectCard({ project }: { project: ProjectItem }) {
 
   return (
     <div
-      className={`project-card ${project.tone}`}
+      className={`project-card ${project.tone} ${isVisible ? "is-revealed" : ""}`}
       onMouseMove={move}
+      ref={ref}
       style={
-        { "--card-x": `${x}%`, "--card-y": `${y}%` } as React.CSSProperties
+        {
+          "--card-x": `${x}%`,
+          "--card-y": `${y}%`,
+          transitionDelay: `${delay}ms`,
+        } as React.CSSProperties
       }
     >
       <div>
@@ -762,6 +946,9 @@ function ProjectCard({ project }: { project: ProjectItem }) {
   )
 }
 
+/* ═══════════════════════════════════════════════════════
+   MAIN APP
+   ═══════════════════════════════════════════════════════ */
 export default function App() {
   const [loaded, setLoaded] = useState(false)
   const [transitioning, setTransitioning] = useState(false)
@@ -778,7 +965,19 @@ export default function App() {
     message: "",
   })
 
+  // Typing effect for hero subtitle
+  const [typedText, setTypedText] = useState("")
+  const fullText = "Building intelligence into useful things."
+
   const appRef = useRef<HTMLDivElement>(null)
+
+  // Scroll reveal hooks for each major section
+  const heroReveal = useScrollReveal()
+  const workReveal = useScrollReveal()
+  const aboutReveal = useScrollReveal()
+  const journeyReveal = useScrollReveal()
+  const credsReveal = useScrollReveal()
+  const contactReveal = useScrollReveal()
 
   useEffect(() => {
     const timer = window.setTimeout(() => setLoaded(true), 250)
@@ -792,6 +991,18 @@ export default function App() {
       window.removeEventListener("pointermove", updatePointer)
     }
   }, [])
+
+  // Typing effect
+  useEffect(() => {
+    if (!loaded) return
+    let i = 0
+    const interval = window.setInterval(() => {
+      i += 1
+      setTypedText(fullText.slice(0, i))
+      if (i >= fullText.length) window.clearInterval(interval)
+    }, 45)
+    return () => window.clearInterval(interval)
+  }, [loaded])
 
   useEffect(() => {
     const sections = [
@@ -818,14 +1029,14 @@ export default function App() {
     return () => observer.disconnect()
   }, [])
 
-  const navigate = (id: string) => {
+  const navigate = useCallback((id: string) => {
     setTransitioning(true)
     window.setTimeout(() => {
       document.getElementById(id)?.scrollIntoView({ behavior: "smooth" })
       setActive(id)
       window.setTimeout(() => setTransitioning(false), 480)
     }, 260)
-  }
+  }, [])
 
   const handleCopyEmail = (e?: ReactMouseEvent) => {
     if (e) e.stopPropagation()
@@ -887,12 +1098,7 @@ export default function App() {
 
       if (res.ok) {
         setContactStatus("sent")
-        setFormData({
-          name: "",
-          email: "",
-          subject: "AI / ML Project Discussion",
-          message: "",
-        })
+        setFormData({ name: "", email: "", subject: "", message: "" })
         window.setTimeout(() => setContactStatus("idle"), 6000)
       } else {
         window.open(mailtoUrl, "_blank")
@@ -905,7 +1111,6 @@ export default function App() {
       window.setTimeout(() => setContactStatus("idle"), 6000)
     }
   }
-
 
   const filteredProjects =
     activeCategory === "all"
@@ -958,7 +1163,7 @@ export default function App() {
 
       <main>
         {/* HERO SECTION */}
-        <section className="hero section-frame" id="home">
+        <section className="hero section-frame" id="home" ref={heroReveal.ref}>
           <div className="hero-copy">
             <div className="eyebrow reveal-item">
               <span className="signal">
@@ -971,9 +1176,9 @@ export default function App() {
               role="heading"
               aria-level={1}
             >
-              <span>Building intelligence</span>
-              <span>
-                into <em className="wave-word">useful</em> things.
+              <span className="typing-line">
+                {typedText}
+                <span className="cursor-blink">|</span>
               </span>
             </div>
             <div className="hero-intro reveal-item">
@@ -1058,7 +1263,7 @@ export default function App() {
         </div>
 
         {/* WORK SECTION */}
-        <section className="work section-frame" id="work">
+        <section className={`work section-frame ${workReveal.isVisible ? "section-revealed" : ""}`} id="work" ref={workReveal.ref}>
           <SectionLabel index="02">SELECTED WORK</SectionLabel>
           <div className="section-heading">
             <div role="heading" aria-level={2}>
@@ -1107,14 +1312,14 @@ export default function App() {
 
           {/* PROJECT GRID */}
           <div className="project-grid">
-            {filteredProjects.map((project) => (
-              <ProjectCard key={project.title} project={project} />
+            {filteredProjects.map((project, i) => (
+              <ProjectCard key={project.title} project={project} delay={i * 80} />
             ))}
           </div>
         </section>
 
         {/* ABOUT ME SECTION */}
-        <section className="about section-frame" id="about">
+        <section className={`about section-frame ${aboutReveal.isVisible ? "section-revealed" : ""}`} id="about" ref={aboutReveal.ref}>
           <SectionLabel index="03">MY OPERATING SYSTEM</SectionLabel>
           <div className="about-grid">
             <div className="about-statement">
@@ -1187,10 +1392,28 @@ export default function App() {
               <span>VERIFIED CERTS</span>
             </div>
           </div>
+
+          {/* SLACK-STYLE CARDS */}
+          <div className="slack-section">
+            <div className="slack-heading">
+              <div className="slack-heading-icon">
+                <Icon name="terminal" size={20} />
+              </div>
+              <div>
+                <span className="slack-heading-label">LIVE FEED</span>
+                <strong>What I&apos;ve been shipping</strong>
+              </div>
+            </div>
+            <div className="slack-grid">
+              {slackCards.map((card, i) => (
+                <SlackCard card={card} delay={i * 120} key={card.channel} />
+              ))}
+            </div>
+          </div>
         </section>
 
         {/* EXPERIENCE TIMELINE SECTION */}
-        <section className="journey section-frame" id="journey">
+        <section className={`journey section-frame ${journeyReveal.isVisible ? "section-revealed" : ""}`} id="journey" ref={journeyReveal.ref}>
           <SectionLabel index="04">EXPERIENCE TIMELINE</SectionLabel>
           <div className="journey-heading">
             <div role="heading" aria-level={2}>
@@ -1204,8 +1427,8 @@ export default function App() {
             </p>
           </div>
           <div className="timeline">
-            {journey.map((item) => (
-              <article className="timeline-item" key={item.title}>
+            {journey.map((item, i) => (
+              <article className="timeline-item" key={item.title} style={{ animationDelay: `${i * 100}ms` }}>
                 <span className="timeline-year">{item.year}</span>
                 <div>
                   <h3>{item.title}</h3>
@@ -1218,7 +1441,7 @@ export default function App() {
         </section>
 
         {/* CERTIFICATIONS & CREDENTIALS SECTION */}
-        <section className="credentials section-frame" id="credentials">
+        <section className={`credentials section-frame ${credsReveal.isVisible ? "section-revealed" : ""}`} id="credentials" ref={credsReveal.ref}>
           <SectionLabel index="05">CERTIFICATIONS &amp; CREDENTIALS</SectionLabel>
           <div className="credentials-heading">
             <div role="heading" aria-level={2}>
@@ -1235,8 +1458,8 @@ export default function App() {
             </Link>
           </div>
           <div className="cert-grid">
-            {certifications.map((cert) => (
-              <article className="cert-card" key={cert.name}>
+            {certifications.map((cert, i) => (
+              <article className="cert-card" key={cert.name} style={{ animationDelay: `${i * 60}ms` }}>
                 <div>
                   <div className="cert-meta">
                     <span>{cert.label}</span>
@@ -1261,7 +1484,7 @@ export default function App() {
         </section>
 
         {/* CONTACT SECTION */}
-        <section className="contact section-frame" id="contact">
+        <section className={`contact section-frame ${contactReveal.isVisible ? "section-revealed" : ""}`} id="contact" ref={contactReveal.ref}>
           <div className="contact-noise" aria-hidden="true" />
           <div className="contact-kicker">
             <span className="live-dot" />

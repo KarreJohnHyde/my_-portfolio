@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Manrope:wght@400;500;600;700&family=Syne:wght@500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Manrope:wght@400;500;600;700&family=Syne:wght@500;600;700&family=Noto+Sans:wght@400;500;600;700&display=swap");
 @import "tailwindcss";
 
 :root {
@@ -1848,6 +1848,346 @@ em {
 
 }
 
+/* ═══════════════════════════════════════════════════════
+   TYPING CURSOR + FONT TRANSITIONS
+   ═══════════════════════════════════════════════════════ */
+.typing-line {
+  display: block;
+}
+
+.cursor-blink {
+  color: var(--acid);
+  animation: blink-cursor 0.72s step-end infinite;
+  font-weight: 300;
+  margin-left: 2px;
+}
+
+@keyframes blink-cursor {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* ═══════════════════════════════════════════════════════
+   SECTION SCROLL-REVEAL TRANSITIONS
+   ═══════════════════════════════════════════════════════ */
+.work,
+.about,
+.journey,
+.credentials,
+.contact {
+  opacity: 0;
+  transform: translateY(50px);
+  transition:
+    opacity 0.85s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.85s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.section-revealed {
+  opacity: 1;
+  transform: translateY(0) !important;
+}
+
+/* Project cards - staggered reveal */
+.project-card {
+  opacity: 0;
+  transform: translateY(40px) scale(0.97);
+  transition:
+    opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.3s;
+}
+
+.project-card.is-revealed {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.project-card.is-revealed:hover {
+  transform: translateY(-9px) scale(1);
+}
+
+/* Cert cards - stagger via animation-delay inline */
+.section-revealed .cert-card {
+  animation: slide-up-fade 0.55s ease both;
+}
+
+@keyframes slide-up-fade {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Timeline items in revealed section */
+.section-revealed .timeline-item {
+  animation: slide-in-left 0.5s ease both;
+}
+
+@keyframes slide-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
+   FONT WEIGHT TRANSITIONS ON HEADINGS
+   ═══════════════════════════════════════════════════════ */
+.section-heading > div:first-child,
+.about-statement > div:first-child,
+.journey-heading > div,
+.credentials-heading > div,
+.contact-title {
+  transition: font-variation-settings 0.5s ease, letter-spacing 0.5s ease;
+}
+
+.section-heading > div:first-child:hover,
+.journey-heading > div:hover,
+.credentials-heading > div:hover {
+  letter-spacing: -0.04em;
+}
+
+/* ═══════════════════════════════════════════════════════
+   ENHANCED PAGE TRANSITION
+   ═══════════════════════════════════════════════════════ */
+.page-transition {
+  backdrop-filter: blur(12px);
+}
+
+.page-transition.is-active {
+  animation: page-sweep 1.0s cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+.page-transition.is-active span {
+  animation: transition-type 1.0s ease;
+}
+
+/* ═══════════════════════════════════════════════════════
+   SLACK-STYLE MESSAGE CARDS
+   ═══════════════════════════════════════════════════════ */
+.slack-section {
+  margin-top: 90px;
+  padding-top: 60px;
+  border-top: 1px solid var(--line);
+}
+
+.slack-heading {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 32px;
+}
+
+.slack-heading-icon {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 11px;
+  background: rgba(203, 255, 71, 0.12);
+  color: var(--acid);
+}
+
+.slack-heading-label {
+  display: block;
+  color: var(--acid);
+  font: 400 8px/1 var(--font-mono);
+  letter-spacing: 0.12em;
+  margin-bottom: 4px;
+}
+
+.slack-heading strong {
+  font: 600 18px/1.2 var(--font-display);
+}
+
+.slack-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.slack-card {
+  position: relative;
+  padding: 22px 24px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--night-soft);
+  transition:
+    opacity 0.6s ease,
+    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.3s,
+    box-shadow 0.3s;
+  opacity: 0;
+  transform: translateX(-30px);
+}
+
+.slack-card.is-revealed {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.slack-card:hover {
+  border-color: rgba(203, 255, 71, 0.25);
+  box-shadow:
+    0 0 0 1px rgba(203, 255, 71, 0.06),
+    0 8px 32px rgba(0, 0, 0, 0.25);
+}
+
+.slack-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  border-radius: 16px 0 0 16px;
+  background: linear-gradient(180deg, var(--acid), var(--violet));
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.slack-card:hover::before {
+  opacity: 1;
+}
+
+.slack-channel {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 12px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: rgba(203, 255, 71, 0.08);
+  color: var(--acid);
+  font: 600 10px/1 var(--font-mono);
+  letter-spacing: 0.04em;
+}
+
+.slack-hash {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.slack-body {
+  display: flex;
+  gap: 14px;
+}
+
+.slack-avatar {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--acid), var(--violet));
+  color: var(--night);
+  font: 700 13px/1 var(--font-display);
+}
+
+.slack-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.slack-meta {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.slack-meta strong {
+  font: 600 13px/1 var(--font-body);
+  color: var(--ink);
+}
+
+.slack-meta time {
+  color: var(--ink-muted);
+  font: 400 9px/1 var(--font-mono);
+}
+
+.slack-content p {
+  margin: 0;
+  color: #c4c6c1;
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+.slack-reactions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.slack-reaction {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.03);
+  font: 500 11px/1 var(--font-mono);
+  color: var(--ink-muted);
+  transition: background 0.2s, border-color 0.2s;
+  cursor: default;
+}
+
+.slack-reaction:hover {
+  border-color: rgba(203, 255, 71, 0.3);
+  background: rgba(203, 255, 71, 0.06);
+}
+
+.slack-thread {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  color: var(--cyan);
+  font: 500 10px/1 var(--font-mono);
+  cursor: default;
+}
+
+/* ═══════════════════════════════════════════════════════
+   MOBILE RESPONSIVE - NEW COMPONENTS
+   ═══════════════════════════════════════════════════════ */
+@media (max-width: 760px) {
+  .slack-section {
+    margin-top: 50px;
+    padding-top: 40px;
+  }
+
+  .slack-body {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .slack-avatar {
+    width: 32px;
+    height: 32px;
+    font-size: 11px;
+  }
+
+  .slack-card {
+    padding: 16px 18px;
+  }
+
+  .slack-reactions {
+    gap: 6px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -1859,5 +2199,20 @@ em {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+
+  .work,
+  .about,
+  .journey,
+  .credentials,
+  .contact {
+    opacity: 1;
+    transform: none;
+  }
+
+  .project-card,
+  .slack-card {
+    opacity: 1;
+    transform: none;
   }
 }
