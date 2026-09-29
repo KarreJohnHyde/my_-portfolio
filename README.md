@@ -51,7 +51,7 @@ A modern, high-performance portfolio website built with React 19, Vite, Tailwind
    - **Repository**: [KarreJohnHyde/Brite-Systems](https://github.com/KarreJohnHyde/Brite-Systems)
    - *Tech: React, TypeScript, Enterprise, Cloud*
 
-### 🌐 Web Experiences & Global Edge Deployments
+### 🌐 Web Experiences & Creative Engineering
 8. **Noel Foundation** — Purpose-led web hub engineered for community welfare outreach.
    - **Live Website**: [noel-foundation.vercel.app](https://noel-foundation.vercel.app)
    - **Repository**: [KarreJohnHyde/Noel-Foundation](https://github.com/KarreJohnHyde/Noel-Foundation)
@@ -60,16 +60,21 @@ A modern, high-performance portfolio website built with React 19, Vite, Tailwind
    - **Repository**: [KarreJohnHyde/Xen-01](https://github.com/KarreJohnHyde/Xen-01)
 10. **Gravity Glow Portfolio** — Physics simulation canvas with particle trajectories and glowing shaders.
     - **Repository**: [KarreJohnHyde/gravity-glow-portfolio](https://github.com/KarreJohnHyde/gravity-glow-portfolio)
-11. **EdgeOne Distributed Nodes (9 Live Edge CDN Deployments)**:
-    - [Node Alpha (Eventual Chocolate)](https://eventual-chocolate-6jxt4lqw.edgeone.dev/)
-    - [Node Beta (Professional Teal)](https://professional-teal-fbj1bwy3.edgeone.dev/)
-    - [Node Gamma (Thorough Harlequin)](https://thorough-harlequin-v56d50g3.edgeone.dev/)
-    - [Node Delta (Pregnant Indigo)](https://pregnant-indigo-9tamhpek.edgeone.dev/)
-    - [Node Epsilon (Colonial Lavender)](https://colonial-lavender-ryxeasj8.edgeone.dev/)
-    - [Node Zeta (Civil Orange)](https://civil-orange-hyw3u80v.edgeone.dev/)
-    - [Node Eta (Compulsory Moccasin)](https://compulsory-moccasin-tvscvhwn.edgeone.dev/)
-    - [Node Theta (Frequent Amaranth)](https://frequent-amaranth-azxtib3b.edgeone.dev/)
-    - [Node Iota (Faithful Rose)](https://faithful-rose-vspdozlo.edgeone.dev/)
+
+---
+
+## 📜 Verified Certifications & Credentials
+
+1. **Introduction to Machine Learning** — NPTEL · IIT Kharagpur (2025) · [Verify Credential](https://civil-orange-hyw3u80v.edgeone.dev/)
+2. **Cloud Computing & Distributed Systems (Elite)** — NPTEL · IIT Kanpur (2026) · [Verify Credential](https://thorough-harlequin-v56d50g3.edgeone.dev/)
+3. **Generative AI & Agentic Architectures** — HERE AND NOW AI · Sathyabama IST (2025) · [Verify Credential](https://eventual-chocolate-6jxt4lqw.edgeone.dev/)
+4. **Database Management System** — NPTEL · IIT Kharagpur (2025) · [Verify Credential](https://professional-teal-fbj1bwy3.edgeone.dev/)
+5. **Python for Data Science** — IBM · CognitiveClass.ai (2024) · [Verify Credential](https://pregnant-indigo-9tamhpek.edgeone.dev/)
+6. **Programming in Java** — NPTEL · IIT Kharagpur (2024) · [Verify Credential](https://colonial-lavender-ryxeasj8.edgeone.dev/)
+7. **Cognitive Learning & Applied AI (Innoverse'26)** — Sathyabama IST Hackathon Award (2026) · [Verify Credential](https://compulsory-moccasin-tvscvhwn.edgeone.dev/)
+8. **Advanced Deep Learning & Neural Architectures** — Specialized Technical Credential (2025) · [Verify Credential](https://frequent-amaranth-azxtib3b.edgeone.dev/)
+9. **Modern Full-Stack & Cloud Architecture** — Engineering Verification Credential (2024) · [Verify Credential](https://faithful-rose-vspdozlo.edgeone.dev/)
+
 
 ---
 

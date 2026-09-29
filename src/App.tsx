@@ -71,7 +71,7 @@ const projects: ProjectItem[] = [
     number: "02",
     title: "Expense AI",
     description:
-      "Serverless financial intelligence application featuring automated receipt OCR, QR payments, DynamoDB ledgering, and spending analytics.",
+      "Serverless financial intelligence application featuring automated receipt OCR, QR payments, DynamoDB ledgering, and interactive spending analytics.",
     tags: ["AWS", "Next.js", "DynamoDB", "OCR", "FinTech"],
     category: "cloud",
     liveUrl: "https://expense-tracker-rho-olive-10.vercel.app",
@@ -193,85 +193,79 @@ const projects: ProjectItem[] = [
     tone: "lime",
     label: "PHYSICS · EXPERIMENTAL",
   },
-  {
-    number: "11",
-    title: "EdgeOne Distributed Nodes",
-    description:
-      "High-speed edge micro-frontends and distributed interfaces deployed globally across Tencent EdgeOne Anycast CDN nodes.",
-    tags: ["EdgeOne", "CDN", "Edge Functions", "Serverless"],
-    category: "cloud",
-    liveUrl: "https://eventual-chocolate-6jxt4lqw.edgeone.dev/",
-    githubUrl: "https://github.com/KarreJohnHyde",
-    status: "9 Edge Nodes",
-    icon: "cloud",
-    tone: "violet",
-    label: "EDGE · DISTRIBUTED",
-  },
 ]
 
-const edgeNodes = [
+type CertificationItem = {
+  label: string
+  name: string
+  issuer: string
+  year: string
+  credentialUrl: string
+}
+
+const certifications: CertificationItem[] = [
   {
-    id: "01",
-    name: "Eventual Chocolate",
-    url: "https://eventual-chocolate-6jxt4lqw.edgeone.dev/",
-    region: "Global Anycast · Primary",
-    ping: "12ms",
+    label: "AI / ML",
+    name: "Introduction to Machine Learning",
+    issuer: "NPTEL · IIT Kharagpur",
+    year: "2025",
+    credentialUrl: "https://civil-orange-hyw3u80v.edgeone.dev/",
   },
   {
-    id: "02",
-    name: "Professional Teal",
-    url: "https://professional-teal-fbj1bwy3.edgeone.dev/",
-    region: "Asia-Pacific · Edge",
-    ping: "14ms",
+    label: "Cloud",
+    name: "Cloud Computing & Distributed Systems · Elite",
+    issuer: "NPTEL · IIT Kanpur",
+    year: "2026",
+    credentialUrl: "https://thorough-harlequin-v56d50g3.edgeone.dev/",
   },
   {
-    id: "03",
-    name: "Thorough Harlequin",
-    url: "https://thorough-harlequin-v56d50g3.edgeone.dev/",
-    region: "North America · Edge",
-    ping: "21ms",
+    label: "AI / ML",
+    name: "Generative AI & Agentic Architectures",
+    issuer: "HERE AND NOW AI · Sathyabama IST",
+    year: "2025",
+    credentialUrl: "https://eventual-chocolate-6jxt4lqw.edgeone.dev/",
   },
   {
-    id: "04",
-    name: "Pregnant Indigo",
-    url: "https://pregnant-indigo-9tamhpek.edgeone.dev/",
-    region: "Europe Central · Edge",
-    ping: "18ms",
+    label: "Data",
+    name: "Database Management System",
+    issuer: "NPTEL · IIT Kharagpur",
+    year: "2025",
+    credentialUrl: "https://professional-teal-fbj1bwy3.edgeone.dev/",
   },
   {
-    id: "05",
-    name: "Colonial Lavender",
-    url: "https://colonial-lavender-ryxeasj8.edgeone.dev/",
-    region: "South Asia · Edge",
-    ping: "9ms",
+    label: "Programming",
+    name: "Python for Data Science",
+    issuer: "IBM · CognitiveClass.ai",
+    year: "2024",
+    credentialUrl: "https://pregnant-indigo-9tamhpek.edgeone.dev/",
   },
   {
-    id: "06",
-    name: "Civil Orange",
-    url: "https://civil-orange-hyw3u80v.edgeone.dev/",
-    region: "US West · Edge",
-    ping: "24ms",
+    label: "Programming",
+    name: "Programming in Java",
+    issuer: "NPTEL · IIT Kharagpur",
+    year: "2024",
+    credentialUrl: "https://colonial-lavender-ryxeasj8.edgeone.dev/",
   },
   {
-    id: "07",
-    name: "Compulsory Moccasin",
-    url: "https://compulsory-moccasin-tvscvhwn.edgeone.dev/",
-    region: "East Asia · Edge",
-    ping: "17ms",
+    label: "Hackathon",
+    name: "Cognitive Learning & Applied AI · Innoverse'26",
+    issuer: "Sathyabama IST · 24-Hr Hackathon Award",
+    year: "2026",
+    credentialUrl: "https://compulsory-moccasin-tvscvhwn.edgeone.dev/",
   },
   {
-    id: "08",
-    name: "Frequent Amaranth",
-    url: "https://frequent-amaranth-azxtib3b.edgeone.dev/",
-    region: "Global CDN · Edge",
-    ping: "15ms",
+    label: "AI / ML",
+    name: "Advanced Deep Learning & Neural Architectures",
+    issuer: "Specialized Technical Credential",
+    year: "2025",
+    credentialUrl: "https://frequent-amaranth-azxtib3b.edgeone.dev/",
   },
   {
-    id: "09",
-    name: "Faithful Rose",
-    url: "https://faithful-rose-vspdozlo.edgeone.dev/",
-    region: "Global Edge · Anycast",
-    ping: "11ms",
+    label: "Systems",
+    name: "Modern Full-Stack & Cloud Architecture",
+    issuer: "Engineering Verification Credential",
+    year: "2024",
+    credentialUrl: "https://faithful-rose-vspdozlo.edgeone.dev/",
   },
 ]
 
@@ -302,45 +296,6 @@ const journey = [
   },
 ]
 
-const certifications = [
-  {
-    label: "AI / ML",
-    name: "Introduction to Machine Learning",
-    issuer: "NPTEL · IIT Kharagpur",
-    year: "2025",
-  },
-  {
-    label: "AI / ML",
-    name: "Generative AI & Agentic Architectures",
-    issuer: "HERE AND NOW AI · Sathyabama IST",
-    year: "2025",
-  },
-  {
-    label: "Cloud",
-    name: "Cloud Computing & Distributed Systems · Elite",
-    issuer: "NPTEL · IIT Kanpur",
-    year: "2026",
-  },
-  {
-    label: "Data",
-    name: "Database Management System",
-    issuer: "NPTEL · IIT Kharagpur",
-    year: "2025",
-  },
-  {
-    label: "Programming",
-    name: "Python for Data Science",
-    issuer: "IBM · CognitiveClass.ai",
-    year: "2024",
-  },
-  {
-    label: "Programming",
-    name: "Programming in Java",
-    issuer: "NPTEL · IIT Kharagpur",
-    year: "2024",
-  },
-]
-
 const skills = [
   {
     name: "AI & ML Systems",
@@ -353,8 +308,8 @@ const skills = [
     icon: "grid" as IconName,
   },
   {
-    name: "Cloud & Distributed",
-    value: "AWS (DynamoDB, S3) · Vercel · EdgeOne CDN · Hugging Face · Streamlit",
+    name: "Cloud & Serverless",
+    value: "AWS (DynamoDB, S3) · Vercel · Hugging Face Spaces · Streamlit Cloud",
     icon: "cloud" as IconName,
   },
   {
@@ -842,7 +797,6 @@ export default function App() {
     const sections = [
       "home",
       "work",
-      "edge",
       "about",
       "journey",
       "credentials",
@@ -923,10 +877,9 @@ export default function App() {
           {[
             { id: "home", label: "home", index: "01" },
             { id: "work", label: "work", index: "02" },
-            { id: "edge", label: "edge", index: "03" },
-            { id: "about", label: "about", index: "04" },
-            { id: "journey", label: "path", index: "05" },
-            { id: "credentials", label: "creds", index: "06" },
+            { id: "about", label: "about", index: "03" },
+            { id: "journey", label: "path", index: "04" },
+            { id: "credentials", label: "creds", index: "05" },
           ].map((item) => (
             <Action
               className={active === item.id ? "active" : ""}
@@ -1036,7 +989,7 @@ export default function App() {
                 <i>✦</i>
                 <span>AWS &amp; VERCEL</span>
                 <i>✦</i>
-                <span>TENCENT EDGEONE CDN</span>
+                <span>LANGCHAIN &amp; FAISS</span>
                 <i>✦</i>
                 <span>MACHINE LEARNING</span>
                 <i>✦</i>
@@ -1055,9 +1008,9 @@ export default function App() {
               into <em className="wave-word">impact.</em>
             </div>
             <div className="section-aside">
-              <span>11 / PROJECTS</span>
-              Selected productions spanning artificial intelligence, full stack,
-              and global cloud deployments.
+              <span>10 / PROJECTS</span>
+              Selected experiments across artificial intelligence, full stack,
+              and cloud deployment.
             </div>
           </div>
 
@@ -1101,61 +1054,9 @@ export default function App() {
           </div>
         </section>
 
-        {/* EDGEONE DEPLOYMENTS SECTION */}
-        <section className="edge-section section-frame" id="edge">
-          <SectionLabel index="03">GLOBAL EDGE INFRASTRUCTURE</SectionLabel>
-          <div className="section-heading">
-            <div role="heading" aria-level={2}>
-              Distributed at
-              <br />
-              the <em className="wave-word">global edge.</em>
-            </div>
-            <div className="section-aside">
-              <span>09 / NODES</span>
-              Live micro-frontends and serverless edge deployments distributed
-              worldwide on Tencent EdgeOne Anycast CDN.
-            </div>
-          </div>
-
-          <div className="edge-card-grid">
-            {edgeNodes.map((node) => (
-              <a
-                className="edge-node-card"
-                href={node.url}
-                key={node.id}
-                rel="noreferrer"
-                target="_blank"
-              >
-                <div>
-                  <div className="edge-node-header">
-                    <span className="project-number">NODE /{node.id}</span>
-                    <span className="edge-latency">
-                      <span className="dot" />
-                      {node.ping}
-                    </span>
-                  </div>
-                  <div className="edge-node-name">{node.name}</div>
-                  <div className="edge-node-url">{node.url}</div>
-                </div>
-                <div className="edge-node-footer">
-                  <span
-                    style={{
-                      font: "500 9px/1 var(--font-mono)",
-                      color: "var(--ink-muted)",
-                    }}
-                  >
-                    {node.region}
-                  </span>
-                  <Icon name="external" size={13} />
-                </div>
-              </a>
-            ))}
-          </div>
-        </section>
-
         {/* ABOUT ME SECTION */}
         <section className="about section-frame" id="about">
-          <SectionLabel index="04">MY OPERATING SYSTEM</SectionLabel>
+          <SectionLabel index="03">MY OPERATING SYSTEM</SectionLabel>
           <div className="about-grid">
             <div className="about-statement">
               <div role="heading" aria-level={2}>
@@ -1172,7 +1073,7 @@ export default function App() {
                 My passion lies at the intersection of applied machine learning
                 and real-world software engineering: moving seamlessly from RAG
                 pipelines and predictive modeling to serverless databases,
-                reactive frontend design, and high-performance edge deployment.
+                reactive frontend design, and production deployment.
               </p>
               <div
                 style={{
@@ -1219,19 +1120,19 @@ export default function App() {
               <span>CURRENT CGPA</span>
             </div>
             <div className="metric">
-              <strong>11+</strong>
+              <strong>10+</strong>
               <span>DEPLOYED APPS</span>
             </div>
             <div className="metric">
               <strong>09</strong>
-              <span>EDGE CDN NODES</span>
+              <span>VERIFIED CERTS</span>
             </div>
           </div>
         </section>
 
         {/* EXPERIENCE TIMELINE SECTION */}
         <section className="journey section-frame" id="journey">
-          <SectionLabel index="05">EXPERIENCE TIMELINE</SectionLabel>
+          <SectionLabel index="04">EXPERIENCE TIMELINE</SectionLabel>
           <div className="journey-heading">
             <div role="heading" aria-level={2}>
               Learning in public.
@@ -1259,7 +1160,7 @@ export default function App() {
 
         {/* CERTIFICATIONS & CREDENTIALS SECTION */}
         <section className="credentials section-frame" id="credentials">
-          <SectionLabel index="06">CERTIFICATIONS &amp; CREDENTIALS</SectionLabel>
+          <SectionLabel index="05">CERTIFICATIONS &amp; CREDENTIALS</SectionLabel>
           <div className="credentials-heading">
             <div role="heading" aria-level={2}>
               Curiosity,
@@ -1277,12 +1178,24 @@ export default function App() {
           <div className="cert-grid">
             {certifications.map((cert) => (
               <article className="cert-card" key={cert.name}>
-                <div className="cert-meta">
-                  <span>{cert.label}</span>
-                  <span>{cert.year}</span>
+                <div>
+                  <div className="cert-meta">
+                    <span>{cert.label}</span>
+                    <span>{cert.year}</span>
+                  </div>
+                  <h3>{cert.name}</h3>
+                  <p>{cert.issuer}</p>
                 </div>
-                <h3>{cert.name}</h3>
-                <p>{cert.issuer}</p>
+                <a
+                  aria-label={`View verified certificate for ${cert.name}`}
+                  className="cert-link"
+                  href={cert.credentialUrl}
+                  rel="noreferrer"
+                  target="_blank"
+                >
+                  <span>View Verified Certificate</span>
+                  <Icon name="external" size={13} />
+                </a>
               </article>
             ))}
           </div>
