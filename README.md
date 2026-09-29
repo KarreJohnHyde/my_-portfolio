@@ -20,12 +20,56 @@ A modern, high-performance portfolio website built with React 19, Vite, Tailwind
 
 ---
 
-## 🌟 Featured Projects
+## 🌟 Featured Projects & Live Deployments
 
-1. **Study2AI** — Full-stack RAG system turning documents into grounded, context-aware learning conversations *(LangChain, FAISS, Python, Gradio)*.
-2. **Expense AI** — Serverless expense intelligence with receipt OCR, QR payments, and spending analytics *(AWS, Next.js, DynamoDB, OCR)*.
-3. **Cognitive Learning** — Adaptive ML dashboard classifying learners into cognitive profiles *(Streamlit, scikit-learn, K-Means, PCA)*.
-4. **MedTwin** — Healthcare-focused AI exploration turning complex clinical data into interactive digital tools.
+### 🤖 AI & Machine Learning Systems
+1. **Study2AI** — Full-stack RAG system turning documents into grounded, context-aware learning conversations.
+   - **Live Space**: [Hugging Face Space](https://huggingface.co/spaces/Johnny2005/Final_Project)
+   - **Repository**: [KarreJohnHyde/STUDY2AI](https://github.com/KarreJohnHyde/STUDY2AI)
+   - *Tech: Python, LangChain, FAISS, Gradio, RAG*
+2. **Cognitive Learning** — Adaptive ML dashboard classifying learners into cognitive profiles from behavioral signals (Innoverse'26 Hackathon).
+   - **Live App**: [Streamlit Cloud](https://cognitivelearning-5zqpetkfjexgbjx5kdappgk.streamlit.app/)
+   - **Repository**: [KarreJohnHyde/cognitive_learning](https://github.com/KarreJohnHyde/cognitive_learning)
+   - *Tech: Streamlit, scikit-learn, K-Means, PCA*
+3. **MedTwin** — Healthcare-focused AI digital twin exploration for clinical decision support and patient simulation.
+   - **Repository**: [KarreJohnHyde/MedTwin](https://github.com/KarreJohnHyde/MedTwin)
+   - *Tech: AI, Healthcare Informatics, Jupyter, Diagnostics*
+4. **Project Jarvis AI** — Voice-activated assistant with automation, audio recognition, and real-time execution.
+   - **Repository**: [KarreJohnHyde/project-Jarvis-AI](https://github.com/KarreJohnHyde/project-Jarvis-AI)
+   - *Tech: Python, SpeechRecognition, Automation, NLP*
+
+### ⚡ Full-Stack, Cloud & Fintech
+5. **Expense AI / Expense Tracker** — Serverless expense intelligence with receipt OCR, QR payments, DynamoDB ledgering, and spending analytics.
+   - **Live Deployments**: [expense-tracker-rho-olive-10.vercel.app](https://expense-tracker-rho-olive-10.vercel.app) · [bigdatas.vercel.app](https://bigdatas.vercel.app)
+   - **Repositories**: [KarreJohnHyde/Expense_Tracker](https://github.com/KarreJohnHyde/Expense_Tracker) · [KarreJohnHyde/bigdatas](https://github.com/KarreJohnHyde/bigdatas)
+   - *Tech: AWS (DynamoDB, Lambda), Next.js, OCR, FinTech*
+6. **AgriMandi** — Digital agricultural marketplace connecting farmers with buyers and transparent crop valuation.
+   - **Live Preview**: [agrimandi.vercel.app](https://agrimandi.vercel.app)
+   - **Repository**: [KarreJohnHyde/agrimndi](https://github.com/KarreJohnHyde/agrimndi)
+   - *Tech: Agritech, Next.js, Supply Chain, Product*
+7. **Brite Systems** — Enterprise software architecture and business process infrastructure.
+   - **Repository**: [KarreJohnHyde/Brite-Systems](https://github.com/KarreJohnHyde/Brite-Systems)
+   - *Tech: React, TypeScript, Enterprise, Cloud*
+
+### 🌐 Web Experiences & Global Edge Deployments
+8. **Noel Foundation** — Purpose-led web hub engineered for community welfare outreach.
+   - **Live Website**: [noel-foundation.vercel.app](https://noel-foundation.vercel.app)
+   - **Repository**: [KarreJohnHyde/Noel-Foundation](https://github.com/KarreJohnHyde/Noel-Foundation)
+9. **Xen-01** — Futuristic web interface with cybernetic micro-animations and glassmorphism.
+   - **Live Website**: [xen-01.vercel.app](https://xen-01.vercel.app)
+   - **Repository**: [KarreJohnHyde/Xen-01](https://github.com/KarreJohnHyde/Xen-01)
+10. **Gravity Glow Portfolio** — Physics simulation canvas with particle trajectories and glowing shaders.
+    - **Repository**: [KarreJohnHyde/gravity-glow-portfolio](https://github.com/KarreJohnHyde/gravity-glow-portfolio)
+11. **EdgeOne Distributed Nodes (9 Live Edge CDN Deployments)**:
+    - [Node Alpha (Eventual Chocolate)](https://eventual-chocolate-6jxt4lqw.edgeone.dev/)
+    - [Node Beta (Professional Teal)](https://professional-teal-fbj1bwy3.edgeone.dev/)
+    - [Node Gamma (Thorough Harlequin)](https://thorough-harlequin-v56d50g3.edgeone.dev/)
+    - [Node Delta (Pregnant Indigo)](https://pregnant-indigo-9tamhpek.edgeone.dev/)
+    - [Node Epsilon (Colonial Lavender)](https://colonial-lavender-ryxeasj8.edgeone.dev/)
+    - [Node Zeta (Civil Orange)](https://civil-orange-hyw3u80v.edgeone.dev/)
+    - [Node Eta (Compulsory Moccasin)](https://compulsory-moccasin-tvscvhwn.edgeone.dev/)
+    - [Node Theta (Frequent Amaranth)](https://frequent-amaranth-azxtib3b.edgeone.dev/)
+    - [Node Iota (Faithful Rose)](https://faithful-rose-vspdozlo.edgeone.dev/)
 
 ---
 

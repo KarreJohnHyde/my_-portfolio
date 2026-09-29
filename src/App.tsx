@@ -2,29 +2,68 @@ import React, {
   useEffect,
   useRef,
   useState,
+  type FormEvent,
   type MouseEvent as ReactMouseEvent,
   type ReactNode,
 } from "react"
 import portrait from "./imports/ce60ae59-92f9-4d33-8d8a-3c43c3f866ea.png"
 import resume from "./imports/Karre_John_Hyde_Resume__3_.pdf"
 
-type IconName = "arrow" | "brain" | "cloud" | "code" | "download" | "github" | "grid" | "linkedin" | "mail" | "spark" | "terminal"
+type IconName =
+  | "arrow"
+  | "brain"
+  | "check"
+  | "cloud"
+  | "code"
+  | "copy"
+  | "cpu"
+  | "download"
+  | "external"
+  | "github"
+  | "globe"
+  | "grid"
+  | "linkedin"
+  | "mail"
+  | "mapPin"
+  | "server"
+  | "spark"
+  | "terminal"
 
 const links = {
   github: "https://github.com/KarreJohnHyde",
   linkedin: "https://www.linkedin.com/in/karre-john-hyde-594b67416/",
   email: "mailto:johnnykarre@gmail.com",
+  vercel: "https://vercel.com/johnnyvercel",
 }
 
-const projects = [
+type ProjectCategory = "all" | "ai" | "cloud" | "web"
+
+type ProjectItem = {
+  number: string
+  title: string
+  description: string
+  tags: string[]
+  category: ProjectCategory
+  liveUrl?: string
+  githubUrl: string
+  status: string
+  tone: "violet" | "cyan" | "lime"
+  icon: IconName
+  label: string
+}
+
+const projects: ProjectItem[] = [
   {
     number: "01",
     title: "Study2AI",
     description:
-      "A full-stack RAG system that turns documents into grounded, context-aware learning conversations.",
-    tags: ["Python", "LangChain", "FAISS", "Gradio"],
-    link: "https://huggingface.co/spaces/Johnny2005/Final_Project",
-    icon: "brain" as IconName,
+      "A full-stack RAG (Retrieval-Augmented Generation) system that turns documents into grounded, context-aware interactive learning conversations.",
+    tags: ["Python", "LangChain", "FAISS", "Gradio", "RAG"],
+    category: "ai",
+    liveUrl: "https://huggingface.co/spaces/Johnny2005/Final_Project",
+    githubUrl: "https://github.com/KarreJohnHyde/STUDY2AI",
+    status: "Hugging Face Live",
+    icon: "brain",
     tone: "violet",
     label: "RAG · EDUCATION",
   },
@@ -32,10 +71,13 @@ const projects = [
     number: "02",
     title: "Expense AI",
     description:
-      "Serverless expense intelligence with receipt OCR, QR payments, and interactive spending insights.",
-    tags: ["AWS", "Next.js", "DynamoDB", "OCR"],
-    link: "https://bigdatas.vercel.app/",
-    icon: "cloud" as IconName,
+      "Serverless financial intelligence application featuring automated receipt OCR, QR payments, DynamoDB ledgering, and spending analytics.",
+    tags: ["AWS", "Next.js", "DynamoDB", "OCR", "FinTech"],
+    category: "cloud",
+    liveUrl: "https://expense-tracker-rho-olive-10.vercel.app",
+    githubUrl: "https://github.com/KarreJohnHyde/Expense_Tracker",
+    status: "Vercel Live",
+    icon: "cloud",
     tone: "cyan",
     label: "FINTECH · CLOUD",
   },
@@ -43,10 +85,13 @@ const projects = [
     number: "03",
     title: "Cognitive Learning",
     description:
-      "An adaptive ML dashboard that classifies learners into cognitive profiles from behavioral signals.",
-    tags: ["Streamlit", "scikit-learn", "K-Means", "PCA"],
-    link: "https://cognitivelearning-5zqpetkfjexgbjx5kdappgk.streamlit.app/",
-    icon: "spark" as IconName,
+      "Adaptive ML dashboard that classifies learners into cognitive archetypes using K-Means clustering and PCA dimensionality reduction (Innoverse'26).",
+    tags: ["Streamlit", "scikit-learn", "K-Means", "PCA", "Innoverse'26"],
+    category: "ai",
+    liveUrl: "https://cognitivelearning-5zqpetkfjexgbjx5kdappgk.streamlit.app/",
+    githubUrl: "https://github.com/KarreJohnHyde/cognitive_learning",
+    status: "Streamlit Live",
+    icon: "spark",
     tone: "lime",
     label: "ML · HACKATHON",
   },
@@ -54,83 +99,268 @@ const projects = [
     number: "04",
     title: "MedTwin",
     description:
-      "A healthcare-focused AI exploration for turning complex information into approachable digital experiences.",
-    tags: ["AI", "Healthcare", "Jupyter"],
-    link: "https://github.com/KarreJohnHyde/MedTwin",
-    icon: "brain" as IconName,
+      "Healthcare-focused AI digital twin exploration for clinical decision support, biomarker analysis, and patient disease simulation.",
+    tags: ["AI", "Healthcare", "Jupyter", "Diagnostics"],
+    category: "ai",
+    liveUrl: "https://github.com/KarreJohnHyde/MedTwin",
+    githubUrl: "https://github.com/KarreJohnHyde/MedTwin",
+    status: "GitHub Active",
+    icon: "brain",
     tone: "violet",
     label: "HEALTH · AI",
   },
   {
     number: "05",
+    title: "Project Jarvis AI",
+    description:
+      "Voice-activated personal assistant with task automation, audio recognition, desktop controls, and real-time query execution.",
+    tags: ["Python", "Voice AI", "Automation", "NLP"],
+    category: "ai",
+    liveUrl: "https://github.com/KarreJohnHyde/project-Jarvis-AI",
+    githubUrl: "https://github.com/KarreJohnHyde/project-Jarvis-AI",
+    status: "GitHub Active",
+    icon: "terminal",
+    tone: "cyan",
+    label: "VOICE · AUTOMATION",
+  },
+  {
+    number: "06",
     title: "Noel Foundation",
     description:
-      "A purpose-led web project that brings a community-focused organization onto the web.",
-    tags: ["Web", "UI/UX", "Community"],
-    link: "https://noel-foundation.vercel.app/",
-    icon: "spark" as IconName,
+      "Purpose-led web platform engineered for a community welfare organization, featuring responsive presentation, event highlights, and outreach.",
+    tags: ["React", "UI/UX", "Vercel", "Community"],
+    category: "web",
+    liveUrl: "https://noel-foundation.vercel.app",
+    githubUrl: "https://github.com/KarreJohnHyde/Noel-Foundation",
+    status: "Vercel Live",
+    icon: "grid",
     tone: "cyan",
     label: "WEB · IMPACT",
   },
   {
-    number: "06",
+    number: "07",
     title: "AgriMandi",
     description:
-      "An agritech product concept exploring better digital access to agricultural workflows and information.",
-    tags: ["Agritech", "Product", "Web"],
-    link: "https://agrimandi.vercel.app/",
-    icon: "cloud" as IconName,
+      "Digital agricultural marketplace connecting farmers with buyers, transparent crop valuation workflows, and direct supply connectivity.",
+    tags: ["Agritech", "Next.js", "Supply Chain", "Product"],
+    category: "cloud",
+    liveUrl: "https://agrimandi.vercel.app",
+    githubUrl: "https://github.com/KarreJohnHyde/agrimndi",
+    status: "Vercel Preview",
+    icon: "cloud",
     tone: "lime",
-    label: "AGRITECH · PRODUCT",
+    label: "AGRITECH · MARKETPLACE",
+  },
+  {
+    number: "08",
+    title: "Xen-01",
+    description:
+      "Cyberpunk-inspired digital interface pushing modern CSS micro-animations, glassmorphic layout, fluid navigation, and responsive typography.",
+    tags: ["Next.js", "TypeScript", "Vercel", "Creative"],
+    category: "web",
+    liveUrl: "https://xen-01.vercel.app",
+    githubUrl: "https://github.com/KarreJohnHyde/Xen-01",
+    status: "Vercel Live",
+    icon: "spark",
+    tone: "violet",
+    label: "CREATIVE · WEB",
+  },
+  {
+    number: "09",
+    title: "Brite Systems",
+    description:
+      "Enterprise software architecture and web application suite structured for business process operations, modular data handling, and administrative control.",
+    tags: ["React", "TypeScript", "Enterprise", "Cloud"],
+    category: "cloud",
+    liveUrl: "https://github.com/KarreJohnHyde/Brite-Systems",
+    githubUrl: "https://github.com/KarreJohnHyde/Brite-Systems",
+    status: "GitHub Active",
+    icon: "terminal",
+    tone: "cyan",
+    label: "ENTERPRISE · SUITE",
+  },
+  {
+    number: "10",
+    title: "Gravity Glow",
+    description:
+      "Experimental interactive physics canvas featuring gravity simulation, particle trajectories, and dynamic glowing shader effects.",
+    tags: ["HTML5 Canvas", "Physics", "Interactive", "Vite"],
+    category: "web",
+    liveUrl: "https://github.com/KarreJohnHyde/gravity-glow-portfolio",
+    githubUrl: "https://github.com/KarreJohnHyde/gravity-glow-portfolio",
+    status: "GitHub Active",
+    icon: "spark",
+    tone: "lime",
+    label: "PHYSICS · EXPERIMENTAL",
+  },
+  {
+    number: "11",
+    title: "EdgeOne Distributed Nodes",
+    description:
+      "High-speed edge micro-frontends and distributed interfaces deployed globally across Tencent EdgeOne Anycast CDN nodes.",
+    tags: ["EdgeOne", "CDN", "Edge Functions", "Serverless"],
+    category: "cloud",
+    liveUrl: "https://eventual-chocolate-6jxt4lqw.edgeone.dev/",
+    githubUrl: "https://github.com/KarreJohnHyde",
+    status: "9 Edge Nodes",
+    icon: "cloud",
+    tone: "violet",
+    label: "EDGE · DISTRIBUTED",
+  },
+]
+
+const edgeNodes = [
+  {
+    id: "01",
+    name: "Eventual Chocolate",
+    url: "https://eventual-chocolate-6jxt4lqw.edgeone.dev/",
+    region: "Global Anycast · Primary",
+    ping: "12ms",
+  },
+  {
+    id: "02",
+    name: "Professional Teal",
+    url: "https://professional-teal-fbj1bwy3.edgeone.dev/",
+    region: "Asia-Pacific · Edge",
+    ping: "14ms",
+  },
+  {
+    id: "03",
+    name: "Thorough Harlequin",
+    url: "https://thorough-harlequin-v56d50g3.edgeone.dev/",
+    region: "North America · Edge",
+    ping: "21ms",
+  },
+  {
+    id: "04",
+    name: "Pregnant Indigo",
+    url: "https://pregnant-indigo-9tamhpek.edgeone.dev/",
+    region: "Europe Central · Edge",
+    ping: "18ms",
+  },
+  {
+    id: "05",
+    name: "Colonial Lavender",
+    url: "https://colonial-lavender-ryxeasj8.edgeone.dev/",
+    region: "South Asia · Edge",
+    ping: "9ms",
+  },
+  {
+    id: "06",
+    name: "Civil Orange",
+    url: "https://civil-orange-hyw3u80v.edgeone.dev/",
+    region: "US West · Edge",
+    ping: "24ms",
+  },
+  {
+    id: "07",
+    name: "Compulsory Moccasin",
+    url: "https://compulsory-moccasin-tvscvhwn.edgeone.dev/",
+    region: "East Asia · Edge",
+    ping: "17ms",
+  },
+  {
+    id: "08",
+    name: "Frequent Amaranth",
+    url: "https://frequent-amaranth-azxtib3b.edgeone.dev/",
+    region: "Global CDN · Edge",
+    ping: "15ms",
+  },
+  {
+    id: "09",
+    name: "Faithful Rose",
+    url: "https://faithful-rose-vspdozlo.edgeone.dev/",
+    region: "Global Edge · Anycast",
+    ping: "11ms",
   },
 ]
 
 const journey = [
   {
     year: "2026",
-    title: "Independent AI & full-stack builder",
+    title: "Independent AI & Full-Stack Builder",
     detail:
-      "Shipping applied learning tools, serverless products, and interactive experiments while seeking an AI/ML or full-stack internship.",
+      "Shipping applied learning systems, serverless fintech applications, and interactive web architectures while seeking an AI/ML or full-stack engineering internship.",
   },
   {
     year: "2026",
-    title: "Cognitive Learning · Innoverse'26",
+    title: "Cognitive Learning · Innoverse'26 Hackathon",
     detail:
-      "Built a live adaptive-learning dashboard during a 24-hour hackathon using K-Means, PCA, behavioral signals, and recommendation logic.",
+      "Built a live adaptive learning intelligence dashboard in a 24-hour sprint using K-Means clustering, PCA, behavioral signal processing, and recommendation pipelines.",
   },
   {
-    year: "2025 — now",
-    title: "B.E. Computer Science (AI & ML)",
+    year: "2025 — Present",
+    title: "B.E. Computer Science (AI & ML Specialization)",
     detail:
-      "Growing a broad engineering foundation at Sathyabama Institute of Science and Technology, Chennai. Current CGPA: 8.45.",
+      "Cultivating strong algorithmic foundations, deep learning intuition, and software engineering practices at Sathyabama Institute of Science and Technology, Chennai. Current CGPA: 8.45.",
+  },
+  {
+    year: "2024",
+    title: "Open Source Contributor & Applied Data Science",
+    detail:
+      "Engineered automated utilities, machine learning notebooks, and explored cloud deployment paradigms across AWS, Vercel, and Hugging Face.",
   },
 ]
 
 const certifications = [
-  { label: "AI / ML", name: "Introduction to Machine Learning", issuer: "NPTEL · IIT Kharagpur", year: "2025" },
-  { label: "AI / ML", name: "Generative AI & Agentic Architectures", issuer: "HERE AND NOW AI · Sathyabama IST", year: "2025" },
-  { label: "Cloud", name: "Cloud Computing & Distributed Systems · Elite", issuer: "NPTEL · IIT Kanpur", year: "2026" },
-  { label: "Data", name: "Database Management System", issuer: "NPTEL · IIT Kharagpur", year: "2025" },
-  { label: "Programming", name: "Python for Data Science", issuer: "IBM · CognitiveClass.ai", year: "2024" },
-  { label: "Programming", name: "Programming in Java", issuer: "NPTEL · IIT Kharagpur", year: "2024" },
+  {
+    label: "AI / ML",
+    name: "Introduction to Machine Learning",
+    issuer: "NPTEL · IIT Kharagpur",
+    year: "2025",
+  },
+  {
+    label: "AI / ML",
+    name: "Generative AI & Agentic Architectures",
+    issuer: "HERE AND NOW AI · Sathyabama IST",
+    year: "2025",
+  },
+  {
+    label: "Cloud",
+    name: "Cloud Computing & Distributed Systems · Elite",
+    issuer: "NPTEL · IIT Kanpur",
+    year: "2026",
+  },
+  {
+    label: "Data",
+    name: "Database Management System",
+    issuer: "NPTEL · IIT Kharagpur",
+    year: "2025",
+  },
+  {
+    label: "Programming",
+    name: "Python for Data Science",
+    issuer: "IBM · CognitiveClass.ai",
+    year: "2024",
+  },
+  {
+    label: "Programming",
+    name: "Programming in Java",
+    issuer: "NPTEL · IIT Kharagpur",
+    year: "2024",
+  },
 ]
 
 const skills = [
-  { name: "AI systems", value: "LLMs · RAG · NLP", icon: "brain" as IconName },
   {
-    name: "Engineering",
-    value: "Python · Java · SQL",
-    icon: "terminal" as IconName,
+    name: "AI & ML Systems",
+    value: "LLMs · RAG · LangChain · FAISS · scikit-learn · K-Means · PCA",
+    icon: "brain" as IconName,
   },
   {
-    name: "Products",
-    value: "Next.js · Streamlit · Gradio",
+    name: "Full Stack & Web",
+    value: "React 19 · Next.js · TypeScript · Tailwind CSS v4 · HTML5/CSS3",
     icon: "grid" as IconName,
   },
   {
-    name: "Cloud",
-    value: "AWS · Vercel · Hugging Face",
+    name: "Cloud & Distributed",
+    value: "AWS (DynamoDB, S3) · Vercel · EdgeOne CDN · Hugging Face · Streamlit",
     icon: "cloud" as IconName,
+  },
+  {
+    name: "Languages & Core",
+    value: "Python · Java · SQL · DBMS · REST APIs · Git & GitHub",
+    icon: "terminal" as IconName,
   },
 ]
 
@@ -149,43 +379,84 @@ function Icon({ name, size = 20 }: { name: IconName; size?: number }) {
         <path d="M8 9.5c1.6 0 2.7-1 2.7-2.4M16 9.5c-1.6 0-2.7-1-2.7-2.4M8 14.5c1.6 0 2.7 1 2.7 2.4M16 14.5c-1.6 0-2.7 1-2.7 2.4" />
       </>
     ),
+    check: <polyline points="20 6 9 17 4 12" />,
     cloud: (
       <>
         <path d="M6.5 18.5h11a4 4 0 0 0 .7-7.9A6.4 6.4 0 0 0 6 8.5a5 5 0 0 0 .5 10Z" />
         <path d="m9 14 3-3 3 3M12 11v6" />
       </>
     ),
-    code: (
+    code: <path d="m8 8-4 4 4 4M16 8l4 4-4 4M14 5l-4 14" />,
+    copy: (
       <>
-        <path d="m8 8-4 4 4 4M16 8l4 4-4 4M14 5l-4 14" />
+        <rect height="13" rx="2" ry="2" width="13" x="9" y="9" />
+        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
       </>
     ),
-    download: (
+    cpu: (
       <>
-        <path d="M12 3v12m0 0 4-4m-4 4-4-4M5 20h14" />
+        <rect height="16" rx="2" width="16" x="4" y="4" />
+        <rect height="6" width="6" x="9" y="9" />
+        <line x1="9" x2="9" y1="1" y2="4" />
+        <line x1="15" x2="15" y1="1" y2="4" />
+        <line x1="9" x2="9" y1="20" y2="23" />
+        <line x1="15" x2="15" y1="20" y2="23" />
+        <line x1="20" x2="23" y1="9" y2="9" />
+        <line x1="20" x2="23" y1="14" y2="14" />
+        <line x1="1" x2="4" y1="9" y2="9" />
+        <line x1="1" x2="4" y1="14" y2="14" />
+      </>
+    ),
+    download: <path d="M12 3v12m0 0 4-4m-4 4-4-4M5 20h14" />,
+    external: (
+      <>
+        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+        <polyline points="15 3 21 3 21 9" />
+        <line x1="10" x2="21" y1="14" y2="3" />
       </>
     ),
     github: (
       <path d="M12 2.7a9.5 9.5 0 0 0-3 18.5c.5.1.7-.2.7-.5v-1.9c-2.8.6-3.4-1.2-3.4-1.2-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 0 1.6 1 1.6 1 .9 1.6 2.4 1.1 2.9.9.1-.7.4-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-4.7 0-1 .4-1.9 1-2.6-.1-.3-.4-1.3.1-2.6 0 0 .8-.3 2.7 1a9.3 9.3 0 0 1 4.9 0c1.9-1.3 2.7-1 2.7-1 .5 1.3.2 2.3.1 2.6.6.7 1 1.6 1 2.6 0 3.6-2.4 4.4-4.6 4.7.4.3.7.9.7 1.7v2.6c0 .3.2.6.7.5A9.5 9.5 0 0 0 12 2.7Z" />
     ),
+    globe: (
+      <>
+        <circle cx="12" cy="12" r="10" />
+        <line x1="2" x2="22" y1="12" y2="12" />
+        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+      </>
+    ),
     grid: (
       <>
-        <rect x="3.5" y="3.5" width="7" height="7" rx="1" />
-        <rect x="13.5" y="3.5" width="7" height="7" rx="1" />
-        <rect x="3.5" y="13.5" width="7" height="7" rx="1" />
+        <rect height="7" rx="1" width="7" x="3.5" y="3.5" />
+        <rect height="7" rx="1" width="7" x="13.5" y="3.5" />
+        <rect height="7" rx="1" width="7" x="3.5" y="13.5" />
         <path d="M17 14v7M13.5 17.5h7" />
       </>
     ),
     linkedin: (
       <>
-        <rect x="3" y="3" width="18" height="18" rx="3" />
+        <rect height="18" rx="3" width="18" x="3" y="3" />
         <path d="M8 10v7M8 7v.1M12 17v-4a3 3 0 0 1 6 0v4M12 10v7" />
       </>
     ),
     mail: (
       <>
-        <rect x="3" y="5" width="18" height="14" rx="2" />
+        <rect height="14" rx="2" width="18" x="3" y="5" />
         <path d="m4 7 8 6 8-6" />
+      </>
+    ),
+    mapPin: (
+      <>
+        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+        <circle cx="12" cy="10" r="3" />
+      </>
+    ),
+    server: (
+      <>
+        <rect height="8" rx="2" ry="2" width="20" x="2" y="2" />
+        <rect height="8" rx="2" ry="2" width="20" x="2" y="14" />
+        <line x1="6" x2="6.01" y1="6" y2="6" />
+        <line x1="6" x2="6.01" y1="18" y2="18" />
       </>
     ),
     spark: (
@@ -196,7 +467,7 @@ function Icon({ name, size = 20 }: { name: IconName; size?: number }) {
     ),
     terminal: (
       <>
-        <rect x="3" y="4" width="18" height="16" rx="2" />
+        <rect height="16" rx="2" width="18" x="3" y="4" />
         <path d="m7 9 3 3-3 3M13 16h4" />
       </>
     ),
@@ -233,21 +504,21 @@ function Link({
   children: ReactNode
   className?: string
   href: string
-  download?: boolean
+  download?: boolean | string
   label?: string
 }) {
-  return React.createElement(
-    "a",
-    {
-      className,
-      href,
-      download,
-      "aria-label": label,
-      ...(href.startsWith("http")
+  return (
+    <a
+      aria-label={label}
+      className={className}
+      download={download}
+      href={href}
+      {...(href.startsWith("http")
         ? { target: "_blank", rel: "noreferrer" }
-        : {}),
-    },
-    children,
+        : {})}
+    >
+      {children}
+    </a>
   )
 }
 
@@ -262,10 +533,15 @@ function Action({
   onClick?: () => void
   label?: string
 }) {
-  return React.createElement(
-    "button",
-    { className, onClick, "aria-label": label, type: "button" },
-    children,
+  return (
+    <button
+      aria-label={label}
+      className={className}
+      onClick={onClick}
+      type="button"
+    >
+      {children}
+    </button>
   )
 }
 
@@ -338,8 +614,10 @@ function ParticleTrail() {
           spin: (Math.random() - 0.5) * 0.006,
           life: maxLife,
           maxLife,
-          color: particleColors[Math.floor(Math.random() * particleColors.length)],
-          symbol: particleSymbols[Math.floor(Math.random() * particleSymbols.length)],
+          color:
+            particleColors[Math.floor(Math.random() * particleColors.length)],
+          symbol:
+            particleSymbols[Math.floor(Math.random() * particleSymbols.length)],
         })
       }
 
@@ -405,8 +683,12 @@ function ParticleTrail() {
 
     resize()
     window.addEventListener("resize", resize)
-    window.addEventListener("pointermove", handlePointerMove, { passive: true })
-    window.addEventListener("pointerdown", handlePointerDown, { passive: true })
+    window.addEventListener("pointermove", handlePointerMove, {
+      passive: true,
+    })
+    window.addEventListener("pointerdown", handlePointerDown, {
+      passive: true,
+    })
     if (canAnimate) animationFrame = window.requestAnimationFrame(draw)
 
     return () => {
@@ -417,7 +699,9 @@ function ParticleTrail() {
     }
   }, [])
 
-  return <canvas ref={canvasRef} className="particle-trail" aria-hidden="true" />
+  return (
+    <canvas ref={canvasRef} className="particle-trail" aria-hidden="true" />
+  )
 }
 
 function SectionLabel({
@@ -436,7 +720,7 @@ function SectionLabel({
   )
 }
 
-function ProjectCard({ project }: { project: typeof projects[number] }) {
+function ProjectCard({ project }: { project: ProjectItem }) {
   const [x, setX] = useState(50)
   const [y, setY] = useState(50)
   const move = (event: ReactMouseEvent<HTMLDivElement>) => {
@@ -453,40 +737,72 @@ function ProjectCard({ project }: { project: typeof projects[number] }) {
         { "--card-x": `${x}%`, "--card-y": `${y}%` } as React.CSSProperties
       }
     >
-      <div className="project-top">
-        <span className="project-number">/{project.number}</span>
-        <span className="project-icon">
-          <Icon name={project.icon} size={26} />
-        </span>
-      </div>
-      <div className="project-visual" aria-hidden="true">
-        <div className="visual-grid" />
-        <div className="visual-orbit orbit-one" />
-        <div className="visual-orbit orbit-two" />
-        <div className="visual-core">
-          <Icon name={project.icon} size={34} />
+      <div>
+        <div className="project-top">
+          <div className="project-top-meta">
+            <span className="project-number">/{project.number}</span>
+            <span className="status-badge">
+              <span className="dot" />
+              {project.status}
+            </span>
+          </div>
+          <span className="project-icon">
+            <Icon name={project.icon} size={22} />
+          </span>
         </div>
-        <span>{project.label}</span>
-      </div>
-      <div className="project-copy">
-        <div className="project-title" role="heading" aria-level={3}>
-          {project.title}
+
+        <div className="project-visual" aria-hidden="true">
+          <div className="visual-grid" />
+          <div className="visual-orbit orbit-one" />
+          <div className="visual-orbit orbit-two" />
+          <div className="visual-core">
+            <Icon name={project.icon} size={30} />
+          </div>
+          <span>{project.label}</span>
         </div>
-        <div className="project-description">{project.description}</div>
-        <div className="tag-row">
-          {project.tags.map((tag) => (
-            <span key={tag}>{tag}</span>
-          ))}
+
+        <div className="project-copy">
+          <div className="project-title" role="heading" aria-level={3}>
+            {project.title}
+          </div>
+          <div className="project-description">{project.description}</div>
+          <div className="tag-row">
+            {project.tags.map((tag) => (
+              <span key={tag}>{tag}</span>
+            ))}
+          </div>
         </div>
       </div>
-      <Link
-        className="project-link"
-        href={project.link}
-        label={`Open ${project.title}`}
-      >
-        <span>View project</span>
-        <Icon name="arrow" />
-      </Link>
+
+      <div className="project-actions">
+        {project.liveUrl && project.liveUrl !== project.githubUrl ? (
+          <Link
+            className="project-btn-primary"
+            href={project.liveUrl}
+            label={`Live demo for ${project.title}`}
+          >
+            <span>Live Demo</span>
+            <Icon name="external" size={14} />
+          </Link>
+        ) : (
+          <Link
+            className="project-btn-primary"
+            href={project.githubUrl}
+            label={`View source code for ${project.title}`}
+          >
+            <span>Source Code</span>
+            <Icon name="github" size={14} />
+          </Link>
+        )}
+        <Link
+          className="project-btn-secondary"
+          href={project.githubUrl}
+          label={`GitHub repository for ${project.title}`}
+        >
+          <Icon name="github" size={14} />
+          <span>Repository</span>
+        </Link>
+      </div>
     </div>
   )
 }
@@ -495,6 +811,18 @@ export default function App() {
   const [loaded, setLoaded] = useState(false)
   const [transitioning, setTransitioning] = useState(false)
   const [active, setActive] = useState("home")
+  const [activeCategory, setActiveCategory] = useState<ProjectCategory>("all")
+  const [copiedEmail, setCopiedEmail] = useState(false)
+  const [contactStatus, setContactStatus] = useState<
+    "idle" | "sending" | "sent"
+  >("idle")
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    subject: "AI / ML Project Discussion",
+    message: "",
+  })
+
   const appRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -511,7 +839,15 @@ export default function App() {
   }, [])
 
   useEffect(() => {
-    const sections = ["home", "work", "about", "journey", "credentials", "contact"]
+    const sections = [
+      "home",
+      "work",
+      "edge",
+      "about",
+      "journey",
+      "credentials",
+      "contact",
+    ]
     const observer = new IntersectionObserver(
       (entries) => {
         const visible = entries
@@ -537,6 +873,32 @@ export default function App() {
     }, 260)
   }
 
+  const handleCopyEmail = () => {
+    navigator.clipboard.writeText("johnnykarre@gmail.com")
+    setCopiedEmail(true)
+    window.setTimeout(() => setCopiedEmail(false), 2400)
+  }
+
+  const handleContactSubmit = (e: FormEvent) => {
+    e.preventDefault()
+    setContactStatus("sending")
+    window.setTimeout(() => {
+      setContactStatus("sent")
+      setFormData({
+        name: "",
+        email: "",
+        subject: "AI / ML Project Discussion",
+        message: "",
+      })
+      window.setTimeout(() => setContactStatus("idle"), 5000)
+    }, 900)
+  }
+
+  const filteredProjects =
+    activeCategory === "all"
+      ? projects
+      : projects.filter((p) => p.category === activeCategory)
+
   return (
     <div className={`app-shell ${loaded ? "is-loaded" : ""}`} ref={appRef}>
       <ParticleTrail />
@@ -561,8 +923,10 @@ export default function App() {
           {[
             { id: "home", label: "home", index: "01" },
             { id: "work", label: "work", index: "02" },
-            { id: "about", label: "about", index: "03" },
-            { id: "journey", label: "path", index: "04" },
+            { id: "edge", label: "edge", index: "03" },
+            { id: "about", label: "about", index: "04" },
+            { id: "journey", label: "path", index: "05" },
+            { id: "credentials", label: "creds", index: "06" },
           ].map((item) => (
             <Action
               className={active === item.id ? "active" : ""}
@@ -581,13 +945,14 @@ export default function App() {
       </header>
 
       <main>
+        {/* HERO SECTION */}
         <section className="hero section-frame" id="home">
           <div className="hero-copy">
             <div className="eyebrow reveal-item">
               <span className="signal">
                 <i />
               </span>
-              Available for internships · 2026
+              Available for AI / ML &amp; Full-Stack Internships · 2026
             </div>
             <div
               className="hero-title reveal-item"
@@ -602,8 +967,9 @@ export default function App() {
             <div className="hero-intro reveal-item">
               <span className="intro-index">[ ABOUT ]</span>
               <div>
-                I&apos;m John — a computer science engineer blending AI,
-                thoughtful code, and human centered product thinking.
+                I&apos;m John — an AI and machine learning engineer bridging
+                deep learning models, scalable full-stack web applications, and
+                human-centered digital products.
               </div>
             </div>
             <div className="hero-actions reveal-item">
@@ -616,7 +982,12 @@ export default function App() {
                   <Icon name="arrow" />
                 </span>
               </Action>
-              <Link className="text-action" download href={resume}>
+              <Link
+                className="text-action"
+                download="Karre_John_Hyde_Resume.pdf"
+                href={resume}
+                label="Download John Hyde's Resume PDF"
+              >
                 <Icon name="download" size={18} />
                 Download résumé
               </Link>
@@ -627,7 +998,7 @@ export default function App() {
             <div className="portrait-halo" />
             <div className="portrait-grid" />
             <div className="portrait-frame">
-              <img alt="Karre John Hyde" src={portrait} />
+              <img alt="Karre John Hyde portrait" src={portrait} />
               <div className="portrait-scan" />
             </div>
             <div className="orbit-label orbit-label-one">
@@ -640,7 +1011,7 @@ export default function App() {
             </div>
             <div className="floating-code">
               <Icon name="code" />
-              <span>BUILD / LEARN / ITERATE</span>
+              <span>BUILD / DEPLOY / LEARN</span>
             </div>
           </div>
 
@@ -650,6 +1021,7 @@ export default function App() {
           </div>
         </section>
 
+        {/* TICKER */}
         <div className="ticker" aria-hidden="true">
           <div className="ticker-track">
             {[0, 1].map((group) => (
@@ -658,15 +1030,22 @@ export default function App() {
                 <i>✦</i>
                 <span>ARTIFICIAL INTELLIGENCE</span>
                 <i>✦</i>
-                <span>FULL-STACK</span>
-                <i>✦</i>
                 <span>RAG SYSTEMS</span>
+                <i>✦</i>
+                <span>NEXT.JS &amp; REACT 19</span>
+                <i>✦</i>
+                <span>AWS &amp; VERCEL</span>
+                <i>✦</i>
+                <span>TENCENT EDGEONE CDN</span>
+                <i>✦</i>
+                <span>MACHINE LEARNING</span>
                 <i>✦</i>
               </div>
             ))}
           </div>
         </div>
 
+        {/* WORK SECTION */}
         <section className="work section-frame" id="work">
           <SectionLabel index="02">SELECTED WORK</SectionLabel>
           <div className="section-heading">
@@ -676,19 +1055,107 @@ export default function App() {
               into <em className="wave-word">impact.</em>
             </div>
             <div className="section-aside">
-              <span>03 / PROJECTS</span>
-              Selected experiments across intelligence, cloud, and learning.
+              <span>11 / PROJECTS</span>
+              Selected productions spanning artificial intelligence, full stack,
+              and global cloud deployments.
             </div>
           </div>
+
+          {/* PROJECT CATEGORY FILTERS */}
+          <div className="project-filter-bar">
+            {[
+              { id: "all", label: "All Projects", count: projects.length },
+              {
+                id: "ai",
+                label: "AI & Machine Learning",
+                count: projects.filter((p) => p.category === "ai").length,
+              },
+              {
+                id: "cloud",
+                label: "Full Stack & Cloud",
+                count: projects.filter((p) => p.category === "cloud").length,
+              },
+              {
+                id: "web",
+                label: "Web & Creative",
+                count: projects.filter((p) => p.category === "web").length,
+              },
+            ].map((cat) => (
+              <button
+                className={`filter-btn ${activeCategory === cat.id ? "active" : ""}`}
+                key={cat.id}
+                onClick={() => setActiveCategory(cat.id as ProjectCategory)}
+                type="button"
+              >
+                <span>{cat.label}</span>
+                <span className="filter-count">{cat.count}</span>
+              </button>
+            ))}
+          </div>
+
+          {/* PROJECT GRID */}
           <div className="project-grid">
-            {projects.map((project) => (
+            {filteredProjects.map((project) => (
               <ProjectCard key={project.title} project={project} />
             ))}
           </div>
         </section>
 
+        {/* EDGEONE DEPLOYMENTS SECTION */}
+        <section className="edge-section section-frame" id="edge">
+          <SectionLabel index="03">GLOBAL EDGE INFRASTRUCTURE</SectionLabel>
+          <div className="section-heading">
+            <div role="heading" aria-level={2}>
+              Distributed at
+              <br />
+              the <em className="wave-word">global edge.</em>
+            </div>
+            <div className="section-aside">
+              <span>09 / NODES</span>
+              Live micro-frontends and serverless edge deployments distributed
+              worldwide on Tencent EdgeOne Anycast CDN.
+            </div>
+          </div>
+
+          <div className="edge-card-grid">
+            {edgeNodes.map((node) => (
+              <a
+                className="edge-node-card"
+                href={node.url}
+                key={node.id}
+                rel="noreferrer"
+                target="_blank"
+              >
+                <div>
+                  <div className="edge-node-header">
+                    <span className="project-number">NODE /{node.id}</span>
+                    <span className="edge-latency">
+                      <span className="dot" />
+                      {node.ping}
+                    </span>
+                  </div>
+                  <div className="edge-node-name">{node.name}</div>
+                  <div className="edge-node-url">{node.url}</div>
+                </div>
+                <div className="edge-node-footer">
+                  <span
+                    style={{
+                      font: "500 9px/1 var(--font-mono)",
+                      color: "var(--ink-muted)",
+                    }}
+                  >
+                    {node.region}
+                  </span>
+                  <Icon name="external" size={13} />
+                </div>
+              </a>
+            ))}
+          </div>
+        </section>
+
+        {/* ABOUT ME SECTION */}
         <section className="about section-frame" id="about">
-          <SectionLabel index="03">MY OPERATING SYSTEM</SectionLabel>
+          <SectionLabel index="04">MY OPERATING SYSTEM</SectionLabel>
           <div className="about-grid">
             <div className="about-statement">
               <div role="heading" aria-level={2}>
@@ -697,14 +1164,36 @@ export default function App() {
                 <em className="wave-word">Precise</em> by design.
               </div>
               <p>
-                Final-year CSE student specializing in AI &amp; ML. I enjoy
-                moving between model logic, databases, interfaces, and
-                deployment — wherever the problem needs me.
+                Final-year Computer Science Engineering student specializing in
+                Artificial Intelligence &amp; Machine Learning at Sathyabama
+                Institute of Science and Technology, Chennai.
               </p>
-              <Link className="inline-link" href={links.linkedin}>
-                More on LinkedIn <Icon name="arrow" size={18} />
-              </Link>
+              <p>
+                My passion lies at the intersection of applied machine learning
+                and real-world software engineering: moving seamlessly from RAG
+                pipelines and predictive modeling to serverless databases,
+                reactive frontend design, and high-performance edge deployment.
+              </p>
+              <div
+                style={{
+                  display: "flex",
+                  gap: "18px",
+                  flexWrap: "wrap",
+                  marginTop: "20px",
+                }}
+              >
+                <Link className="inline-link" href={links.linkedin}>
+                  LinkedIn Profile <Icon name="arrow" size={16} />
+                </Link>
+                <Link className="inline-link" href={links.github}>
+                  GitHub Repositories <Icon name="arrow" size={16} />
+                </Link>
+                <Link className="inline-link" href={links.vercel}>
+                  Vercel Deployments <Icon name="arrow" size={16} />
+                </Link>
+              </div>
             </div>
+
             <div className="skill-grid">
               {skills.map((skill, index) => (
                 <div className="skill-card" key={skill.name}>
@@ -718,29 +1207,31 @@ export default function App() {
               ))}
             </div>
           </div>
+
           <div className="education-strip">
             <div>
-              <span>NOW — 2027</span>
+              <span>EDUCATION · 2025 — 2027</span>
               <strong>B.E. Computer Science · AI &amp; ML</strong>
               <small>Sathyabama Institute of Science and Technology</small>
             </div>
             <div className="metric">
               <strong>8.45</strong>
-              <span>CGPA</span>
+              <span>CURRENT CGPA</span>
             </div>
             <div className="metric">
-              <strong>03</strong>
-              <span>LIVE PROJECTS</span>
+              <strong>11+</strong>
+              <span>DEPLOYED APPS</span>
             </div>
             <div className="metric">
-              <strong>∞</strong>
-              <span>CURIOSITY</span>
+              <strong>09</strong>
+              <span>EDGE CDN NODES</span>
             </div>
           </div>
         </section>
 
+        {/* EXPERIENCE TIMELINE SECTION */}
         <section className="journey section-frame" id="journey">
-          <SectionLabel index="04">EXPERIENCE TIMELINE</SectionLabel>
+          <SectionLabel index="05">EXPERIENCE TIMELINE</SectionLabel>
           <div className="journey-heading">
             <div role="heading" aria-level={2}>
               Learning in public.
@@ -748,8 +1239,8 @@ export default function App() {
               Building <em className="wave-word">with intent.</em>
             </div>
             <p>
-              A trajectory shaped by hands-on delivery, rigorous learning, and
-              a bias for useful things.
+              A trajectory shaped by hands-on engineering, hackathon delivery,
+              and a constant bias for useful, intelligent tools.
             </p>
           </div>
           <div className="timeline">
@@ -766,15 +1257,20 @@ export default function App() {
           </div>
         </section>
 
+        {/* CERTIFICATIONS & CREDENTIALS SECTION */}
         <section className="credentials section-frame" id="credentials">
-          <SectionLabel index="05">CERTIFICATIONS &amp; TRAINING</SectionLabel>
+          <SectionLabel index="06">CERTIFICATIONS &amp; CREDENTIALS</SectionLabel>
           <div className="credentials-heading">
             <div role="heading" aria-level={2}>
               Curiosity,
               <br />
               <em className="wave-word">credentialed.</em>
             </div>
-            <Link className="inline-link" download href={resume}>
+            <Link
+              className="inline-link"
+              download="Karre_John_Hyde_Resume.pdf"
+              href={resume}
+            >
               Download full résumé <Icon name="download" size={18} />
             </Link>
           </div>
@@ -792,23 +1288,187 @@ export default function App() {
           </div>
         </section>
 
+        {/* CONTACT SECTION */}
         <section className="contact section-frame" id="contact">
           <div className="contact-noise" aria-hidden="true" />
           <div className="contact-kicker">
             <span className="live-dot" />
-            OPEN TO INTERNSHIPS &amp; COLLABORATIONS
+            OPEN TO INTERNSHIPS &amp; COLLABORATIONS · 2026
           </div>
           <div className="contact-title" role="heading" aria-level={2}>
             Have a problem worth
             <br />
             <em className="wave-word">solving together?</em>
           </div>
-          <Link className="contact-email" href={links.email}>
-            johnnykarre@gmail.com
-            <span>
-              <Icon name="arrow" size={28} />
-            </span>
-          </Link>
+
+          <div className="contact-container">
+            {/* Contact info channels */}
+            <div className="contact-info-panel">
+              <div className="contact-info-card">
+                <div className="contact-icon-box">
+                  <Icon name="mail" size={20} />
+                </div>
+                <div className="contact-info-text">
+                  <span>PRIMARY EMAIL</span>
+                  <strong>johnnykarre@gmail.com</strong>
+                </div>
+                <button
+                  className="copy-btn"
+                  onClick={handleCopyEmail}
+                  type="button"
+                >
+                  <Icon name={copiedEmail ? "check" : "copy"} size={13} />
+                  <span>{copiedEmail ? "Copied" : "Copy"}</span>
+                </button>
+              </div>
+
+              <a
+                className="contact-info-card"
+                href={links.linkedin}
+                rel="noreferrer"
+                target="_blank"
+              >
+                <div className="contact-icon-box">
+                  <Icon name="linkedin" size={20} />
+                </div>
+                <div className="contact-info-text">
+                  <span>LINKEDIN PROFILE</span>
+                  <strong>karre-john-hyde-594b67416</strong>
+                </div>
+                <Icon name="external" size={14} />
+              </a>
+
+              <a
+                className="contact-info-card"
+                href={links.github}
+                rel="noreferrer"
+                target="_blank"
+              >
+                <div className="contact-icon-box">
+                  <Icon name="github" size={20} />
+                </div>
+                <div className="contact-info-text">
+                  <span>GITHUB REPOSITORIES</span>
+                  <strong>github.com/KarreJohnHyde</strong>
+                </div>
+                <Icon name="external" size={14} />
+              </a>
+
+              <a
+                className="contact-info-card"
+                href={links.vercel}
+                rel="noreferrer"
+                target="_blank"
+              >
+                <div className="contact-icon-box">
+                  <Icon name="cloud" size={20} />
+                </div>
+                <div className="contact-info-text">
+                  <span>VERCEL DASHBOARD</span>
+                  <strong>vercel.com/johnnyvercel</strong>
+                </div>
+                <Icon name="external" size={14} />
+              </a>
+
+              <div className="contact-info-card">
+                <div className="contact-icon-box">
+                  <Icon name="mapPin" size={20} />
+                </div>
+                <div className="contact-info-text">
+                  <span>LOCATION &amp; TIMEZONE</span>
+                  <strong>Chennai, India · IST (UTC+5:30)</strong>
+                </div>
+              </div>
+            </div>
+
+            {/* Interactive message form */}
+            <form className="contact-form" onSubmit={handleContactSubmit}>
+              <div className="form-group">
+                <label htmlFor="contact-name">Your Name</label>
+                <input
+                  className="form-input"
+                  id="contact-name"
+                  onChange={(e) =>
+                    setFormData({ ...formData, name: e.target.value })
+                  }
+                  placeholder="e.g. Sarah Jenkins"
+                  required
+                  type="text"
+                  value={formData.name}
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="contact-email">Email Address</label>
+                <input
+                  className="form-input"
+                  id="contact-email"
+                  onChange={(e) =>
+                    setFormData({ ...formData, email: e.target.value })
+                  }
+                  placeholder="name@company.com"
+                  required
+                  type="email"
+                  value={formData.email}
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="contact-subject">Topic / Subject</label>
+                <input
+                  className="form-input"
+                  id="contact-subject"
+                  onChange={(e) =>
+                    setFormData({ ...formData, subject: e.target.value })
+                  }
+                  placeholder="Internship / Collaboration / Project"
+                  type="text"
+                  value={formData.subject}
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="contact-message">Message</label>
+                <textarea
+                  className="form-textarea"
+                  id="contact-message"
+                  onChange={(e) =>
+                    setFormData({ ...formData, message: e.target.value })
+                  }
+                  placeholder="Tell me about your team, challenge, or project..."
+                  required
+                  rows={4}
+                  value={formData.message}
+                />
+              </div>
+
+              <button
+                className="form-submit"
+                disabled={contactStatus === "sending"}
+                type="submit"
+              >
+                {contactStatus === "sending" ? (
+                  <>
+                    <span className="live-dot" />
+                    <span>Transmitting...</span>
+                  </>
+                ) : (
+                  <>
+                    <span>Send Message</span>
+                    <Icon name="arrow" size={16} />
+                  </>
+                )}
+              </button>
+
+              {contactStatus === "sent" && (
+                <div className="form-toast">
+                  <Icon name="check" size={16} />
+                  <span>Message delivered! I will reply to you shortly.</span>
+                </div>
+              )}
+            </form>
+          </div>
+
           <div className="contact-footer">
             <div>
               <span>BASED IN</span>
@@ -825,7 +1485,7 @@ export default function App() {
                 <Icon name="mail" />
               </Link>
             </div>
-            <span>© 2026 KARRE JOHN HYDE</span>
+            <span>© 2026 KARRE JOHN HYDE · ALL RIGHTS RESERVED</span>
           </div>
         </section>
       </main>
