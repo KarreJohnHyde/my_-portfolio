@@ -11,8 +11,13 @@ from app.ingestion.indexing import index_documents, delete_document_vectors
 
 router = APIRouter(prefix="/documents", tags=["Documents"])
 
-UPLOAD_DIR = Path("data/uploads")
-UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+from app.core.config import is_vercel
+
+UPLOAD_DIR = Path("/tmp/uploads" if is_vercel else "data/uploads")
+try:
+    UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+except Exception:
+    pass
 ALLOWED = {".pdf", ".txt", ".md", ".docx"}
 MAX_BYTES = 10 * 1024 * 1024
 
