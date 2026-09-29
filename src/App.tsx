@@ -9,6 +9,12 @@ import React, {
 } from "react"
 import portrait from "./imports/ce60ae59-92f9-4d33-8d8a-3c43c3f866ea.png"
 import resume from "./imports/Karre_John_Hyde_Resume__3_.pdf"
+import ScrollytellingSection from "./components/ScrollytellingSection"
+import {
+  initSmoothScroll,
+  scrollToTarget,
+  destroySmoothScroll,
+} from "./lib/smoothScroll"
 
 type IconName =
   | "arrow"
@@ -1285,6 +1291,14 @@ export default function App() {
   const credsReveal = useScrollReveal()
   const contactReveal = useScrollReveal()
 
+  // Initialize Lenis Smooth Scrolling hooked to GSAP ScrollTrigger
+  useEffect(() => {
+    initSmoothScroll()
+    return () => {
+      destroySmoothScroll()
+    }
+  }, [])
+
   useEffect(() => {
     const timer = window.setTimeout(() => setLoaded(true), 250)
     const updatePointer = (event: MouseEvent) => {
@@ -1313,6 +1327,7 @@ export default function App() {
   useEffect(() => {
     const sections = [
       "home",
+      "scrollytelling",
       "work",
       "about",
       "journey",
@@ -1338,7 +1353,7 @@ export default function App() {
   const navigate = useCallback((id: string) => {
     setTransitioning(true)
     window.setTimeout(() => {
-      document.getElementById(id)?.scrollIntoView({ behavior: "smooth" })
+      scrollToTarget(`#${id}`)
       setActive(id)
       window.setTimeout(() => setTransitioning(false), 480)
     }, 260)
@@ -1466,10 +1481,11 @@ export default function App() {
         <nav className="main-nav" aria-label="Primary navigation">
           {[
             { id: "home", label: "home", index: "01" },
-            { id: "work", label: "work", index: "02" },
-            { id: "about", label: "about", index: "03" },
-            { id: "journey", label: "path", index: "04" },
-            { id: "credentials", label: "creds", index: "05" },
+            { id: "scrollytelling", label: "3d story", index: "02" },
+            { id: "work", label: "work", index: "03" },
+            { id: "about", label: "about", index: "04" },
+            { id: "journey", label: "path", index: "05" },
+            { id: "credentials", label: "creds", index: "06" },
           ].map((item) => (
             <Action
               className={active === item.id ? "active" : ""}
@@ -1588,9 +1604,12 @@ export default function App() {
           </div>
         </div>
 
+        {/* 3D SCROLLYTELLING SECTION (CANVAS PINNING, THREE.JS, GLSL SHADERS, GSAP SCRUB) */}
+        <ScrollytellingSection />
+
         {/* WORK SECTION */}
         <section className={`work section-frame ${workReveal.isVisible ? "section-revealed" : ""}`} id="work" ref={workReveal.ref}>
-          <SectionLabel index="02">SELECTED WORK</SectionLabel>
+          <SectionLabel index="03">SELECTED WORK</SectionLabel>
           <div className="section-heading">
             <div role="heading" aria-level={2}>
               Ideas, engineered
