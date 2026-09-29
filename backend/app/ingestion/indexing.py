@@ -5,12 +5,20 @@ from app.rag.embeddings import get_embeddings
 
 def get_vector_store():
     persist_path = Path(settings.chroma_dir)
-    persist_path.mkdir(parents=True, exist_ok=True)
-    return Chroma(
-        collection_name="johnny_knowledge",
-        embedding_function=get_embeddings(),
-        persist_directory=str(persist_path)
-    )
+    try:
+        persist_path.mkdir(parents=True, exist_ok=True)
+    except Exception:
+        pass
+    try:
+        from langchain_chroma import Chroma
+        return Chroma(
+            collection_name="johnny_knowledge",
+            embedding_function=get_embeddings(),
+            persist_directory=str(persist_path)
+        )
+    except Exception as e:
+        print(f"Vector store Chroma initialization notice: {e}")
+        return None
 
 def index_documents(chunks, document_id: str):
     store = get_vector_store()

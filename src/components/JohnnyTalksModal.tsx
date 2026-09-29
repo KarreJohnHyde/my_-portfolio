@@ -219,13 +219,34 @@ I encountered a temporary connection interruption. However, my grounded offline 
                     }`}
                     title={
                       backendOnline
-                        ? "Connected to FastAPI Python Backend"
+                        ? "Connected to Local Python FastAPI Backend on http://127.0.0.1:8000"
                         : "Operating in Edge Grounded RAG Mode"
                     }
                   >
-                    {backendOnline ? "FastAPI Online" : "Client Grounded RAG"}
+                    {backendOnline ? "● FastAPI 127.0.0.1:8000 (Live)" : "● Edge Grounded RAG"}
                   </span>
                 )}
+                <a
+                  href="/docs"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="johnny-api-docs-btn"
+                  title="Open Interactive OpenAPI Swagger Docs on http://127.0.0.1:8000/docs"
+                >
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3" />
+                  </svg>
+                  API Docs ↗
+                </a>
+                <a
+                  href="/health"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="johnny-health-btn"
+                  title="Open Backend Health Check on http://127.0.0.1:8000/health"
+                >
+                  Health: OK
+                </a>
               </div>
               <p className="johnny-subtitle">
                 Knowledge-Grounded Cognitive Clone &amp; Client Advisory Engine
@@ -312,8 +333,59 @@ I encountered a temporary connection interruption. However, my grounded offline 
               <div className="knowledge-view-header">
                 <h3>Johnny&apos;s Verified Ingested Memory Store</h3>
                 <p>
-                  Documents split with semantic overlap (600 chars, 120 overlap) and indexed into ChromaDB/FAISS vector embeddings.
+                  Documents split with semantic overlap (600 chars, 120 overlap) and indexed into ChromaDB vector embeddings.
                 </p>
+              </div>
+
+              {/* LOCAL PYTHON BACKEND & OPENAPI TELEMETRY BANNER */}
+              <div className="knowledge-telemetry-banner">
+                <div className="telemetry-banner-title">
+                  <div className="telemetry-badge-live">
+                    <span className="telemetry-live-dot" />
+                    <span>LOCAL PYTHON BACKEND ACTIVE</span>
+                  </div>
+                  <span className="telemetry-host">http://127.0.0.1:8000</span>
+                </div>
+                
+                <div className="telemetry-grid">
+                  <a
+                    href="http://127.0.0.1:8000/docs"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="telemetry-item is-link"
+                    title="Interactive Swagger OpenAPI UI"
+                  >
+                    <span className="telemetry-item-label">Interactive OpenAPI Docs</span>
+                    <span className="telemetry-item-val highlight">http://127.0.0.1:8000/docs ↗</span>
+                  </a>
+
+                  <a
+                    href="http://127.0.0.1:8000/health"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="telemetry-item is-link"
+                    title="Health Check"
+                  >
+                    <span className="telemetry-item-label">Health Endpoint</span>
+                    <span className="telemetry-item-val ok">http://127.0.0.1:8000/health (Status: ok) ↗</span>
+                  </a>
+
+                  <a
+                    href="http://127.0.0.1:8000/openapi.json"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="telemetry-item is-link"
+                    title="OpenAPI Spec"
+                  >
+                    <span className="telemetry-item-label">OpenAPI JSON Schema</span>
+                    <span className="telemetry-item-val">/openapi.json ↗</span>
+                  </a>
+
+                  <div className="telemetry-item">
+                    <span className="telemetry-item-label">Vector Store &amp; Memory</span>
+                    <span className="telemetry-item-val">ChromaDB MMR (19 Chunks)</span>
+                  </div>
+                </div>
               </div>
 
               <div className="knowledge-grid">
@@ -533,11 +605,15 @@ I encountered a temporary connection interruption. However, my grounded offline 
             </form>
 
             <div className="johnny-footer-telemetry">
-              <span>Grounding: 10 Projects Ingested</span>
+              <span>Backend: <a href="http://127.0.0.1:8000" target="_blank" rel="noopener noreferrer" className="footer-telemetry-link">127.0.0.1:8000</a></span>
               <span className="telemetry-sep">•</span>
-              <span>Memory: MMR Retrievable</span>
+              <span>Health: <a href="/health" target="_blank" rel="noopener noreferrer" className="footer-telemetry-link text-emerald-400">OK</a></span>
               <span className="telemetry-sep">•</span>
-              <span>Mode: 5-Part Architectural Blueprint</span>
+              <span>Docs: <a href="/docs" target="_blank" rel="noopener noreferrer" className="footer-telemetry-link text-cyan-400">/docs ↗</a></span>
+              <span className="telemetry-sep">•</span>
+              <span>Memory: ChromaDB MMR</span>
+              <span className="telemetry-sep">•</span>
+              <span>Blueprint: 5-Part Diagnostic</span>
             </div>
           </footer>
         )}

@@ -1,6 +1,8 @@
 import os
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+is_vercel = bool(os.getenv("VERCEL") or os.getenv("AWS_LAMBDA_FUNCTION_NAME"))
+
 class Settings(BaseSettings):
     app_name: str = "Johnny-Talks"
     app_env: str = "development"
@@ -9,9 +11,9 @@ class Settings(BaseSettings):
     openai_api_key: str = os.getenv("OPENAI_API_KEY", "")
     openai_chat_model: str = "gpt-4o-mini"
     openai_embedding_model: str = "text-embedding-3-small"
-    database_url: str = "sqlite:///./data/johnny.db"
-    chroma_dir: str = "./data/chroma"
-    allowed_origins: str = "http://localhost:5173,http://localhost:8443,http://127.0.0.1:5173,https://my-portfolio-beige-eta-a97xqb58zd.vercel.app"
+    database_url: str = os.getenv("DATABASE_URL", "sqlite:////tmp/johnny.db" if is_vercel else "sqlite:///./data/johnny.db")
+    chroma_dir: str = os.getenv("CHROMA_DIR", "/tmp/chroma" if is_vercel else "./data/chroma")
+    allowed_origins: str = "http://localhost:5173,http://localhost:8443,http://127.0.0.1:5173,http://127.0.0.1:8000,http://localhost:8000,https://my-portfolio-beige-eta-a97xqb58zd.vercel.app"
     admin_username: str = "admin"
     admin_password: str = "admin123"
 
