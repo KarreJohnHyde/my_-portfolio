@@ -2746,12 +2746,82 @@ html.lenis body {
 }
 
 /* ═══════════════════════════════════════════════════════
+   GLOBAL SCROLL-DRIVEN ANIMATIONS & LENIS HUD
+   ═══════════════════════════════════════════════════════ */
+.global-scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, #cbff47 0%, #45e6f0 38%, #25d366 70%, #a78bfa 100%);
+  transform-origin: left;
+  z-index: 99999;
+  pointer-events: none;
+  box-shadow: 0 0 12px rgba(203, 255, 71, 0.6);
+}
+
+@supports ((animation-timeline: scroll()) and (animation-range: 0% 100%)) {
+  @keyframes global-scroll-fill {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
+  }
+
+  .global-scroll-progress {
+    animation: global-scroll-fill linear both;
+    animation-timeline: scroll();
+    animation-range: 0% 100%;
+  }
+}
+
+.lenis-hud-pill {
+  position: fixed;
+  bottom: 22px;
+  right: 24px;
+  z-index: 9990;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(14, 16, 18, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-family: var(--font-mono, "DM Mono", monospace);
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.65);
+  pointer-events: none;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.lenis-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #cbff47;
+  box-shadow: 0 0 8px #cbff47;
+  animation: pulse-dot 2s infinite ease-in-out;
+}
+
+.lenis-vel {
+  color: #45e6f0;
+  font-weight: 700;
+}
+
+/* ═══════════════════════════════════════════════════════
    SCROLLYTELLING & CANVAS PINNING (STICKY PINNING + 3D)
    ═══════════════════════════════════════════════════════ */
 .scrollytelling-track {
   position: relative;
   width: 100%;
-  height: 380vh;
+  height: 420vh;
   background-color: var(--bg-void, #090a0a);
 }
 
@@ -2767,7 +2837,12 @@ html.lenis body {
   flex-direction: column;
   justify-content: space-between;
   z-index: 10;
-  background: radial-gradient(circle at 50% 50%, rgba(20, 24, 30, 0.4) 0%, rgba(9, 10, 10, 0.95) 85%);
+  background: radial-gradient(circle at 50% 50%, rgba(18, 22, 28, 0.45) 0%, rgba(9, 10, 10, 0.96) 85%);
+  transition: box-shadow 0.4s ease;
+}
+
+.scrollytelling-pinned.is-pinned {
+  box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.85);
 }
 
 .scrollytelling-canvas {
@@ -2777,6 +2852,12 @@ html.lenis body {
   height: 100%;
   z-index: 1;
   pointer-events: auto;
+  cursor: grab;
+  touch-action: none;
+}
+
+.scrollytelling-canvas.is-orbiting {
+  cursor: grabbing;
 }
 
 .scrollytelling-vignette {
@@ -2785,7 +2866,7 @@ html.lenis body {
   pointer-events: none;
   z-index: 2;
   background:
-    radial-gradient(ellipse at center, transparent 35%, rgba(9, 10, 10, 0.8) 85%, #090a0a 100%),
+    radial-gradient(ellipse at center, transparent 32%, rgba(9, 10, 10, 0.82) 85%, #090a0a 100%),
     linear-gradient(to bottom, #090a0a 0%, transparent 15%, transparent 85%, #090a0a 100%);
 }
 
@@ -2794,11 +2875,11 @@ html.lenis body {
   inset: 0;
   pointer-events: none;
   z-index: 2;
-  opacity: 0.08;
+  opacity: 0.07;
   background-image:
     linear-gradient(rgba(255, 255, 255, 0.2) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255, 255, 255, 0.2) 1px, transparent 1px);
-  background-size: 60px 60px;
+  background-size: 64px 64px;
 }
 
 /* TOP HUD */
@@ -2810,6 +2891,15 @@ html.lenis body {
   align-items: center;
   padding: 24px 40px;
   pointer-events: none;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.hud-badge-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
 .hud-badge {
@@ -2836,9 +2926,62 @@ html.lenis body {
   animation: pulse-dot 2s ease-in-out infinite;
 }
 
+.hud-topology-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono, "DM Mono", monospace);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  padding: 6px 14px;
+  backdrop-filter: blur(8px);
+  transition: all 0.3s ease;
+}
+
+.topology-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  box-shadow: 0 0 8px currentColor;
+}
+
 .hud-metrics-row {
   display: flex;
+  align-items: center;
   gap: 10px;
+  flex-wrap: wrap;
+}
+
+.hud-audio-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  padding: 5px 12px;
+  color: rgba(255, 255, 255, 0.65);
+  font-family: var(--font-mono, "DM Mono", monospace);
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: all 0.25s ease;
+}
+
+.hud-audio-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+.hud-audio-btn.active {
+  background: rgba(203, 255, 71, 0.14);
+  border-color: #cbff47;
+  color: #cbff47;
+  box-shadow: 0 0 12px -2px rgba(203, 255, 71, 0.4);
 }
 
 .hud-chip {
@@ -2853,7 +2996,7 @@ html.lenis body {
   backdrop-filter: blur(8px);
 }
 
-/* CONTENT LAYER & STORY CARD */
+/* CONTENT LAYER & CONTINUOUS STACKED CARDS */
 .scrollytelling-content-layer {
   position: relative;
   z-index: 6;
@@ -2867,36 +3010,39 @@ html.lenis body {
   flex: 1;
 }
 
-.scrollytelling-card {
-  pointer-events: auto;
+.scrollytelling-cards-stack {
+  position: relative;
   width: 100%;
-  max-width: 530px;
-  background: rgba(14, 16, 18, 0.78);
+  max-width: 540px;
+  min-height: 440px;
+  display: flex;
+  align-items: center;
+}
+
+.scrollytelling-card {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(14, 16, 18, 0.82);
   backdrop-filter: blur(28px) saturate(180%);
   -webkit-backdrop-filter: blur(28px) saturate(180%);
   border: 1px solid rgba(255, 255, 255, 0.12);
+  border-left: 3px solid;
   border-radius: 20px;
   padding: 34px 38px;
   box-shadow:
-    0 24px 64px -12px rgba(0, 0, 0, 0.75),
+    0 28px 72px -12px rgba(0, 0, 0, 0.8),
     inset 0 1px 0 rgba(255, 255, 255, 0.14);
-  animation: scrollyCardIn 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
-  transition: transform 0.3s ease, border-color 0.3s ease;
+  transition:
+    opacity 0.22s ease-out,
+    transform 0.22s ease-out,
+    border-color 0.3s ease;
+  will-change: transform, opacity;
 }
 
 .scrollytelling-card:hover {
-  border-color: rgba(255, 255, 255, 0.22);
-}
-
-@keyframes scrollyCardIn {
-  from {
-    opacity: 0;
-    transform: translateY(18px) scale(0.97);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
+  border-color: rgba(255, 255, 255, 0.24);
 }
 
 .scrollytelling-card-header {
@@ -2920,6 +3066,7 @@ html.lenis body {
   letter-spacing: 0.1em;
   text-transform: uppercase;
   background: rgba(255, 255, 255, 0.06);
+  border: 1px solid;
   padding: 3px 9px;
   border-radius: 4px;
 }
@@ -2929,7 +3076,7 @@ html.lenis body {
   font-family: var(--font-mono, "DM Mono", monospace);
   font-size: 0.65rem;
   letter-spacing: 0.08em;
-  color: rgba(255, 255, 255, 0.38);
+  color: rgba(255, 255, 255, 0.4);
 }
 
 .scrollytelling-card-title {
@@ -2982,7 +3129,6 @@ html.lenis body {
   font-size: 1.35rem;
   font-weight: 800;
   font-family: var(--font-mono, "DM Mono", monospace);
-  color: #ffffff;
   line-height: 1;
 }
 
@@ -3011,7 +3157,7 @@ html.lenis body {
 .scrollytelling-action-btn:hover {
   background: #cbff47;
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(203, 255, 71, 0.3);
+  box-shadow: 0 8px 24px rgba(203, 255, 71, 0.35);
 }
 
 .scrollytelling-action-btn .arrow-glyph {
@@ -3045,8 +3191,16 @@ html.lenis body {
 .scrollytelling-progress-fill {
   height: 100%;
   border-radius: 999px;
-  transition: width 0.12s linear, background-color 0.3s ease;
+  transition: width 0.1s linear, background-color 0.3s ease;
   box-shadow: 0 0 12px currentColor;
+}
+
+.scrollytelling-bottom-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
 }
 
 .scrollytelling-stepper {
@@ -3096,10 +3250,16 @@ html.lenis body {
   opacity: 0.8;
 }
 
+.scrollytelling-status-pills {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-left: auto;
+}
+
 .scrollytelling-depth-counter {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
   gap: 8px;
   font-family: var(--font-mono, "DM Mono", monospace);
   font-size: 0.68rem;
@@ -3108,11 +3268,22 @@ html.lenis body {
 }
 
 .scrollytelling-depth-counter strong {
-  color: #ffffff;
+  font-weight: 800;
+}
+
+.drag-hint {
+  font-family: var(--font-mono, "DM Mono", monospace);
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 4px;
+  padding: 3px 8px;
 }
 
 /* NATIVE CSS SCROLL-DRIVEN ANIMATION SUPPORT (animation-timeline: scroll()) */
-@supports (animation-timeline: scroll()) {
+@supports ((animation-timeline: scroll()) and (animation-range: 0% 100%)) {
   @keyframes scroll-hud-glow {
     0% {
       opacity: 0.3;
@@ -3151,8 +3322,12 @@ html.lenis body {
     padding: 0 20px;
   }
 
-  .scrollytelling-card {
+  .scrollytelling-cards-stack {
     max-width: 100%;
+    min-height: 480px;
+  }
+
+  .scrollytelling-card {
     padding: 24px 22px;
     border-radius: 16px;
   }
@@ -3162,6 +3337,10 @@ html.lenis body {
   }
 
   .scrollytelling-step-btn .step-label {
+    display: none;
+  }
+
+  .lenis-hud-pill {
     display: none;
   }
 }

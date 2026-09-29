@@ -1291,10 +1291,20 @@ export default function App() {
   const credsReveal = useScrollReveal()
   const contactReveal = useScrollReveal()
 
+  const [scrollVelocity, setScrollVelocity] = useState(0)
+
   // Initialize Lenis Smooth Scrolling hooked to GSAP ScrollTrigger
   useEffect(() => {
-    initSmoothScroll()
+    const lenis = initSmoothScroll()
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const handleScroll = (e: any) => {
+      if (e && typeof e.velocity === "number") {
+        setScrollVelocity(Math.round(e.velocity))
+      }
+    }
+    lenis.on("scroll", handleScroll)
     return () => {
+      lenis.off("scroll", handleScroll)
       destroySmoothScroll()
     }
   }, [])
@@ -1460,6 +1470,14 @@ export default function App() {
 
   return (
     <div className={`app-shell ${loaded ? "is-loaded" : ""}`} ref={appRef}>
+      {/* GLOBAL NATIVE CSS SCROLL-DRIVEN PROGRESS BAR */}
+      <div className="global-scroll-progress" aria-hidden="true" />
+      {/* REAL-TIME LENIS SCROLL VELOCITY TELEMETRY */}
+      <div className="lenis-hud-pill" aria-hidden="true">
+        <span className="lenis-dot" />
+        <span>LENIS NORMALIZED INERTIA</span>
+        <span className="lenis-vel">{Math.abs(scrollVelocity)} PX/S</span>
+      </div>
       <ParticleTrail />
       <div className={`page-transition ${transitioning ? "is-active" : ""}`}>
         <span>KJH</span>
