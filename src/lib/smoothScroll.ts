@@ -33,13 +33,16 @@ export function initSmoothScroll(): Lenis {
   return lenis
 }
 
+import { getGlobalLenis } from "../components/scrollytelling/SmoothScrollProvider"
+
 export function getSmoothScroll(): Lenis | null {
-  return lenisInstance
+  return getGlobalLenis() || lenisInstance
 }
 
 export function scrollToTarget(target: string | number | HTMLElement, offset = 0) {
-  if (lenisInstance) {
-    lenisInstance.scrollTo(target, { offset, duration: 1.3 })
+  const activeLenis = getGlobalLenis() || lenisInstance
+  if (activeLenis) {
+    activeLenis.scrollTo(target, { offset, duration: 1.3 })
   } else {
     if (typeof target === "number") {
       window.scrollTo({ top: target, behavior: "smooth" })

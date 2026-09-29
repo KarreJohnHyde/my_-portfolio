@@ -9,12 +9,11 @@ import React, {
 } from "react"
 import portrait from "./imports/ce60ae59-92f9-4d33-8d8a-3c43c3f866ea.png"
 import resume from "./imports/Karre_John_Hyde_Resume__3_.pdf"
-import ScrollytellingSection from "./components/ScrollytellingSection"
-import {
-  initSmoothScroll,
-  scrollToTarget,
-  destroySmoothScroll,
-} from "./lib/smoothScroll"
+import ThreeDStorySection from "./components/scrollytelling/ThreeDStorySection"
+import SmoothScrollProvider, {
+  getGlobalLenis,
+} from "./components/scrollytelling/SmoothScrollProvider"
+import { scrollToTarget } from "./lib/smoothScroll"
 
 type IconName =
   | "arrow"
@@ -1293,19 +1292,26 @@ export default function App() {
 
   const [scrollVelocity, setScrollVelocity] = useState(0)
 
-  // Initialize Lenis Smooth Scrolling hooked to GSAP ScrollTrigger
+  // Listen to global Lenis scroll velocity for HUD telemetry
   useEffect(() => {
-    const lenis = initSmoothScroll()
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const handleScroll = (e: any) => {
-      if (e && typeof e.velocity === "number") {
-        setScrollVelocity(Math.round(e.velocity))
+    let activeLenis: any = null
+    const timer = window.setInterval(() => {
+      activeLenis = getGlobalLenis()
+      if (activeLenis) {
+        window.clearInterval(timer)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const handleScroll = (e: any) => {
+          if (e && typeof e.velocity === "number") {
+            setScrollVelocity(Math.round(e.velocity))
+          }
+        }
+        activeLenis.on("scroll", handleScroll)
       }
-    }
-    lenis.on("scroll", handleScroll)
+    }, 100)
+
     return () => {
-      lenis.off("scroll", handleScroll)
-      destroySmoothScroll()
+      window.clearInterval(timer)
     }
   }, [])
 
@@ -1469,7 +1475,8 @@ export default function App() {
       : projects.filter((p) => p.category === activeCategory)
 
   return (
-    <div className={`app-shell ${loaded ? "is-loaded" : ""}`} ref={appRef}>
+    <SmoothScrollProvider>
+      <div className={`app-shell ${loaded ? "is-loaded" : ""}`} ref={appRef}>
       {/* GLOBAL NATIVE CSS SCROLL-DRIVEN PROGRESS BAR */}
       <div className="global-scroll-progress" aria-hidden="true" />
       {/* REAL-TIME LENIS SCROLL VELOCITY TELEMETRY */}
@@ -1622,8 +1629,8 @@ export default function App() {
           </div>
         </div>
 
-        {/* 3D SCROLLYTELLING SECTION (CANVAS PINNING, THREE.JS, GLSL SHADERS, GSAP SCRUB) */}
-        <ScrollytellingSection />
+        {/* 3D SCROLLYTELLING SECTION: NEURAL KNOWLEDGE TORUS (CANVAS PINNING, R3F, GLSL SHADERS, GSAP SCRUB) */}
+        <ThreeDStorySection />
 
         {/* WORK SECTION */}
         <section className={`work section-frame ${workReveal.isVisible ? "section-revealed" : ""}`} id="work" ref={workReveal.ref}>
@@ -1844,18 +1851,20 @@ export default function App() {
             <div className="credentials-resume-actions">
               <button
                 aria-label="Preview official resume"
-                className="inline-link resume-trigger-btn"
+                className="credentials-action-btn"
                 onClick={() => setResumeModalOpen(true)}
                 type="button"
               >
-                Preview full résumé <Icon name="external" size={16} />
+                <span>Preview full résumé</span>
+                <Icon name="external" size={16} />
               </button>
               <Link
-                className="inline-link"
+                className="credentials-action-btn"
                 download="Karre_John_Hyde_Resume.pdf"
                 href={resume}
               >
-                Download PDF <Icon name="download" size={18} />
+                <span>Download PDF</span>
+                <Icon name="download" size={16} />
               </Link>
             </div>
           </div>
@@ -2178,5 +2187,6 @@ export default function App() {
         onClose={() => setResumeModalOpen(false)}
       />
     </div>
+    </SmoothScrollProvider>
   )
 }
