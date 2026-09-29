@@ -1,4 +1,5 @@
 import React, {
+  Suspense,
   useCallback,
   useEffect,
   useRef,
@@ -9,11 +10,14 @@ import React, {
 } from "react"
 import portrait from "./imports/ce60ae59-92f9-4d33-8d8a-3c43c3f866ea.png"
 import resume from "./imports/Karre_John_Hyde_Resume__3_.pdf"
-import ThreeDStorySection from "./components/scrollytelling/ThreeDStorySection"
 import SmoothScrollProvider, {
   getGlobalLenis,
 } from "./components/scrollytelling/SmoothScrollProvider"
 import { scrollToTarget } from "./lib/smoothScroll"
+
+const ThreeDStorySection = React.lazy(
+  () => import("./components/scrollytelling/ThreeDStorySection"),
+)
 
 type IconName =
   | "arrow"
@@ -1294,24 +1298,33 @@ export default function App() {
 
   // Listen to global Lenis scroll velocity for HUD telemetry
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let activeLenis: any = null
+    let unsubscribe: (() => void) | undefined
     const timer = window.setInterval(() => {
-      activeLenis = getGlobalLenis()
+      const activeLenis = getGlobalLenis()
       if (activeLenis) {
         window.clearInterval(timer)
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const handleScroll = (e: any) => {
+        const handleScroll = (e: { progress?: number; velocity?: number }) => {
           if (e && typeof e.velocity === "number") {
             setScrollVelocity(Math.round(e.velocity))
           }
+          if (typeof e.progress === "number") {
+            document.documentElement.style.setProperty(
+              "--page-scroll-progress",
+              String(e.progress),
+            )
+          }
         }
-        activeLenis.on("scroll", handleScroll)
+        unsubscribe = activeLenis.on("scroll", handleScroll)
+        handleScroll({
+          progress: activeLenis.progress,
+          velocity: activeLenis.velocity,
+        })
       }
     }, 100)
 
     return () => {
       window.clearInterval(timer)
+      unsubscribe?.()
     }
   }, [])
 
@@ -1629,8 +1642,16 @@ export default function App() {
           </div>
         </div>
 
-        {/* 3D SCROLLYTELLING SECTION: NEURAL KNOWLEDGE TORUS (CANVAS PINNING, R3F, GLSL SHADERS, GSAP SCRUB) */}
-        <ThreeDStorySection />
+        {/* Scroll-linked 3D narrative is code-split so it never delays the hero. */}
+        <section id="scrollytelling">
+          <Suspense
+            fallback={
+              <div aria-label="Loading interactive 3D story" className="threed-story-track story-loading" />
+            }
+          >
+            <ThreeDStorySection />
+          </Suspense>
+        </section>
 
         {/* WORK SECTION */}
         <section className={`work section-frame ${workReveal.isVisible ? "section-revealed" : ""}`} id="work" ref={workReveal.ref}>

@@ -14,16 +14,40 @@ interface NeuralTorusMeshProps {
   inspectMode: boolean
   mouseX: number
   mouseY: number
+  lowPower: boolean
 }
 
 const PARTICLE_COUNT = 2400
 
-function NeuralTorusParticles({ progress, inspectMode, mouseX, mouseY }: NeuralTorusMeshProps) {
+interface RenderProfile {
+  dpr: number
+  lowPower: boolean
+}
+
+function getRenderProfile(): RenderProfile {
+  if (typeof window === "undefined") return { dpr: 1, lowPower: false }
+
+  const navigatorWithMemory = navigator as Navigator & { deviceMemory?: number }
+  const isCoarsePointer = window.matchMedia("(pointer: coarse)").matches
+  const hasLimitedMemory = (navigatorWithMemory.deviceMemory ?? 8) <= 4
+  const hasFewCores = (navigator.hardwareConcurrency ?? 8) <= 4
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  const lowPower = isCoarsePointer || hasLimitedMemory || hasFewCores || prefersReducedMotion
+  const maximumDpr = hasLimitedMemory || hasFewCores ? 1 : isCoarsePointer ? 1.25 : 2
+
+  return {
+    dpr: Math.min(window.devicePixelRatio || 1, maximumDpr),
+    lowPower,
+  }
+}
+
+function NeuralTorusParticles({ progress, inspectMode, mouseX, mouseY, lowPower }: NeuralTorusMeshProps) {
   const pointsRef = useRef<THREE.Points>(null)
   const beamRef = useRef<THREE.Mesh>(null)
   const torusWireframeRef = useRef<THREE.Mesh>(null)
   const materialRef = useRef<THREE.ShaderMaterial>(null)
   const beamMaterialRef = useRef<THREE.ShaderMaterial>(null)
+  const lastFrameTime = useRef(0)
   const { camera, gl } = useThree()
 
   // Generate 4 procedural mathematical topologies
@@ -137,6 +161,12 @@ function NeuralTorusParticles({ progress, inspectMode, mouseX, mouseY }: NeuralT
   // Smooth camera orchestration tied to scroll stages when NOT in manual inspect mode
   useFrame((state, delta) => {
     const time = state.clock.getElapsedTime()
+    const elapsedSinceLastUpdate = time - lastFrameTime.current
+
+    // Keep lower-end/mobile devices at a calmer ~30 FPS update cadence.
+    if (lowPower && elapsedSinceLastUpdate < 1 / 30) return
+    lastFrameTime.current = time
+    const animationDelta = lowPower ? elapsedSinceLastUpdate : delta
 
     if (materialRef.current) {
       materialRef.current.uniforms.uTime.value = time
@@ -190,9 +220,9 @@ function NeuralTorusParticles({ progress, inspectMode, mouseX, mouseY }: NeuralT
         targetX = THREE.MathUtils.lerp(1.0, 0.0, p4) + mouseX * 0.4
       }
 
-      camera.position.x = THREE.MathUtils.damp(camera.position.x, targetX, 4.0, delta)
-      camera.position.y = THREE.MathUtils.damp(camera.position.y, targetY + mouseY * 0.6, 4.0, delta)
-      camera.position.z = THREE.MathUtils.damp(camera.position.z, targetZ, 4.0, delta)
+      camera.position.x = THREE.MathUtils.damp(camera.position.x, targetX, 4.0, animationDelta)
+      camera.position.y = THREE.MathUtils.damp(camera.position.y, targetY + mouseY * 0.6, 4.0, animationDelta)
+      camera.position.z = THREE.MathUtils.damp(camera.position.z, targetZ, 4.0, animationDelta)
       camera.lookAt(0, 0, 0)
     }
   })
@@ -288,13 +318,30 @@ export default function NeuralTorusScene({
   mouseX,
   mouseY,
 }: NeuralTorusSceneProps) {
+  const [renderProfile, setRenderProfile] = React.useState<RenderProfile>(getRenderProfile)
+
+  useEffect(() => {
+    const updateRenderProfile = () => setRenderProfile(getRenderProfile())
+    const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)")
+
+    window.addEventListener("resize", updateRenderProfile, { passive: true })
+    window.addEventListener("orientationchange", updateRenderProfile, { passive: true })
+    motionQuery.addEventListener("change", updateRenderProfile)
+
+    return () => {
+      window.removeEventListener("resize", updateRenderProfile)
+      window.removeEventListener("orientationchange", updateRenderProfile)
+      motionQuery.removeEventListener("change", updateRenderProfile)
+    }
+  }, [])
+
   return (
     <Canvas
       camera={{ position: [0, 0, 8.8], fov: 52, near: 0.1, far: 100 }}
       className="neural-torus-canvas"
-      dpr={Math.min(typeof window !== "undefined" ? window.devicePixelRatio : 1, 2)}
+      dpr={renderProfile.dpr}
       gl={{
-        antialias: true,
+        antialias: !renderProfile.lowPower,
         alpha: true,
         powerPreference: "high-performance",
       }}
@@ -310,6 +357,7 @@ export default function NeuralTorusScene({
         inspectMode={inspectMode}
         mouseX={mouseX}
         mouseY={mouseY}
+        lowPower={renderProfile.lowPower}
         progress={progress}
       />
 

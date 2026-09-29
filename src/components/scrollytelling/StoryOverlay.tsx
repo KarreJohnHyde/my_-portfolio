@@ -1,4 +1,4 @@
-import React, { useRef } from "react"
+import React, { useEffect, useRef } from "react"
 import NeuralTorusScene from "./NeuralTorusScene"
 
 export interface StoryStageData {
@@ -80,7 +80,9 @@ interface StoryOverlayProps {
   progress: number
   activeStage: number
   inspectMode: boolean
+  snapEnabled: boolean
   onToggleInspect: () => void
+  onToggleSnap: () => void
   onJumpToStage: (index: number) => void
   mouseX: number
   mouseY: number
@@ -90,17 +92,40 @@ export default function StoryOverlay({
   progress,
   activeStage,
   inspectMode,
+  snapEnabled,
   onToggleInspect,
+  onToggleSnap,
   onJumpToStage,
   mouseX,
   mouseY,
 }: StoryOverlayProps) {
   const currentStage = storyStages[activeStage] || storyStages[0]
+  const canvasContainerRef = useRef<HTMLDivElement>(null)
+
+  // OrbitControls receives the event on the canvas first. Stopping propagation
+  // at the parent then keeps Lenis/the document from treating it as page scroll.
+  useEffect(() => {
+    const container = canvasContainerRef.current
+    if (!container || !inspectMode) return
+
+    const preventDocumentScroll = (event: Event) => {
+      event.preventDefault()
+      event.stopPropagation()
+    }
+
+    container.addEventListener("wheel", preventDocumentScroll, { passive: false })
+    container.addEventListener("touchmove", preventDocumentScroll, { passive: false })
+
+    return () => {
+      container.removeEventListener("wheel", preventDocumentScroll)
+      container.removeEventListener("touchmove", preventDocumentScroll)
+    }
+  }, [inspectMode])
 
   return (
-    <div className="story-overlay-pinned">
+    <div className={`story-overlay-pinned ${inspectMode ? "is-inspecting" : ""}`}>
       {/* 3D WebGL / R3F Canvas */}
-      <div className="story-canvas-container">
+      <div className="story-canvas-container" ref={canvasContainerRef}>
         <NeuralTorusScene
           inspectMode={inspectMode}
           mouseX={mouseX}
@@ -139,6 +164,7 @@ export default function StoryOverlay({
         <div className="hud-controls-group">
           <button
             className={`hud-inspect-btn ${inspectMode ? "is-active" : ""}`}
+            aria-pressed={inspectMode}
             onClick={onToggleInspect}
             title={
               inspectMode
@@ -151,6 +177,17 @@ export default function StoryOverlay({
             <span>{inspectMode ? "EXIT 3D INSPECT (RESUME SCROLL)" : "INSPECT 3D MODEL"}</span>
           </button>
 
+          <button
+            aria-pressed={snapEnabled}
+            className={`hud-snap-btn ${snapEnabled ? "is-active" : ""}`}
+            onClick={onToggleSnap}
+            title="Toggle gentle snapping to 25% story milestones after scrolling stops"
+            type="button"
+          >
+            <span aria-hidden="true">⌁</span>
+            <span>SOFT SNAP {snapEnabled ? "ON" : "OFF"}</span>
+          </button>
+
           <span className="hud-telemetry-chip">2,400 PARTICLES</span>
           <span className="hud-telemetry-chip">GLSL SHADER</span>
         </div>
@@ -161,7 +198,7 @@ export default function StoryOverlay({
         <div className="story-cards-stack">
           {storyStages.map((stage, i) => {
             // Precise continuous scroll proximity math
-            const center = i / (storyStages.length - 1)
+            const center = i / storyStages.length
             const distance = Math.abs(progress - center)
             const isVisible = distance < 0.28
             const opacity = Math.max(0, Math.min(1, 1 - distance * 3.8))

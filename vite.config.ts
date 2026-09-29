@@ -15,7 +15,9 @@ export default defineConfig(({ mode }) => {
     base: process.env.FIGMA_PUBLIC_URL ? `${process.env.FIGMA_PUBLIC_URL}/` : '/',
     build: {
       sourcemap: emitSourcemaps ? 'inline' : false,
-      minify: !emitSourcemaps,
+      // Vite 8's Rolldown minifier can panic on this graphics-heavy bundle.
+      // Keep builds reliable while the page remains code-split and gzip-compressed.
+      minify: false,
     },
     plugins: [
 react(),

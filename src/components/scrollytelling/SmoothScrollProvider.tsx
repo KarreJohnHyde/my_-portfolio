@@ -1,4 +1,13 @@
-import React, { createContext, useContext, useEffect, useRef, useState, type ReactNode } from "react"
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react"
 import Lenis from "lenis"
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
@@ -89,23 +98,21 @@ export default function SmoothScrollProvider({ children }: SmoothScrollProviderP
     }
   }, [])
 
-  const stopScroll = () => {
+  const stopScroll = useCallback(() => {
     if (lenisRef.current) {
       lenisRef.current.stop()
       setIsLocked(true)
-      document.body.style.overflow = "hidden"
     }
-  }
+  }, [])
 
-  const startScroll = () => {
+  const startScroll = useCallback(() => {
     if (lenisRef.current) {
       lenisRef.current.start()
       setIsLocked(false)
-      document.body.style.overflow = ""
     }
-  }
+  }, [])
 
-  const scrollTo = (target: string | number | HTMLElement, offset = 0) => {
+  const scrollTo = useCallback((target: string | number | HTMLElement, offset = 0) => {
     if (lenisRef.current) {
       lenisRef.current.scrollTo(target, { offset, duration: 1.4 })
     } else {
@@ -117,18 +124,15 @@ export default function SmoothScrollProvider({ children }: SmoothScrollProviderP
         target.scrollIntoView({ behavior: "smooth" })
       }
     }
-  }
+  }, [])
+
+  const value = useMemo(
+    () => ({ lenis, stopScroll, startScroll, scrollTo, isLocked }),
+    [isLocked, lenis, scrollTo, startScroll, stopScroll],
+  )
 
   return (
-    <SmoothScrollContext.Provider
-      value={{
-        lenis,
-        stopScroll,
-        startScroll,
-        scrollTo,
-        isLocked,
-      }}
-    >
+    <SmoothScrollContext.Provider value={value}>
       {children}
     </SmoothScrollContext.Provider>
   )
