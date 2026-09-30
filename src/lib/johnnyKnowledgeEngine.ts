@@ -1005,7 +1005,7 @@ When translating cross-platform specifications from Figma into production archit
      - **iOS / macOS**: Declarative SwiftUI views with native system icons (\`Image(systemName:)\`).
      - **Android**: Jetpack Compose Composables with Material 3 token bindings.
 
-You can interactively test this in real-time in the **Multi-Platform Device Studio** embedded right above in my portfolio!`
+These six pillars enable me to design once and deliver production-quality interfaces across web, iOS, and Android simultaneously.`
     } else {
       answer = `I love this topic! Building modern multi-platform apps requires seamless harmony between design systems in Figma and production code in React, SwiftUI, or Jetpack Compose.
 
@@ -1018,7 +1018,7 @@ Figma makes this possible through **6 foundational pillars**:
 5. **Prototyping and Real-Time Testing**: You set native triggers (clicks for mouse users, drags/swipes for mobile), preview designs with realistic hardware bezels, and use **Figma Mirror** on an actual phone to test thumb reachability in real-time.
 6. **Dev Mode for Multi-Platform Handoff**: When designs are ready to ship, Dev Mode translates visual styling into platform-specific code—generating CSS for web apps, SwiftUI for Apple platforms, and Compose for Android.
 
-I've even built an interactive **Multi-Platform Device Studio** right into my portfolio where you can toggle between these devices, adjust Auto Layout spacing, switch UI kits, and inspect generated code in real time!`
+This systematic approach lets me design once in Figma and ship production-quality interfaces across web, iOS, and Android simultaneously.`
     }
   }
   // -------------------------------------------------------------

@@ -1,21 +1,39 @@
-import React, { useEffect, useRef } from "react"
+import { useEffect, useRef } from "react"
 
 export default function PixelGridTrail() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
+    // Skip on touch-only devices (no fine pointer)
+    const hasPointer = window.matchMedia("(pointer: fine)").matches
+    if (!hasPointer) return
+
+    // Skip when user prefers reduced motion
+    const prefersReduced = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches
+    if (prefersReduced) return
+
     const canvas = canvasRef.current
     if (!canvas) return
     const ctx = canvas.getContext("2d")
     if (!ctx) return
 
-    let width = window.innerWidth
-    let height = window.innerHeight
-    canvas.width = width
-    canvas.height = height
-
     const gridSize = 40 // Size of each pixel block
     const trail: { x: number; y: number; alpha: number }[] = []
+
+    const resize = () => {
+      const dpr = window.devicePixelRatio || 1
+      const w = window.innerWidth
+      const h = window.innerHeight
+      canvas.width = w * dpr
+      canvas.height = h * dpr
+      canvas.style.width = `${w}px`
+      canvas.style.height = `${h}px`
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+    }
+
+    resize()
 
     const handleMouseMove = (e: MouseEvent) => {
       // Snap mouse coordinates to the nearest grid block
@@ -29,10 +47,13 @@ export default function PixelGridTrail() {
     }
 
     window.addEventListener("mousemove", handleMouseMove)
+    window.addEventListener("resize", resize)
 
-    let animationFrameId: number
+    let rafId: number
     const animate = () => {
-      ctx.clearRect(0, 0, width, height)
+      const w = canvas.width / (window.devicePixelRatio || 1)
+      const h = canvas.height / (window.devicePixelRatio || 1)
+      ctx.clearRect(0, 0, w, h)
 
       // Draw and fade trail
       for (let i = 0; i < trail.length; i++) {
@@ -51,24 +72,15 @@ export default function PixelGridTrail() {
         trail.pop()
       }
 
-      animationFrameId = requestAnimationFrame(animate)
+      rafId = requestAnimationFrame(animate)
     }
 
-    animate()
-
-    const handleResize = () => {
-      width = window.innerWidth
-      height = window.innerHeight
-      canvas.width = width
-      canvas.height = height
-    }
-
-    window.addEventListener("resize", handleResize)
+    rafId = requestAnimationFrame(animate)
 
     return () => {
+      cancelAnimationFrame(rafId)
       window.removeEventListener("mousemove", handleMouseMove)
-      window.removeEventListener("resize", handleResize)
-      cancelAnimationFrame(animationFrameId)
+      window.removeEventListener("resize", resize)
     }
   }, [])
 
