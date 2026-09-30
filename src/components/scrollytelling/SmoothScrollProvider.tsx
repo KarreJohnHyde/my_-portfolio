@@ -44,7 +44,10 @@ export function getGlobalLenis(): Lenis | null {
   return globalLenisInstance
 }
 
-export function scrollToTarget(target: string | number | HTMLElement, offset = 0) {
+export function scrollToTarget(
+  target: string | number | HTMLElement,
+  offset = 0,
+) {
   if (globalLenisInstance) {
     globalLenisInstance.scrollTo(target, { offset, duration: 1.4 })
   } else {
@@ -58,7 +61,9 @@ export function scrollToTarget(target: string | number | HTMLElement, offset = 0
   }
 }
 
-export default function SmoothScrollProvider({ children }: SmoothScrollProviderProps) {
+export default function SmoothScrollProvider({
+  children,
+}: SmoothScrollProviderProps) {
   const [lenis, setLenis] = useState<Lenis | null>(null)
   const [isLocked, setIsLocked] = useState(false)
   const lenisRef = useRef<Lenis | null>(null)
@@ -112,19 +117,22 @@ export default function SmoothScrollProvider({ children }: SmoothScrollProviderP
     }
   }, [])
 
-  const scrollTo = useCallback((target: string | number | HTMLElement, offset = 0) => {
-    if (lenisRef.current) {
-      lenisRef.current.scrollTo(target, { offset, duration: 1.4 })
-    } else {
-      if (typeof target === "number") {
-        window.scrollTo({ top: target, behavior: "smooth" })
-      } else if (typeof target === "string") {
-        document.querySelector(target)?.scrollIntoView({ behavior: "smooth" })
+  const scrollTo = useCallback(
+    (target: string | number | HTMLElement, offset = 0) => {
+      if (lenisRef.current) {
+        lenisRef.current.scrollTo(target, { offset, duration: 1.4 })
       } else {
-        target.scrollIntoView({ behavior: "smooth" })
+        if (typeof target === "number") {
+          window.scrollTo({ top: target, behavior: "smooth" })
+        } else if (typeof target === "string") {
+          document.querySelector(target)?.scrollIntoView({ behavior: "smooth" })
+        } else {
+          target.scrollIntoView({ behavior: "smooth" })
+        }
       }
-    }
-  }, [])
+    },
+    [],
+  )
 
   const value = useMemo(
     () => ({ lenis, stopScroll, startScroll, scrollTo, isLocked }),

@@ -1,8 +1,17 @@
 // src/components/JohnnyTalksModal.tsx
 import React, { useState, useEffect, useRef } from "react"
 import plushieAvatar from "../assets/johnny-plushie.jpg"
-import { askJohnny, checkBackendHealth, type Source } from "../services/api"
-import { JOHNNY_KNOWLEDGE_BASE } from "../lib/johnnyKnowledgeEngine"
+import {
+  askJohnny,
+  checkBackendHealth,
+  getSavedGeminiKey,
+  saveGeminiKey,
+  type Source,
+} from "../services/api"
+import {
+  JOHNNY_KNOWLEDGE_BASE,
+  type PersonaMode,
+} from "../lib/johnnyKnowledgeEngine"
 
 interface Message {
   id: string
@@ -11,6 +20,8 @@ interface Message {
   sources?: Source[]
   latencyMs?: number
   isLiveBackend?: boolean
+  isGeminiLive?: boolean
+  personaMode?: PersonaMode
   timestamp: string
 }
 
@@ -21,33 +32,53 @@ interface JohnnyTalksModalProps {
 }
 
 const STARTER_PROMPTS = [
-  "How did you design Study2AI's RAG pipeline without hallucinations?",
-  "Compare DynamoDB vs PostgreSQL for Expense AI under high write loads",
-  "How does Cognitive Learning classify student archetypes using PCA & K-Means?",
-  "What are your 4 core architectural execution principles?",
-  "Tell me about your academic degree and elite certifications at IIT Kanpur & IIT Kharagpur",
+  {
+    label: "👋 About Johnny",
+    text: "Tell me about yourself, your background, and what drives you",
+  },
+  {
+    label: "🤖 Study2AI RAG",
+    text: "How did you design Study2AI's RAG pipeline without hallucinations?",
+  },
+  {
+    label: "⚡ DynamoDB vs Postgres",
+    text: "Compare DynamoDB vs PostgreSQL for Expense AI under high write loads",
+  },
+  {
+    label: "🏆 IIT Kanpur Credential",
+    text: "Tell me about your elite certification in Distributed Systems from IIT Kanpur",
+  },
+  {
+    label: "💼 2026 Internships",
+    text: "Are you open for AI/ML and Full-Stack Engineering internships in 2026?",
+  },
+  {
+    label: "🥇 Innoverse'26 Winner",
+    text: "How does Cognitive Learning classify student archetypes using PCA & K-Means?",
+  },
 ]
 
 const INITIAL_WELCOME: Message = {
   id: "msg-welcome",
   role: "assistant",
-  content: `### 1. Executive Diagnosis & Direct Answer
-I am **Johnny-Talks**, the personal cognitive digital twin and strategic technical advisor of **Karre John Hyde (Johnny)**.
+  content: `Hey! I'm **Johnny-Talks**, the personal AI digital twin and cognitive brain of **Karre John Hyde (Johnny)**.
 
-I reason directly through the verified lens of Johnny's real-world projects (**Study2AI**, **Expense AI**, **Cognitive Learning**, **MedTwin**), his elite certifications from **IIT Kanpur** and **IIT Kharagpur**, and his core architectural playbook.
+I think, evaluate engineering trade-offs, and speak with the exact voice, principles, and real-world project experience that Johnny brings to AI/ML and distributed systems. 
 
-#### What would you like to examine today?
-- **RAG & Agentic Systems**: Chunking strategies, MMR retrieval, and cold-start latency reduction.
-- **Cloud & Databases**: Serverless DynamoDB vs PostgreSQL single-table design and concurrency.
-- **Applied Machine Learning**: Unsupervised clustering, PCA dimensionality reduction, and student profiling.
-- **Advisory & Consulting**: Architectural blueprints, Greenfield vs High-Constraint trade-offs, and technical evaluations.`,
+#### What would you like to explore today?
+- **AI & RAG Systems**: How I eliminated hallucinations in **Study2AI** using MMR retrieval and custom chunk boundaries.
+- **Cloud & Scalability**: Serverless **DynamoDB single-table design** vs PostgreSQL in **Expense AI**.
+- **Applied ML**: How I won **Innoverse'26** with **Cognitive Learning** using PCA + K-Means clustering.
+- **Elite Credentials**: Coursework at **Sathyabama IST (8.45 CGPA)** and **IIT Kanpur Elite** in Distributed Systems.
+- **Hiring & Collaboration**: Actively open for **2026 AI/ML & Full-Stack Internships**!`,
   sources: [
     {
       source: "johnny_technical_playbook_and_creds.md",
       page: 1,
       chunkIndex: 0,
       category: "philosophy",
-      excerpt: "Johnny's 4 Core Execution Principles: Strict Grounding Over Hallucination, Production-Grade Simplicity, First-Person Accountability...",
+      excerpt:
+        "Johnny's 4 Core Execution Principles: Strict Grounding Over Hallucination, Production-Grade Simplicity, First-Person Accountability...",
       score: 0.98,
     },
     {
@@ -55,7 +86,8 @@ I reason directly through the verified lens of Johnny's real-world projects (**S
       page: 1,
       chunkIndex: 0,
       category: "projects",
-      excerpt: "Study2AI RAG Pipeline with MMR retrieval and zero-hallucination guardrails...",
+      excerpt:
+        "Study2AI RAG Pipeline with MMR retrieval and zero-hallucination guardrails...",
       score: 0.95,
     },
   ],
@@ -71,24 +103,136 @@ export default function JohnnyTalksModal({
   const [input, setInput] = useState("")
   const [loading, setLoading] = useState(false)
   const [activeTab, setActiveTab] = useState<"chat" | "knowledge">("chat")
-  const [scenarioMode, setScenarioMode] = useState<"all" | "greenfield" | "high_constraint">("all")
+  const [personaMode, setPersonaMode] = useState<PersonaMode>("conversational")
+  const [scenarioMode, setScenarioMode] =
+    useState<"all" | "greenfield" | "high_constraint">("all")
   const [selectedCitation, setSelectedCitation] = useState<Source | null>(null)
   const [copiedId, setCopiedId] = useState<string | null>(null)
   const [backendOnline, setBackendOnline] = useState<boolean | null>(null)
+
+  // Voice & Speech States
+  const [isListening, setIsListening] = useState(false)
+  const [speakingId, setSpeakingId] = useState<string | null>(null)
+  const speechRecognitionRef = useRef<any>(null)
+
+  // AI Settings Modal
+  const [showSettings, setShowSettings] = useState(false)
+  const [geminiKeyInput, setGeminiKeyInput] = useState("")
+  const [geminiKeySaved, setGeminiKeySaved] = useState(false)
 
   const chatBottomRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLTextAreaElement>(null)
   const initialHandledRef = useRef<string | null>(null)
 
+  // Load saved Gemini Key on mount
+  useEffect(() => {
+    const saved = getSavedGeminiKey()
+    if (saved) {
+      setGeminiKeyInput(saved)
+      setGeminiKeySaved(true)
+    }
+  }, [])
+
+  // Initialize Speech Recognition
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const SpeechRecognition =
+        (window as any).SpeechRecognition ||
+        (window as any).webkitSpeechRecognition
+      if (SpeechRecognition) {
+        const recognition = new SpeechRecognition()
+        recognition.continuous = false
+        recognition.interimResults = false
+        recognition.lang = "en-US"
+
+        recognition.onstart = () => setIsListening(true)
+        recognition.onend = () => setIsListening(false)
+        recognition.onerror = () => setIsListening(false)
+
+        recognition.onresult = (event: any) => {
+          const transcript = event.results[0][0].transcript
+          if (transcript) {
+            setInput((prev) => (prev ? `${prev} ${transcript}` : transcript))
+          }
+          setIsListening(false)
+        }
+
+        speechRecognitionRef.current = recognition
+      }
+    }
+  }, [])
+
+  const toggleSpeechRecognition = () => {
+    if (!speechRecognitionRef.current) {
+      alert("Speech recognition is not supported in this browser.")
+      return
+    }
+    if (isListening) {
+      speechRecognitionRef.current.stop()
+    } else {
+      speechRecognitionRef.current.start()
+    }
+  }
+
+  const toggleSpeakMessage = (msgId: string, text: string) => {
+    if (typeof window === "undefined" || !("speechSynthesis" in window)) {
+      alert("Text-to-speech is not supported in this browser.")
+      return
+    }
+
+    if (speakingId === msgId) {
+      window.speechSynthesis.cancel()
+      setSpeakingId(null)
+      return
+    }
+
+    window.speechSynthesis.cancel()
+    // Clean text of markdown characters before reading
+    const cleanText = text
+      .replace(/```[\s\S]*?```/g, "Code snippet omitted.")
+      .replace(/[#*`_~]/g, "")
+      .replace(/\[(.*?)\]\(.*?\)/g, "$1")
+      .trim()
+
+    const utterance = new SpeechSynthesisUtterance(cleanText)
+    utterance.rate = 1.05
+    utterance.pitch = 1.0
+
+    // Try finding an English natural voice
+    const voices = window.speechSynthesis.getVoices()
+    const preferredVoice = voices.find(
+      (v) =>
+        v.name.includes("Natural") ||
+        v.name.includes("Google") ||
+        v.lang.startsWith("en"),
+    )
+    if (preferredVoice) utterance.voice = preferredVoice
+
+    utterance.onend = () => setSpeakingId(null)
+    utterance.onerror = () => setSpeakingId(null)
+
+    setSpeakingId(msgId)
+    window.speechSynthesis.speak(utterance)
+  }
+
   const handleSend = async (textToSend?: string) => {
     const query = (textToSend || input).trim()
     if (!query || loading) return
+
+    // Stop speaking if new message sent
+    if (speakingId) {
+      window.speechSynthesis.cancel()
+      setSpeakingId(null)
+    }
 
     const userMsg: Message = {
       id: `usr-${Date.now()}`,
       role: "user",
       content: query,
-      timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+      timestamp: new Date().toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
     }
 
     setMessages((prev) => [...prev, userMsg])
@@ -96,8 +240,11 @@ export default function JohnnyTalksModal({
     setLoading(true)
 
     try {
-      const history = messages.map((m) => ({ role: m.role, content: m.content }))
-      const res = await askJohnny(query, history, scenarioMode)
+      const history = messages.map((m) => ({
+        role: m.role,
+        content: m.content,
+      }))
+      const res = await askJohnny(query, history, personaMode, scenarioMode)
 
       const assistantMsg: Message = {
         id: `asst-${Date.now()}`,
@@ -106,7 +253,12 @@ export default function JohnnyTalksModal({
         sources: res.sources,
         latencyMs: res.latencyMs,
         isLiveBackend: res.isLiveBackend,
-        timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+        isGeminiLive: res.isGeminiLive,
+        personaMode,
+        timestamp: new Date().toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
       }
 
       setMessages((prev) => [...prev, assistantMsg])
@@ -115,9 +267,11 @@ export default function JohnnyTalksModal({
       const errorMsg: Message = {
         id: `err-${Date.now()}`,
         role: "assistant",
-        content: `### 1. Executive Diagnosis & Direct Answer
-I encountered a temporary connection interruption. However, my grounded offline playbook remains active. Please try phrasing your inquiry around Study2AI, Expense AI, or Cognitive Learning.`,
-        timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+        content: `I hit a temporary connection glitch, but my grounded local brain is still ready! Feel free to ask me anything about Study2AI, Expense AI, or Cognitive Learning.`,
+        timestamp: new Date().toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
       }
       setMessages((prev) => [...prev, errorMsg])
     } finally {
@@ -134,7 +288,11 @@ I encountered a temporary connection interruption. However, my grounded offline 
 
   // Handle initial question if provided
   useEffect(() => {
-    if (isOpen && initialQuestion && initialHandledRef.current !== initialQuestion) {
+    if (
+      isOpen &&
+      initialQuestion &&
+      initialHandledRef.current !== initialQuestion
+    ) {
       initialHandledRef.current = initialQuestion
       handleSend(initialQuestion)
     }
@@ -148,7 +306,13 @@ I encountered a temporary connection interruption. However, my grounded offline 
   // Focus input and handle ESC
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose()
+      if (e.key === "Escape") {
+        if (showSettings) {
+          setShowSettings(false)
+        } else {
+          onClose()
+        }
+      }
     }
     if (isOpen) {
       document.body.style.overflow = "hidden"
@@ -158,8 +322,11 @@ I encountered a temporary connection interruption. However, my grounded offline 
     return () => {
       document.body.style.overflow = "unset"
       window.removeEventListener("keydown", handleKeyDown)
+      if (speakingId) {
+        window.speechSynthesis.cancel()
+      }
     }
-  }, [isOpen, onClose])
+  }, [isOpen, onClose, showSettings, speakingId])
 
   const handleCopy = (id: string, text: string) => {
     navigator.clipboard.writeText(text).then(() => {
@@ -169,16 +336,30 @@ I encountered a temporary connection interruption. However, my grounded offline 
   }
 
   const handleClearHistory = () => {
+    if (speakingId) {
+      window.speechSynthesis.cancel()
+      setSpeakingId(null)
+    }
     setMessages([])
     setTimeout(() => {
       const fresh: Message = {
         id: "msg-fresh",
         role: "assistant",
-        content: `Memory buffer reset. What technical system, project, or architecture would you like to review?`,
-        timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+        content: `Memory cleared! What would you like to discuss next?`,
+        timestamp: new Date().toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
       }
       setMessages([fresh])
     }, 100)
+  }
+
+  const handleSaveGeminiKey = (e: React.FormEvent) => {
+    e.preventDefault()
+    saveGeminiKey(geminiKeyInput)
+    setGeminiKeySaved(Boolean(geminiKeyInput.trim()))
+    setShowSettings(false)
   }
 
   if (!isOpen) return null
@@ -211,64 +392,70 @@ I encountered a temporary connection interruption. However, my grounded offline 
                 <h2 id="johnny-talks-title" className="johnny-title">
                   Johnny-Talks
                 </h2>
-                <span className="johnny-twin-badge">DIGITAL TWIN · RAG</span>
-                {backendOnline !== null && (
+                <span className="johnny-twin-badge">HUMANIZED AI TWIN</span>
+
+                {geminiKeySaved && (
                   <span
-                    className={`backend-status-badge ${
-                      backendOnline ? "is-backend" : "is-edge"
-                    }`}
-                    title={
-                      backendOnline
-                        ? "Connected to Local Python FastAPI Backend on http://127.0.0.1:8000"
-                        : "Operating in Edge Grounded RAG Mode"
-                    }
+                    className="backend-status-badge is-backend"
+                    title="Google Gemini 2.0 Live Cloud AI"
                   >
-                    {backendOnline ? "● FastAPI 127.0.0.1:8000 (Live)" : "● Edge Grounded RAG"}
+                    ⚡ Gemini 2.0 Active
                   </span>
                 )}
-                <a
-                  href="/docs"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="johnny-api-docs-btn"
-                  title="Open Interactive OpenAPI Swagger Docs on http://127.0.0.1:8000/docs"
-                >
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3" />
-                  </svg>
-                  API Docs ↗
-                </a>
-                <a
-                  href="/health"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="johnny-health-btn"
-                  title="Open Backend Health Check on http://127.0.0.1:8000/health"
-                >
-                  Health: OK
-                </a>
+
+                {backendOnline && !geminiKeySaved && (
+                  <span
+                    className="backend-status-badge is-backend"
+                    title="Connected to Local Python FastAPI Backend"
+                  >
+                    ● FastAPI Live
+                  </span>
+                )}
+
+                {!geminiKeySaved && !backendOnline && (
+                  <span
+                    className="backend-status-badge is-edge"
+                    title="High-Speed Grounded Edge Brain"
+                  >
+                    ● Edge Cognitive Brain
+                  </span>
+                )}
               </div>
               <p className="johnny-subtitle">
-                Knowledge-Grounded Cognitive Clone &amp; Client Advisory Engine
+                Authentic Cognitive Digital Twin of Karre John Hyde (Johnny)
               </p>
             </div>
           </div>
 
           <div className="johnny-header-actions">
+            {/* AI SETTINGS TOGGLE */}
+            <button
+              className={`johnny-tab-btn ${showSettings ? "active" : ""}`}
+              onClick={() => setShowSettings(!showSettings)}
+              type="button"
+              title="Configure AI Engine (Gemini / Edge)"
+            >
+              ⚙️ AI Settings
+            </button>
+
             <div className="johnny-tab-switch">
               <button
-                className={`johnny-tab-btn ${activeTab === "chat" ? "active" : ""}`}
+                className={`johnny-tab-btn ${
+                  activeTab === "chat" ? "active" : ""
+                }`}
                 onClick={() => setActiveTab("chat")}
                 type="button"
               >
-                Advisory Chat
+                Chat
               </button>
               <button
-                className={`johnny-tab-btn ${activeTab === "knowledge" ? "active" : ""}`}
+                className={`johnny-tab-btn ${
+                  activeTab === "knowledge" ? "active" : ""
+                }`}
                 onClick={() => setActiveTab("knowledge")}
                 type="button"
               >
-                Knowledge Store ({JOHNNY_KNOWLEDGE_BASE.length})
+                Memory ({JOHNNY_KNOWLEDGE_BASE.length})
               </button>
             </div>
 
@@ -279,7 +466,14 @@ I encountered a temporary connection interruption. However, my grounded offline 
               title="Reset conversation memory"
               type="button"
             >
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <svg
+                width="15"
+                height="15"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
                 <path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" />
               </svg>
             </button>
@@ -295,31 +489,106 @@ I encountered a temporary connection interruption. However, my grounded offline 
           </div>
         </header>
 
-        {/* SCENARIO TOGGLE STRIP */}
+        {/* AI SETTINGS DRAWER / POPOVER */}
+        {showSettings && (
+          <div className="johnny-settings-panel">
+            <div className="settings-panel-header">
+              <span className="settings-panel-title">
+                🧠 Cognitive Engine Settings
+              </span>
+              <button
+                className="popover-close"
+                onClick={() => setShowSettings(false)}
+                type="button"
+              >
+                ✕
+              </button>
+            </div>
+            <p className="settings-panel-desc">
+              Johnny-Talks runs out-of-the-box with a high-speed{" "}
+              <strong>Edge Cognitive Engine</strong> (15+ verified knowledge
+              domains). For unbounded live generative reasoning, you can
+              optionally connect your own free{" "}
+              <strong>Google Gemini API Key</strong>.
+            </p>
+            <form onSubmit={handleSaveGeminiKey} className="settings-form">
+              <div className="settings-input-group">
+                <label htmlFor="gemini-key-input">
+                  Google Gemini API Key (Optional):
+                </label>
+                <input
+                  id="gemini-key-input"
+                  type="password"
+                  placeholder="AIzaSy..."
+                  value={geminiKeyInput}
+                  onChange={(e) => setGeminiKeyInput(e.target.value)}
+                  className="settings-text-input"
+                />
+              </div>
+              <div className="settings-btn-row">
+                <button type="submit" className="settings-save-btn">
+                  Save Engine Settings
+                </button>
+                {geminiKeySaved && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      saveGeminiKey("")
+                      setGeminiKeyInput("")
+                      setGeminiKeySaved(false)
+                    }}
+                    className="settings-clear-btn"
+                  >
+                    Disconnect &amp; Use Edge Brain
+                  </button>
+                )}
+                <a
+                  href="https://aistudio.google.com/app/apikey"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="settings-get-key-link"
+                >
+                  Get a free Gemini key ↗
+                </a>
+              </div>
+            </form>
+          </div>
+        )}
+
+        {/* PERSONA MODE SELECTOR BAR */}
         {activeTab === "chat" && (
           <div className="johnny-scenario-bar">
-            <span className="scenario-label">REASONING FILTER:</span>
+            <span className="scenario-label">VOICE MODE:</span>
             <div className="scenario-chips">
               <button
-                className={`scenario-chip ${scenarioMode === "all" ? "active" : ""}`}
-                onClick={() => setScenarioMode("all")}
+                className={`scenario-chip ${
+                  personaMode === "conversational" ? "active" : ""
+                }`}
+                onClick={() => setPersonaMode("conversational")}
                 type="button"
+                title="Warm, friendly, humanized conversational tone"
               >
-                ★ Full 5-Part Blueprint
+                💬 Conversational
               </button>
               <button
-                className={`scenario-chip ${scenarioMode === "greenfield" ? "active" : ""}`}
-                onClick={() => setScenarioMode("greenfield")}
+                className={`scenario-chip ${
+                  personaMode === "architect" ? "active" : ""
+                }`}
+                onClick={() => setPersonaMode("architect")}
                 type="button"
+                title="Deep technical system blueprints, code patterns, and latency specs"
               >
-                Scenario A (Greenfield Baseline)
+                📐 Tech Architect
               </button>
               <button
-                className={`scenario-chip ${scenarioMode === "high_constraint" ? "active" : ""}`}
-                onClick={() => setScenarioMode("high_constraint")}
+                className={`scenario-chip ${
+                  personaMode === "quick_pitch" ? "active" : ""
+                }`}
+                onClick={() => setPersonaMode("quick_pitch")}
                 type="button"
+                title="Fast 60-second summary tailored for recruiters and founders"
               >
-                Scenario B (High-Constraint)
+                ⚡ Quick Pitch
               </button>
             </div>
           </div>
@@ -331,61 +600,12 @@ I encountered a temporary connection interruption. However, my grounded offline 
             /* KNOWLEDGE BASE EXPLORER */
             <div className="johnny-knowledge-view">
               <div className="knowledge-view-header">
-                <h3>Johnny&apos;s Verified Ingested Memory Store</h3>
+                <h3>Johnny&apos;s Verified Memory Store</h3>
                 <p>
-                  Documents split with semantic overlap (600 chars, 120 overlap) and indexed into ChromaDB vector embeddings.
+                  15+ verified knowledge domains covering projects, IIT
+                  certifications, architecture patterns, and engineering
+                  philosophies.
                 </p>
-              </div>
-
-              {/* LOCAL PYTHON BACKEND & OPENAPI TELEMETRY BANNER */}
-              <div className="knowledge-telemetry-banner">
-                <div className="telemetry-banner-title">
-                  <div className="telemetry-badge-live">
-                    <span className="telemetry-live-dot" />
-                    <span>LOCAL PYTHON BACKEND ACTIVE</span>
-                  </div>
-                  <span className="telemetry-host">http://127.0.0.1:8000</span>
-                </div>
-                
-                <div className="telemetry-grid">
-                  <a
-                    href="http://127.0.0.1:8000/docs"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="telemetry-item is-link"
-                    title="Interactive Swagger OpenAPI UI"
-                  >
-                    <span className="telemetry-item-label">Interactive OpenAPI Docs</span>
-                    <span className="telemetry-item-val highlight">http://127.0.0.1:8000/docs ↗</span>
-                  </a>
-
-                  <a
-                    href="http://127.0.0.1:8000/health"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="telemetry-item is-link"
-                    title="Health Check"
-                  >
-                    <span className="telemetry-item-label">Health Endpoint</span>
-                    <span className="telemetry-item-val ok">http://127.0.0.1:8000/health (Status: ok) ↗</span>
-                  </a>
-
-                  <a
-                    href="http://127.0.0.1:8000/openapi.json"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="telemetry-item is-link"
-                    title="OpenAPI Spec"
-                  >
-                    <span className="telemetry-item-label">OpenAPI JSON Schema</span>
-                    <span className="telemetry-item-val">/openapi.json ↗</span>
-                  </a>
-
-                  <div className="telemetry-item">
-                    <span className="telemetry-item-label">Vector Store &amp; Memory</span>
-                    <span className="telemetry-item-val">ChromaDB MMR (19 Chunks)</span>
-                  </div>
-                </div>
               </div>
 
               <div className="knowledge-grid">
@@ -403,7 +623,9 @@ I encountered a temporary connection interruption. However, my grounded offline 
                     <p>{doc.content}</p>
                     <div className="k-keywords">
                       {doc.keywords.map((kw, i) => (
-                        <span key={i} className="kw-tag">#{kw}</span>
+                        <span key={i} className="kw-tag">
+                          #{kw}
+                        </span>
                       ))}
                     </div>
                   </div>
@@ -429,18 +651,22 @@ I encountered a temporary connection interruption. However, my grounded offline 
                   <div className="msg-bubble-container">
                     <div className="msg-meta-header">
                       <span className="msg-sender">
-                        {msg.role === "user" ? "You (Client)" : "Johnny-Talks"}
+                        {msg.role === "user" ? "You" : "Johnny-Talks"}
                       </span>
                       <span className="msg-time">{msg.timestamp}</span>
                       {msg.latencyMs && (
                         <span className="msg-latency">
-                          {msg.latencyMs}ms {msg.isLiveBackend ? "· API" : "· Edge"}
+                          {msg.latencyMs}ms{" "}
+                          {msg.isGeminiLive
+                            ? "· Gemini 2.0"
+                            : msg.isLiveBackend
+                              ? "· API"
+                              : "· Edge Brain"}
                         </span>
                       )}
                     </div>
 
                     <div className="msg-content-body">
-                      {/* Format text cleanly */}
                       <RenderFormattedMessage text={msg.content} />
                     </div>
 
@@ -448,7 +674,14 @@ I encountered a temporary connection interruption. However, my grounded offline 
                     {msg.sources && msg.sources.length > 0 && (
                       <div className="msg-citations-wrap">
                         <span className="citation-title">
-                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <svg
+                            width="12"
+                            height="12"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                          >
                             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
                             <polyline points="14 2 14 8 20 8" />
                           </svg>
@@ -465,7 +698,9 @@ I encountered a temporary connection interruption. However, my grounded offline 
                             >
                               <span className="cit-name">{src.source}</span>
                               {src.chunkIndex !== undefined && (
-                                <span className="cit-chunk">c{src.chunkIndex}</span>
+                                <span className="cit-chunk">
+                                  c{src.chunkIndex}
+                                </span>
                               )}
                               {src.score && (
                                 <span className="cit-score">
@@ -480,12 +715,27 @@ I encountered a temporary connection interruption. However, my grounded offline 
 
                     {/* MSG FOOTER ACTIONS */}
                     <div className="msg-action-bar">
+                      {msg.role === "assistant" && (
+                        <button
+                          className={`msg-audio-btn ${
+                            speakingId === msg.id ? "is-speaking" : ""
+                          }`}
+                          onClick={() =>
+                            toggleSpeakMessage(msg.id, msg.content)
+                          }
+                          type="button"
+                          title="Listen to Johnny speak"
+                        >
+                          {speakingId === msg.id ? "⏹ Stop Audio" : "🔊 Listen"}
+                        </button>
+                      )}
+
                       <button
                         className="msg-copy-btn"
                         onClick={() => handleCopy(msg.id, msg.content)}
                         type="button"
                       >
-                        {copiedId === msg.id ? "✓ Copied" : "Copy Blueprint"}
+                        {copiedId === msg.id ? "✓ Copied" : "Copy"}
                       </button>
                     </div>
                   </div>
@@ -503,7 +753,8 @@ I encountered a temporary connection interruption. However, my grounded offline 
                       <span className="thinking-dot" />
                       <span className="thinking-dot" />
                       <span className="thinking-text">
-                        Johnny-Talks running 4-step diagnostic &amp; MMR memory retrieval...
+                        Johnny-Talks reasoning through memory &amp; formulating
+                        response...
                       </span>
                     </div>
                   </div>
@@ -517,11 +768,19 @@ I encountered a temporary connection interruption. However, my grounded offline 
 
         {/* CITATION DETAIL POPOVER */}
         {selectedCitation && (
-          <div className="citation-popover-backdrop" onClick={() => setSelectedCitation(null)}>
-            <div className="citation-popover-content" onClick={(e) => e.stopPropagation()}>
+          <div
+            className="citation-popover-backdrop"
+            onClick={() => setSelectedCitation(null)}
+          >
+            <div
+              className="citation-popover-content"
+              onClick={(e) => e.stopPropagation()}
+            >
               <div className="popover-header">
                 <div>
-                  <span className="popover-kicker">VERIFIED SOURCE DOCUMENT</span>
+                  <span className="popover-kicker">
+                    VERIFIED SOURCE DOCUMENT
+                  </span>
                   <h4>{selectedCitation.source}</h4>
                 </div>
                 <button
@@ -534,9 +793,13 @@ I encountered a temporary connection interruption. However, my grounded offline 
               </div>
               <div className="popover-meta">
                 <span>Chunk: #{selectedCitation.chunkIndex ?? 0}</span>
-                {selectedCitation.page && <span>Page: {selectedCitation.page}</span>}
+                {selectedCitation.page && (
+                  <span>Page: {selectedCitation.page}</span>
+                )}
                 {selectedCitation.score && (
-                  <span>Relevance: {Math.round(selectedCitation.score * 100)}%</span>
+                  <span>
+                    Relevance: {Math.round(selectedCitation.score * 100)}%
+                  </span>
                 )}
               </div>
               <div className="popover-body">
@@ -558,10 +821,10 @@ I encountered a temporary connection interruption. However, my grounded offline 
                     <button
                       key={idx}
                       className="starter-prompt-btn"
-                      onClick={() => handleSend(prompt)}
+                      onClick={() => handleSend(prompt.text)}
                       type="button"
                     >
-                      {prompt}
+                      {prompt.label}
                     </button>
                   ))}
                 </div>
@@ -587,33 +850,81 @@ I encountered a temporary connection interruption. However, my grounded offline 
                     handleSend()
                   }
                 }}
-                placeholder="Ask Johnny about projects, system architecture, RAG grounding, or client technical doubts..."
+                placeholder="Ask Johnny about projects, system architecture, IIT credentials, or internships..."
                 rows={2}
                 value={input}
               />
 
-              <button
-                className="johnny-send-btn"
-                disabled={loading || !input.trim()}
-                type="submit"
-              >
-                <span>Advise</span>
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                  <path d="M5 12h14M12 5l7 7-7 7" />
-                </svg>
-              </button>
+              <div className="johnny-form-buttons">
+                {/* VOICE MIC INPUT BUTTON */}
+                <button
+                  className={`johnny-mic-btn ${
+                    isListening ? "is-listening" : ""
+                  }`}
+                  onClick={toggleSpeechRecognition}
+                  type="button"
+                  title={
+                    isListening
+                      ? "Listening... click to stop"
+                      : "Speak to Johnny (Voice Input)"
+                  }
+                >
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
+                    <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                    <line x1="12" y1="19" x2="12" y2="23" />
+                    <line x1="8" y1="23" x2="16" y2="23" />
+                  </svg>
+                  {isListening && <span className="mic-pulse-ring" />}
+                </button>
+
+                <button
+                  className="johnny-send-btn"
+                  disabled={loading || !input.trim()}
+                  type="submit"
+                >
+                  <span>Ask Johnny</span>
+                  <svg
+                    width="15"
+                    height="15"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                  >
+                    <path d="M5 12h14M12 5l7 7-7 7" />
+                  </svg>
+                </button>
+              </div>
             </form>
 
             <div className="johnny-footer-telemetry">
-              <span>Backend: <a href="http://127.0.0.1:8000" target="_blank" rel="noopener noreferrer" className="footer-telemetry-link">127.0.0.1:8000</a></span>
+              <span>
+                Persona:{" "}
+                {personaMode === "conversational"
+                  ? "💬 Conversational"
+                  : personaMode === "architect"
+                    ? "📐 Tech Architect"
+                    : "⚡ Quick Pitch"}
+              </span>
               <span className="telemetry-sep">•</span>
-              <span>Health: <a href="/health" target="_blank" rel="noopener noreferrer" className="footer-telemetry-link text-emerald-400">OK</a></span>
+              <span>Memory: 15+ Verified Domains</span>
               <span className="telemetry-sep">•</span>
-              <span>Docs: <a href="/docs" target="_blank" rel="noopener noreferrer" className="footer-telemetry-link text-cyan-400">/docs ↗</a></span>
+              <span>Voice: STT &amp; TTS Ready</span>
               <span className="telemetry-sep">•</span>
-              <span>Memory: ChromaDB MMR</span>
-              <span className="telemetry-sep">•</span>
-              <span>Blueprint: 5-Part Diagnostic</span>
+              <span>
+                Engine:{" "}
+                {geminiKeySaved
+                  ? "Google Gemini 2.0 Cloud"
+                  : "Grounded Edge Brain"}
+              </span>
             </div>
           </footer>
         )}
@@ -622,7 +933,7 @@ I encountered a temporary connection interruption. However, my grounded offline 
   )
 }
 
-// Custom Markdown-like renderer for code blocks and bold headers
+// Custom Markdown-like renderer for code blocks, bold headers, and clickable markdown links
 function RenderFormattedMessage({ text }: { text: string }) {
   const parts = text.split(/(```[\s\S]*?```)/g)
 
@@ -652,7 +963,6 @@ function RenderFormattedMessage({ text }: { text: string }) {
           )
         }
 
-        // Parse section headings like "#### 1. Executive Diagnosis" or "### 1."
         const paragraphs = part.split("\n\n")
         return (
           <React.Fragment key={idx}>
@@ -671,7 +981,7 @@ function RenderFormattedMessage({ text }: { text: string }) {
                   <ul key={pIdx} className="answer-bullet-list">
                     {items.map((item, itemIdx) => (
                       <li key={itemIdx}>
-                        <FormatBoldText text={item.replace(/^[-*]\s+/, "")} />
+                        <FormatRichText text={item.replace(/^[-*]\s+/, "")} />
                       </li>
                     ))}
                   </ul>
@@ -683,7 +993,7 @@ function RenderFormattedMessage({ text }: { text: string }) {
                   <ol key={pIdx} className="answer-numbered-list">
                     {items.map((item, itemIdx) => (
                       <li key={itemIdx}>
-                        <FormatBoldText text={item.replace(/^\d+\.\s+/, "")} />
+                        <FormatRichText text={item.replace(/^\d+\.\s+/, "")} />
                       </li>
                     ))}
                   </ol>
@@ -691,7 +1001,7 @@ function RenderFormattedMessage({ text }: { text: string }) {
               }
               return (
                 <p key={pIdx} className="answer-paragraph">
-                  <FormatBoldText text={p} />
+                  <FormatRichText text={p} />
                 </p>
               )
             })}
@@ -702,16 +1012,41 @@ function RenderFormattedMessage({ text }: { text: string }) {
   )
 }
 
-function FormatBoldText({ text }: { text: string }) {
-  const segments = text.split(/(\*\*.*?\*\*|`.*?`)/g)
+function FormatRichText({ text }: { text: string }) {
+  // Parse links, bold text, and inline code
+  const segments = text.split(/(\[.*?\]\(.*?\)|\*\*.*?\*\*|`.*?`)/g)
   return (
     <>
       {segments.map((seg, i) => {
+        // Markdown Link: [text](url)
+        const linkMatch = seg.match(/^\[(.*?)\]\((.*?)\)$/)
+        if (linkMatch) {
+          return (
+            <a
+              key={i}
+              href={linkMatch[2]}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-link"
+              style={{
+                color: "#a3e635",
+                textDecoration: "underline",
+                textUnderlineOffset: "3px",
+              }}
+            >
+              {linkMatch[1]}
+            </a>
+          )
+        }
         if (seg.startsWith("**") && seg.endsWith("**")) {
           return <strong key={i}>{seg.slice(2, -2)}</strong>
         }
         if (seg.startsWith("`") && seg.endsWith("`")) {
-          return <code key={i} className="inline-code">{seg.slice(1, -1)}</code>
+          return (
+            <code key={i} className="inline-code">
+              {seg.slice(1, -1)}
+            </code>
+          )
         }
         return seg
       })}

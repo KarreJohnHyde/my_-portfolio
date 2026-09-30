@@ -23,7 +23,7 @@ export interface DetailedProject {
     description: string
     tech: string[]
   }[]
-  keyMetrics: { value: string; label: string }[]
+  keyMetrics: { value: string label: string }[]
   highlights: string[]
 }
 
@@ -34,7 +34,14 @@ export const detailedProjectsData: Record<string, DetailedProject> = {
     headline: "Full-Stack Multimodal RAG Knowledge Engine",
     description:
       "A full-stack RAG (Retrieval-Augmented Generation) system that turns documents into grounded, context-aware interactive learning conversations with zero hallucinations.",
-    tags: ["Python", "LangChain", "FAISS FlatIP", "Gradio", "RAG Pipeline", "Hugging Face"],
+    tags: [
+      "Python",
+      "LangChain",
+      "FAISS FlatIP",
+      "Gradio",
+      "RAG Pipeline",
+      "Hugging Face",
+    ],
     category: "ai",
     liveUrl: "https://huggingface.co/spaces/Johnny2005/Final_Project",
     githubUrl: "https://github.com/KarreJohnHyde/STUDY2AI",
@@ -69,14 +76,22 @@ export const detailedProjectsData: Record<string, DetailedProject> = {
         title: "FAISS Topological Index",
         description:
           "High-speed similarity search using FAISS FlatIP and HNSW partitioning. Queries achieve sub-180ms nearest-neighbor resolution across tens of thousands of document embeddings.",
-        tech: ["FAISS (Facebook AI Similarity Search)", "Cosine Similarity", "Top-K Routing"],
+        tech: [
+          "FAISS (Facebook AI Similarity Search)",
+          "Cosine Similarity",
+          "Top-K Routing",
+        ],
       },
       {
         layer: "LAYER 04: GROUNDED SYNTHESIS & USER INTERFACE",
         title: "Streaming LLM Loop & Gradio Frontend",
         description:
           "Grounded prompt injection loop with strict hallucination constraints. Output is streamed in real time via Gradio with page-level citations, multi-turn dialogue memory, and token streaming.",
-        tech: ["Gradio Web UI", "LangChain ConversationChain", "Hugging Face Spaces"],
+        tech: [
+          "Gradio Web UI",
+          "LangChain ConversationChain",
+          "Hugging Face Spaces",
+        ],
       },
     ],
     keyMetrics: [
@@ -197,7 +212,11 @@ export const detailedProjectsData: Record<string, DetailedProject> = {
         title: "K-Means Centroid Algorithm",
         description:
           "Computes optimal cluster counts via Elbow Method and Silhouette Analysis, isolating 5 distinct learning archetypes ranging from intuitive to analytical.",
-        tech: ["K-Means Clustering", "Silhouette Scoring", "Centroid Optimization"],
+        tech: [
+          "K-Means Clustering",
+          "Silhouette Scoring",
+          "Centroid Optimization",
+        ],
       },
       {
         layer: "LAYER 04: STREAMLIT VISUALIZATION SUITE",
@@ -226,7 +245,14 @@ export const detailedProjectsData: Record<string, DetailedProject> = {
     headline: "Healthcare AI Digital Twin & Clinical Simulation Engine",
     description:
       "Healthcare-focused AI digital twin exploration for clinical decision support, biomarker analysis, and patient disease simulation.",
-    tags: ["AI", "Healthcare", "Jupyter", "Diagnostics", "Machine Learning", "XAI"],
+    tags: [
+      "AI",
+      "Healthcare",
+      "Jupyter",
+      "Diagnostics",
+      "Machine Learning",
+      "XAI",
+    ],
     category: "ai",
     liveUrl: "https://github.com/KarreJohnHyde/MedTwin",
     githubUrl: "https://github.com/KarreJohnHyde/MedTwin",
@@ -290,7 +316,14 @@ export const detailedProjectsData: Record<string, DetailedProject> = {
     headline: "Voice-Activated Autonomous Desktop Assistant",
     description:
       "Voice-activated personal assistant with task automation, audio recognition, desktop controls, and real-time query execution.",
-    tags: ["Python", "Voice AI", "Automation", "NLP", "Speech Recognition", "System APIs"],
+    tags: [
+      "Python",
+      "Voice AI",
+      "Automation",
+      "NLP",
+      "Speech Recognition",
+      "System APIs",
+    ],
     category: "ai",
     liveUrl: "https://github.com/KarreJohnHyde/project-Jarvis-AI",
     githubUrl: "https://github.com/KarreJohnHyde/project-Jarvis-AI",
@@ -354,7 +387,14 @@ export const detailedProjectsData: Record<string, DetailedProject> = {
     headline: "High-Performance Modern Web Platform for Community Impact",
     description:
       "Purpose-led web platform engineered for a community welfare organization, featuring responsive presentation, event highlights, and outreach.",
-    tags: ["React 19", "UI/UX", "Vercel Edge", "Community", "Accessibility", "Tailwind CSS"],
+    tags: [
+      "React 19",
+      "UI/UX",
+      "Vercel Edge",
+      "Community",
+      "Accessibility",
+      "Tailwind CSS",
+    ],
     category: "web",
     liveUrl: "https://noel-foundation.vercel.app",
     githubUrl: "https://github.com/KarreJohnHyde/Noel-Foundation",
@@ -418,7 +458,14 @@ export const detailedProjectsData: Record<string, DetailedProject> = {
     headline: "Decentralized Agricultural Marketplace & Fair Valuation",
     description:
       "Digital agricultural marketplace connecting farmers with buyers, transparent crop valuation workflows, and direct supply connectivity.",
-    tags: ["Agritech", "Next.js", "Supply Chain", "Cloud", "TypeScript", "Marketplace"],
+    tags: [
+      "Agritech",
+      "Next.js",
+      "Supply Chain",
+      "Cloud",
+      "TypeScript",
+      "Marketplace",
+    ],
     category: "cloud",
     liveUrl: "https://agrimandi.vercel.app",
     githubUrl: "https://github.com/KarreJohnHyde/agrimndi",
@@ -482,7 +529,14 @@ export const detailedProjectsData: Record<string, DetailedProject> = {
     headline: "Futuristic Cyberpunk Web Experience & Motion Engine",
     description:
       "Cyberpunk-inspired digital interface pushing modern CSS micro-animations, glassmorphic layout, fluid navigation, and responsive typography.",
-    tags: ["Next.js", "TypeScript", "Vercel", "Creative", "Modern CSS", "Micro-Animations"],
+    tags: [
+      "Next.js",
+      "TypeScript",
+      "Vercel",
+      "Creative",
+      "Modern CSS",
+      "Micro-Animations",
+    ],
     category: "web",
     liveUrl: "https://xen-01.vercel.app",
     githubUrl: "https://github.com/KarreJohnHyde/Xen-01",
@@ -510,7 +564,11 @@ export const detailedProjectsData: Record<string, DetailedProject> = {
         title: "Fluid Micro-Interactions",
         description:
           "Hardware-accelerated transforms and opacity transitions running at 60 FPS without layout recalculation overhead.",
-        tech: ["CSS Transform3D", "Will-Change Optimization", "Keyframe Animations"],
+        tech: [
+          "CSS Transform3D",
+          "Will-Change Optimization",
+          "Keyframe Animations",
+        ],
       },
       {
         layer: "LAYER 03: DYNAMIC MOUSE PARALLAX",
@@ -546,7 +604,14 @@ export const detailedProjectsData: Record<string, DetailedProject> = {
     headline: "Scalable Enterprise Operations & Administrative Software Suite",
     description:
       "Enterprise software architecture and web application suite structured for business process operations, modular data handling, and administrative control.",
-    tags: ["React", "TypeScript", "Enterprise", "Cloud", "Clean Architecture", "RBAC"],
+    tags: [
+      "React",
+      "TypeScript",
+      "Enterprise",
+      "Cloud",
+      "Clean Architecture",
+      "RBAC",
+    ],
     category: "cloud",
     liveUrl: "https://github.com/KarreJohnHyde/Brite-Systems",
     githubUrl: "https://github.com/KarreJohnHyde/Brite-Systems",
@@ -610,7 +675,14 @@ export const detailedProjectsData: Record<string, DetailedProject> = {
     headline: "Real-Time Interactive Particle Physics & Gravitational Canvas",
     description:
       "Experimental interactive physics canvas featuring gravity simulation, particle trajectories, and dynamic glowing shader effects.",
-    tags: ["HTML5 Canvas", "Physics Simulation", "Interactive", "Vite", "Math", "Creative Coding"],
+    tags: [
+      "HTML5 Canvas",
+      "Physics Simulation",
+      "Interactive",
+      "Vite",
+      "Math",
+      "Creative Coding",
+    ],
     category: "web",
     liveUrl: "https://github.com/KarreJohnHyde/gravity-glow-portfolio",
     githubUrl: "https://github.com/KarreJohnHyde/gravity-glow-portfolio",
@@ -679,7 +751,8 @@ export default function ProjectDetailPage({
   projectTitle,
   onClose,
 }: ProjectDetailPageProps) {
-  const project = detailedProjectsData[projectTitle] || detailedProjectsData["Study2AI"]
+  const project =
+    detailedProjectsData[projectTitle] || detailedProjectsData["Study2AI"]
 
   // Close on Escape key and prevent background document scroll while open
   useEffect(() => {
@@ -702,8 +775,8 @@ export default function ProjectDetailPage({
     project.tone === "lime"
       ? "#a3e635"
       : project.tone === "cyan"
-      ? "#00f0ff"
-      : "#c084fc"
+        ? "#00f0ff"
+        : "#c084fc"
 
   return (
     <div
@@ -738,7 +811,10 @@ export default function ProjectDetailPage({
                 backgroundColor: `${toneColor}12`,
               }}
             >
-              <span className="live-dot" style={{ backgroundColor: toneColor }} />
+              <span
+                className="live-dot"
+                style={{ backgroundColor: toneColor }}
+              />
               {project.status}
             </span>
             <span className="detail-meta-chip">PROJECT /{project.number}</span>
@@ -804,7 +880,9 @@ export default function ProjectDetailPage({
 
             {/* Metrics Grid */}
             <div className="detail-metrics-panel">
-              <span className="panel-label">SYSTEM TELEMETRY &amp; BENCHMARKS</span>
+              <span className="panel-label">
+                SYSTEM TELEMETRY &amp; BENCHMARKS
+              </span>
               <div className="detail-metrics-grid">
                 {project.keyMetrics.map((m) => (
                   <div className="metric-box" key={m.label}>
@@ -873,7 +951,10 @@ export default function ProjectDetailPage({
                 <small>Validation &amp; Routing</small>
               </div>
               <div className="flow-arrow">➔</div>
-              <div className="flow-step active-flow" style={{ borderColor: toneColor }}>
+              <div
+                className="flow-step active-flow"
+                style={{ borderColor: toneColor }}
+              >
                 <span className="step-num">03</span>
                 <strong>Engine Core</strong>
                 <small>ML / Vector / Logic</small>
@@ -904,7 +985,10 @@ export default function ProjectDetailPage({
                   <div className="arch-tech-chips">
                     {layer.tech.map((tc) => (
                       <span className="arch-tech-chip" key={tc}>
-                        <span className="chip-bullet" style={{ backgroundColor: toneColor }} />
+                        <span
+                          className="chip-bullet"
+                          style={{ backgroundColor: toneColor }}
+                        />
                         {tc}
                       </span>
                     ))}
@@ -923,7 +1007,10 @@ export default function ProjectDetailPage({
             <div className="highlights-grid">
               {project.highlights.map((highlight, idx) => (
                 <div className="highlight-item" key={idx}>
-                  <span className="highlight-check" style={{ color: toneColor }}>
+                  <span
+                    className="highlight-check"
+                    style={{ color: toneColor }}
+                  >
                     ✦
                   </span>
                   <p>{highlight}</p>
@@ -936,7 +1023,8 @@ export default function ProjectDetailPage({
           <footer className="project-detail-footer">
             <div className="footer-callout">
               <p>
-                Ready to review the source code or test the deployment in real time?
+                Ready to review the source code or test the deployment in real
+                time?
               </p>
               <div className="footer-links">
                 {project.liveUrl && (

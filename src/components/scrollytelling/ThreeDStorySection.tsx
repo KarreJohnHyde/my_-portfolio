@@ -106,7 +106,8 @@ export default function ThreeDStorySection() {
     const rect = containerRef.current.getBoundingClientRect()
     const currentScroll = window.scrollY || document.documentElement.scrollTop
     const trackTop = rect.top + currentScroll
-    const trackScrollable = containerRef.current.scrollHeight - window.innerHeight
+    const trackScrollable =
+      containerRef.current.scrollHeight - window.innerHeight
     const targetY = trackTop + trackScrollable * (stageIdx / storyStages.length)
     scrollTo(targetY)
   }

@@ -31,9 +31,13 @@ function getRenderProfile(): RenderProfile {
   const isCoarsePointer = window.matchMedia("(pointer: coarse)").matches
   const hasLimitedMemory = (navigatorWithMemory.deviceMemory ?? 8) <= 4
   const hasFewCores = (navigator.hardwareConcurrency ?? 8) <= 4
-  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
-  const lowPower = isCoarsePointer || hasLimitedMemory || hasFewCores || prefersReducedMotion
-  const maximumDpr = hasLimitedMemory || hasFewCores ? 1 : isCoarsePointer ? 1.25 : 2
+  const prefersReducedMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)",
+  ).matches
+  const lowPower =
+    isCoarsePointer || hasLimitedMemory || hasFewCores || prefersReducedMotion
+  const maximumDpr =
+    hasLimitedMemory || hasFewCores ? 1 : isCoarsePointer ? 1.25 : 2
 
   return {
     dpr: Math.min(window.devicePixelRatio || 1, maximumDpr),
@@ -41,7 +45,13 @@ function getRenderProfile(): RenderProfile {
   }
 }
 
-function NeuralTorusParticles({ progress, inspectMode, mouseX, mouseY, lowPower }: NeuralTorusMeshProps) {
+function NeuralTorusParticles({
+  progress,
+  inspectMode,
+  mouseX,
+  mouseY,
+  lowPower,
+}: NeuralTorusMeshProps) {
   const pointsRef = useRef<THREE.Points>(null)
   const beamRef = useRef<THREE.Mesh>(null)
   const torusWireframeRef = useRef<THREE.Mesh>(null)
@@ -92,8 +102,10 @@ function NeuralTorusParticles({ progress, inspectMode, mouseX, mouseY, lowPower 
       // Cluster weighting around 5 nearest neighbor centroids
       const clusterBias = Math.random() < 0.4 ? clusterAngles[i % 5] : u
       const blendedU = THREE.MathUtils.lerp(u, clusterBias, 0.4)
-      torus[i3] = (R + r * Math.cos(v)) * Math.cos(blendedU) + (Math.random() - 0.5) * 0.2
-      torus[i3 + 1] = (R + r * Math.cos(v)) * Math.sin(blendedU) + (Math.random() - 0.5) * 0.2
+      torus[i3] =
+        (R + r * Math.cos(v)) * Math.cos(blendedU) + (Math.random() - 0.5) * 0.2
+      torus[i3 + 1] =
+        (R + r * Math.cos(v)) * Math.sin(blendedU) + (Math.random() - 0.5) * 0.2
       torus[i3 + 2] = torusZ + (Math.random() - 0.5) * 0.2
 
       // 3. Stage 3: Context Injection Axial Beam & Excitation Nodes
@@ -143,7 +155,7 @@ function NeuralTorusParticles({ progress, inspectMode, mouseX, mouseY, lowPower 
       uProgress: { value: 0 },
       uNoiseFrequency: { value: 0.22 },
       uDpr: { value: Math.min(window.devicePixelRatio, 2) },
-      uColorPrimary: { value: new THREE.Color("#00FF66") },   // Electric Lime
+      uColorPrimary: { value: new THREE.Color("#00FF66") }, // Electric Lime
       uColorSecondary: { value: new THREE.Color("#D4FF00") }, // Cyber Yellow
     }),
     [],
@@ -153,7 +165,7 @@ function NeuralTorusParticles({ progress, inspectMode, mouseX, mouseY, lowPower 
     () => ({
       uTime: { value: 0 },
       uProgress: { value: 0 },
-      uColor: { value: new THREE.Color("#00F0FF") },          // Electric Cyan
+      uColor: { value: new THREE.Color("#00F0FF") }, // Electric Cyan
     }),
     [],
   )
@@ -180,10 +192,15 @@ function NeuralTorusParticles({ progress, inspectMode, mouseX, mouseY, lowPower 
     }
 
     if (torusWireframeRef.current) {
-      torusWireframeRef.current.rotation.z = time * 0.05 + progress * Math.PI * 0.5
-      torusWireframeRef.current.rotation.x = Math.PI / 2.5 + Math.sin(time * 0.2) * 0.04
+      torusWireframeRef.current.rotation.z =
+        time * 0.05 + progress * Math.PI * 0.5
+      torusWireframeRef.current.rotation.x =
+        Math.PI / 2.5 + Math.sin(time * 0.2) * 0.04
       // Fade wireframe in smoothly during Stage 2 & 3
-      const wireOpacity = smoothstep(0.18, 0.4, progress) * (1.0 - smoothstep(0.8, 0.98, progress)) * 0.16
+      const wireOpacity =
+        smoothstep(0.18, 0.4, progress) *
+        (1.0 - smoothstep(0.8, 0.98, progress)) *
+        0.16
       const mat = torusWireframeRef.current.material as THREE.MeshBasicMaterial
       if (mat) mat.opacity = wireOpacity
     }
@@ -199,7 +216,7 @@ function NeuralTorusParticles({ progress, inspectMode, mouseX, mouseY, lowPower 
         targetZ = 9.0 + Math.sin(progress * Math.PI * 2) * 0.25
         targetY = 0.3
         targetX = mouseX * 0.45
-      } else if (progress < 0.50) {
+      } else if (progress < 0.5) {
         // Stage 2: Smooth dolly zoom pitching into a primary cluster
         const p2 = (progress - 0.25) / 0.25
         targetZ = THREE.MathUtils.lerp(9.0, 6.4, p2)
@@ -207,7 +224,7 @@ function NeuralTorusParticles({ progress, inspectMode, mouseX, mouseY, lowPower 
         targetX = THREE.MathUtils.lerp(0.0, 0.8, p2) + mouseX * 0.4
       } else if (progress < 0.75) {
         // Stage 3: Professional orbiting perspective following axial energy beam
-        const p3 = (progress - 0.50) / 0.25
+        const p3 = (progress - 0.5) / 0.25
         const orbitAngle = p3 * Math.PI * 1.0
         targetZ = 6.4 + Math.cos(orbitAngle) * 0.8
         targetX = Math.sin(orbitAngle) * 1.4 + mouseX * 0.35
@@ -220,9 +237,24 @@ function NeuralTorusParticles({ progress, inspectMode, mouseX, mouseY, lowPower 
         targetX = THREE.MathUtils.lerp(0.8, 0.0, p4) + mouseX * 0.3
       }
 
-      camera.position.x = THREE.MathUtils.damp(camera.position.x, targetX, 2.8, animationDelta)
-      camera.position.y = THREE.MathUtils.damp(camera.position.y, targetY + mouseY * 0.35, 2.8, animationDelta)
-      camera.position.z = THREE.MathUtils.damp(camera.position.z, targetZ, 2.8, animationDelta)
+      camera.position.x = THREE.MathUtils.damp(
+        camera.position.x,
+        targetX,
+        2.8,
+        animationDelta,
+      )
+      camera.position.y = THREE.MathUtils.damp(
+        camera.position.y,
+        targetY + mouseY * 0.35,
+        2.8,
+        animationDelta,
+      )
+      camera.position.z = THREE.MathUtils.damp(
+        camera.position.z,
+        targetZ,
+        2.8,
+        animationDelta,
+      )
       camera.lookAt(0, 0, 0)
     }
   })
@@ -252,14 +284,8 @@ function NeuralTorusParticles({ progress, inspectMode, mouseX, mouseY, lowPower 
             args={[latticePoints, 3]}
             attach="attributes-aLatticePoint"
           />
-          <bufferAttribute
-            args={[randoms, 1]}
-            attach="attributes-aRandom"
-          />
-          <bufferAttribute
-            args={[sizes, 1]}
-            attach="attributes-aSize"
-          />
+          <bufferAttribute args={[randoms, 1]} attach="attributes-aRandom" />
+          <bufferAttribute args={[sizes, 1]} attach="attributes-aSize" />
         </bufferGeometry>
         <shaderMaterial
           blending={THREE.AdditiveBlending}
@@ -318,14 +344,17 @@ export default function NeuralTorusScene({
   mouseX,
   mouseY,
 }: NeuralTorusSceneProps) {
-  const [renderProfile, setRenderProfile] = React.useState<RenderProfile>(getRenderProfile)
+  const [renderProfile, setRenderProfile] =
+    React.useState<RenderProfile>(getRenderProfile)
 
   useEffect(() => {
     const updateRenderProfile = () => setRenderProfile(getRenderProfile())
     const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)")
 
     window.addEventListener("resize", updateRenderProfile, { passive: true })
-    window.addEventListener("orientationchange", updateRenderProfile, { passive: true })
+    window.addEventListener("orientationchange", updateRenderProfile, {
+      passive: true,
+    })
     motionQuery.addEventListener("change", updateRenderProfile)
 
     return () => {

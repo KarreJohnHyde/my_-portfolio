@@ -7,7 +7,7 @@ export interface StoryStageData {
   title: string
   kicker: string
   description: string
-  metrics: { value: string; label: string }[]
+  metrics: { value: string label: string }[]
   tags: string[]
   liveUrl?: string
   color: string
@@ -25,7 +25,13 @@ export const storyStages: StoryStageData[] = [
       { value: "94.2%", label: "RETRIEVAL ACCURACY" },
       { value: "< 180ms", label: "RETRIEVAL LATENCY" },
     ],
-    tags: ["FAISS FlatIP", "LangChain", "Study2AI", "Cosine Metric", "Dense Vectors"],
+    tags: [
+      "FAISS FlatIP",
+      "LangChain",
+      "Study2AI",
+      "Cosine Metric",
+      "Dense Vectors",
+    ],
     liveUrl: "https://huggingface.co/spaces/Johnny2005/Final_Project",
     color: "#00FF66", // Electric Lime
   },
@@ -40,7 +46,13 @@ export const storyStages: StoryStageData[] = [
       { value: "5 Centroids", label: "FAISS PARTITIONS" },
       { value: "1,536-D", label: "EMBEDDING SPACE" },
     ],
-    tags: ["FAISS HNSW", "K-Means", "scikit-learn", "Cosine Sim", "Innoverse'26"],
+    tags: [
+      "FAISS HNSW",
+      "K-Means",
+      "scikit-learn",
+      "Cosine Sim",
+      "Innoverse'26",
+    ],
     liveUrl: "https://cognitivelearning-5zqpetkfjexgbjx5kdappgk.streamlit.app/",
     color: "#D4FF00", // Cyber Yellow / Gold
   },
@@ -55,7 +67,13 @@ export const storyStages: StoryStageData[] = [
       { value: "0.0%", label: "HALLUCINATION RATE" },
       { value: "Real-Time", label: "STREAMING TOKENS" },
     ],
-    tags: ["Gradio Stream", "Context Injection", "AWS DynamoDB", "Lambda OCR", "Agentic Loops"],
+    tags: [
+      "Gradio Stream",
+      "Context Injection",
+      "AWS DynamoDB",
+      "Lambda OCR",
+      "Agentic Loops",
+    ],
     liveUrl: "https://expense-tracker-rho-olive-10.vercel.app",
     color: "#00F0FF", // Electric Cyan
   },
@@ -70,7 +88,13 @@ export const storyStages: StoryStageData[] = [
       { value: "9 Credentials", label: "VERIFIED CREDENTIALS" },
       { value: "< 20ms", label: "GLOBAL EDGE LATENCY" },
     ],
-    tags: ["IIT Kanpur Elite", "Sathyabama IST", "TypeScript", "React 19", "Production Ready"],
+    tags: [
+      "IIT Kanpur Elite",
+      "Sathyabama IST",
+      "TypeScript",
+      "React 19",
+      "Production Ready",
+    ],
     liveUrl: "https://github.com/KarreJohnHyde",
     color: "#A78BFA", // Cyber Violet
   },
@@ -113,8 +137,12 @@ export default function StoryOverlay({
       event.stopPropagation()
     }
 
-    container.addEventListener("wheel", preventDocumentScroll, { passive: false })
-    container.addEventListener("touchmove", preventDocumentScroll, { passive: false })
+    container.addEventListener("wheel", preventDocumentScroll, {
+      passive: false,
+    })
+    container.addEventListener("touchmove", preventDocumentScroll, {
+      passive: false,
+    })
 
     return () => {
       container.removeEventListener("wheel", preventDocumentScroll)
@@ -123,7 +151,9 @@ export default function StoryOverlay({
   }, [inspectMode])
 
   return (
-    <div className={`story-overlay-pinned ${inspectMode ? "is-inspecting" : ""}`}>
+    <div
+      className={`story-overlay-pinned ${inspectMode ? "is-inspecting" : ""}`}
+    >
       {/* 3D WebGL / R3F Canvas */}
       <div className="story-canvas-container" ref={canvasContainerRef}>
         <NeuralTorusScene
@@ -174,7 +204,11 @@ export default function StoryOverlay({
             type="button"
           >
             <span className="inspect-indicator">{inspectMode ? "✦" : "○"}</span>
-            <span>{inspectMode ? "EXIT 3D INSPECT (RESUME SCROLL)" : "INSPECT 3D MODEL"}</span>
+            <span>
+              {inspectMode
+                ? "EXIT 3D INSPECT (RESUME SCROLL)"
+                : "INSPECT 3D MODEL"}
+            </span>
           </button>
 
           <button
@@ -224,7 +258,10 @@ export default function StoryOverlay({
               {currentStage.metrics.map((metric) => (
                 <div className="story-metric-item" key={metric.label}>
                   <div className="metric-val-wrapper">
-                    <strong className="story-metric-val" style={{ color: currentStage.color }}>
+                    <strong
+                      className="story-metric-val"
+                      style={{ color: currentStage.color }}
+                    >
                       {metric.value}
                     </strong>
                   </div>
@@ -276,15 +313,22 @@ export default function StoryOverlay({
         </div>
 
         <div className="story-bottom-controls">
-          <nav aria-label="Story chapter stepper" className="story-stage-stepper">
+          <nav
+            aria-label="Story chapter stepper"
+            className="story-stage-stepper"
+          >
             {storyStages.map((st, idx) => (
               <button
-                className={`story-step-pill ${activeStage === idx ? "is-active" : ""}`}
+                className={`story-step-pill ${
+                  activeStage === idx ? "is-active" : ""
+                }`}
                 key={st.index}
                 onClick={() => onJumpToStage(idx)}
-                style={{
-                  "--stage-color": st.color,
-                } as React.CSSProperties}
+                style={
+                  {
+                    "--stage-color": st.color,
+                  } as React.CSSProperties
+                }
                 type="button"
               >
                 <span className="step-num">{st.index}</span>

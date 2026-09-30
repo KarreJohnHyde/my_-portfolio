@@ -39,7 +39,10 @@ export function getSmoothScroll(): Lenis | null {
   return getGlobalLenis() || lenisInstance
 }
 
-export function scrollToTarget(target: string | number | HTMLElement, offset = 0) {
+export function scrollToTarget(
+  target: string | number | HTMLElement,
+  offset = 0,
+) {
   const activeLenis = getGlobalLenis() || lenisInstance
   if (activeLenis) {
     activeLenis.scrollTo(target, { offset, duration: 1.3 })

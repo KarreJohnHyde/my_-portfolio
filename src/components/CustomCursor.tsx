@@ -36,7 +36,7 @@ export default function CustomCursor() {
       const target = e.target as HTMLElement | null
       if (target) {
         const interactive = target.closest(
-          'a, button, [role="button"], input, textarea, select, .project-card, .skill-card, .cert-card, .filter-btn, .main-nav button, .hud-inspect-btn, .hud-snap-btn, .resume-trigger-btn, .contact-pill, .interactive-hover'
+          'a, button, [role="button"], input, textarea, select, .project-card, .skill-card, .cert-card, .filter-btn, .main-nav button, .hud-inspect-btn, .hud-snap-btn, .resume-trigger-btn, .contact-pill, .interactive-hover',
         )
         setIsHovering(!!interactive)
       }
@@ -83,9 +83,9 @@ export default function CustomCursor() {
   return (
     <div
       aria-hidden="true"
-      className={`cyber-custom-cursor-container ${isVisible ? "is-visible" : ""} ${
-        isHovering ? "is-hovering" : ""
-      } ${isClicking ? "is-clicking" : ""}`}
+      className={`cyber-custom-cursor-container ${
+        isVisible ? "is-visible" : ""
+      } ${isHovering ? "is-hovering" : ""} ${isClicking ? "is-clicking" : ""}`}
     >
       {/* Outer Halo Gray Circle Ring with Lerp Trailing */}
       <div className="cursor-halo-ring" ref={ringRef} />
