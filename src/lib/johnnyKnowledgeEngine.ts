@@ -260,7 +260,7 @@ Grounding Rule: Clinical models must never generate unfalsifiable prognostic cla
       "admin",
       "rbac",
     ],
-    content: `Brite Systems is an enterprise software architecture and web application suite structured for business process operations, modular data handling, and administrative control. It enforces strict RBAC (Role-Based Access Control) and decoupled domain micro-frontends.`,
+    content: `Brite Systems is an enterprise software architecture and web application suite structured for business process operations, modular data handling, and administrative control. It was submitted for the Brite Spark 2026 hackathon (as a participant) and is deployed live on Streamlit at https://brite-systems.streamlit.app/. It enforces strict RBAC (Role-Based Access Control) and decoupled domain micro-frontends.`,
   },
   {
     id: "proj-10-gravity-glow",
@@ -379,7 +379,7 @@ Grounding Rule: Clinical models must never generate unfalsifiable prognostic cla
     content: `Who is Karre John Hyde (Johnny)?
 - Passionate AI/ML & Full-Stack Engineer based in Chennai / Visakhapatnam.
 - Obsessed with bridging the gap between deep mathematical models (clustering, RAG embeddings, loss functions) and silky smooth, high-framerate user interfaces (React, WebGL, GSAP, Tailwind).
-- Loves building hackathon-winning prototypes (Innoverse'26 champion) and breaking down distributed systems whitepapers (Paxos, Raft, DynamoDB partitioning).
+- Loves building hackathon prototypes (Innoverse'26 & Brite Spark 2026 participant) and breaking down distributed systems whitepapers (Paxos, Raft, DynamoDB partitioning).
 - When not coding, Johnny explores modern UI/UX design trends, cybernetic aesthetics, physics simulations, and collaborates with fellow builders.`,
   },
   {
@@ -656,9 +656,9 @@ export function generateJohnnyAnswer(
     if (personaMode === "quick_pitch") {
       answer = `Hey! I'm **Johnny-Talks**, the AI digital twin of **Karre John Hyde (Johnny)**.
 
-- 🎓 **B.E. AI & ML @ Sathyabama IST** (8.45 CGPA, Semester 6)
+- 🎓 **B.E. AI & ML @ Sathyabama IST** (8.45 CGPA in 6th Semester out of 8, 2023–2027 batch)
 - 🏆 **IIT Kanpur Elite Certified** in Cloud Computing & Distributed Systems (2026)
-- 🥇 **Innoverse'26 Winner** · Built Study2AI (RAG), Expense AI (AWS DynamoDB), & Cognitive Learning (PCA/K-Means)
+- 🏅 **Innoverse'26 Participant** · Built Study2AI (RAG), Expense AI (AWS DynamoDB), & Cognitive Learning (PCA/K-Means)
 - 💼 **Actively open for 2026 AI/ML & Full-Stack Internships!**
 
 What project or architecture can I walk you through?`
@@ -687,8 +687,8 @@ What are you curious to dive into today?`
       answer = `**Karre John Hyde (Johnny)** in 60 seconds:
 
 - **What I Do**: AI/ML Engineer bridging deep learning mathematical models with high-performance full-stack web products.
-- **Where I Study**: Sathyabama Institute of Science and Technology, Chennai (B.E. AI & ML, 8.45 CGPA, 2023–2027).
-- **Core Strengths**: RAG pipelines (Study2AI), Cloud-Native serverless ledgers (Expense AI), Unsupervised ML (Innoverse'26 winner), and Distributed Systems (IIT Kanpur Elite).
+- **Where I Study**: Sathyabama Institute of Science and Technology, Chennai (B.E. AI & ML, 8.45 CGPA in 6th Semester out of 8, 2023–2027 batch).
+- **Core Strengths**: RAG pipelines (Study2AI), Cloud-Native serverless ledgers (Expense AI), Unsupervised ML (Innoverse'26 participant), and Distributed Systems (IIT Kanpur Elite).
 - **Status**: Available for 2026 AI/ML & Full-Stack Engineering internships.`
     } else if (personaMode === "architect") {
       answer = `I am the digital architectural twin of **Karre John Hyde**. 
@@ -700,9 +700,9 @@ My core engineering philosophy centers on **predictable latency, state isolation
     } else {
       answer = `I'm **John (Johnny)** — an AI and machine learning engineer who loves taking complex algorithmic systems and turning them into blazing-fast, delightful products people actually want to use.
 
-Right now, I'm in my 6th semester pursuing my **B.E. in Computer Science with AI & ML specialization at Sathyabama IST in Chennai**, where I maintain an **8.45 CGPA**. Before that, I built a strong academic foundation with **99.83% in 10th grade** and **88% in intermediate**.
+Right now, I hold an **8.45 CGPA in my 6th Semester (out of 8 total semesters) for the 2023–2027 batch** pursuing my **B.E. in Computer Science with AI & ML specialization at Sathyabama IST in Chennai**. Before that, I built a strong academic foundation with **99.83% in 10th grade** and **88% in intermediate**.
 
-What really gets me excited is building systems that solve tangible problems. I've designed **Study2AI** (a full-stack RAG engine that doesn't hallucinate), won the **Innoverse'26 Hackathon** with **Cognitive Learning** by clustering student learning behaviors with PCA and K-Means, and built serverless fintech ledgers with **Expense AI** on AWS DynamoDB.
+What really gets me excited is building systems that solve tangible problems. I've designed **Study2AI** (a full-stack RAG engine that doesn't hallucinate), submitted **Cognitive Learning** for the **Innoverse'26 Hackathon** by clustering student learning behaviors with PCA and K-Means, deployed **Brite Systems** for the **Brite Spark 2026 Hackathon** on Streamlit, and built serverless fintech ledgers with **Expense AI** on AWS DynamoDB.
 
 Outside of core ML, I'm passionate about high-framerate UI engineering, modern CSS micro-animations, and reading systems whitepapers.`
     }
@@ -715,7 +715,7 @@ Outside of core ML, I'm passionate about high-framerate UI engineering, modern C
       answer = `**Yes! I am actively looking for AI/ML and Full-Stack Engineering internships for Summer & Fall 2026.**
 
 - **Core Capabilities**: Python, LangChain, FAISS, PyTorch, Next.js, TypeScript, AWS (Lambda, DynamoDB), FastAPI.
-- **Verified Track Record**: 10+ live deployed projects, IIT Kanpur Elite credential, Innoverse'26 Hackathon winner.
+- **Verified Track Record**: 10+ live deployed projects, IIT Kanpur Elite credential, Innoverse'26 & Brite Spark 2026 Hackathons participant.
 - **Direct Reach**: Email **johnnykarre@gmail.com** or WhatsApp **+91 9100243535**. Let's build together!`
     } else if (personaMode === "architect") {
       answer = `### 2026 Engineering Internship Profile & Technical Readiness
@@ -836,12 +836,12 @@ It handles receipt uploads, spending analytics, and QR payments seamlessly!`
   // -------------------------------------------------------------
   else if (isCognitive) {
     if (personaMode === "quick_pitch") {
-      answer = `**Cognitive Learning (Innoverse'26 Winner):**
+      answer = `**Cognitive Learning (Innoverse'26 Hackathon Submission):**
 
 - **What it is**: An adaptive ML system that profiles student learning habits and classifies them into 5 distinct cognitive archetypes.
 - **The Core ML**: Combined **PCA dimensionality reduction** (8 behavioral telemetry metrics down to 3 orthogonal axes, retaining >89% variance) with **K-Means clustering** (k=5 via Silhouette analysis).
 - **Inference Speed**: Under **4ms per student session** on Streamlit Cloud!
-- **Award**: Won first prize at the Innoverse'26 Hackathon.`
+- **Hackathon**: Demonstrated and submitted at the Innoverse'26 Hackathon.`
     } else if (personaMode === "architect") {
       answer = `### Cognitive Learning: Unsupervised Telemetry Pipeline
 
@@ -860,7 +860,7 @@ At the Innoverse'26 Hackathon, the challenge was profiling student learning beha
 
 Inference latency remains locked under **4ms per session** in production.`
     } else {
-      answer = `**Cognitive Learning** is one of the projects I'm proudest of because it won the **Innoverse'26 Hackathon**!
+      answer = `**Cognitive Learning** is one of the projects I'm proudest of because I built and submitted it for the **Innoverse'26 Hackathon**!
 
 The problem we set out to tackle was: how can an educational platform adapt to how a student actually learns—not just whether they got question #3 right or wrong? We tracked 8 behavioral telemetry signals, like how long they pause on complex concepts, how fast they recover after a mistake, and how often they consult hints.
 
@@ -879,10 +879,10 @@ It runs in under 4ms per student and dynamically personalizes quiz difficulty in
     if (personaMode === "quick_pitch") {
       answer = `**Academic & Elite Institutional Credentials:**
 
-- 🎓 **B.E. CSE (AI & ML Specialization)**: Sathyabama IST, Chennai (2023–2027, Sem 6) · **8.45 CGPA**
+- 🎓 **B.E. CSE (AI & ML Specialization)**: Sathyabama IST, Chennai (2023–2027 batch, 6th Semester out of 8) · **8.45 CGPA**
 - 🏆 **IIT Kanpur (NPTEL, 2026)**: Cloud Computing & Distributed Systems · **Elite Certification**
 - 📜 **IIT Kharagpur (NPTEL, 2024–2025)**: Introduction to Machine Learning, DBMS, & Java Programming
-- 🥇 **Innoverse'26 Hackathon**: 1st Place Champion (Cognitive Learning)
+- 🏅 **Hackathons**: Innoverse'26 Participant (Cognitive Learning) · Brite Spark 2026 Participant (Brite Systems)
 - 🏫 **Schooling**: 10th Standard: **99.83%** · 12th Intermediate: **88%**`
     } else if (personaMode === "architect") {
       answer = `### Verified Academic Foundation & Distributed Systems Credentials

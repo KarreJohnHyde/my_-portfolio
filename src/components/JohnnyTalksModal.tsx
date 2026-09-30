@@ -53,7 +53,7 @@ const STARTER_PROMPTS = [
     text: "Are you open for AI/ML and Full-Stack Engineering internships in 2026?",
   },
   {
-    label: "🥇 Innoverse'26 Winner",
+    label: "🏅 Innoverse'26 Participant",
     text: "How does Cognitive Learning classify student archetypes using PCA & K-Means?",
   },
 ]
@@ -68,8 +68,8 @@ I think, evaluate engineering trade-offs, and speak with the exact voice, princi
 #### What would you like to explore today?
 - **AI & RAG Systems**: How I eliminated hallucinations in **Study2AI** using MMR retrieval and custom chunk boundaries.
 - **Cloud & Scalability**: Serverless **DynamoDB single-table design** vs PostgreSQL in **Expense AI**.
-- **Applied ML**: How I won **Innoverse'26** with **Cognitive Learning** using PCA + K-Means clustering.
-- **Elite Credentials**: Coursework at **Sathyabama IST (8.45 CGPA)** and **IIT Kanpur Elite** in Distributed Systems.
+- **Applied ML**: How I built and submitted **Cognitive Learning** for **Innoverse'26** using PCA + K-Means clustering.
+- **Elite Credentials**: 8.45 CGPA in 6th semester (2023–2027 batch) at **Sathyabama IST** and **IIT Kanpur Elite** in Distributed Systems.
 - **Hiring & Collaboration**: Actively open for **2026 AI/ML & Full-Stack Internships**!`,
   sources: [
     {

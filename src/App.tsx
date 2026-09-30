@@ -21,8 +21,7 @@ const ThreeDStorySection = React.lazy(
 import CustomCursor from "./components/CustomCursor"
 import ProjectDetailPage from "./components/ProjectDetailPage"
 import JohnnyTalksModal from "./components/JohnnyTalksModal"
-import InteractiveRagVisualizer from "./components/InteractiveRagVisualizer"
-import MultiPlatformDeviceStudio from "./components/MultiPlatformDeviceStudio"
+import PixelGridTrail from "./components/PixelGridTrail"
 import plushieAvatar from "./assets/johnny-plushie.jpg"
 
 type IconName = "arrow" | "brain" | "check" | "cloud" | "code" | "copy" | "cpu" | "download" | "external" | "github" | "globe" | "grid" | "linkedin" | "mail" | "mapPin" | "phone" | "server" | "spark" | "terminal" | "whatsapp"
@@ -168,15 +167,15 @@ const projects: ProjectItem[] = [
     number: "09",
     title: "Brite Systems",
     description:
-      "Enterprise software architecture and web application suite structured for business process operations, modular data handling, and administrative control.",
-    tags: ["React", "TypeScript", "Enterprise", "Cloud"],
+      "Project submission for the Brite Spark 2026 hackathon: an enterprise software architecture and web application suite structured for business process operations, modular data handling, and administrative control.",
+    tags: ["React", "TypeScript", "Enterprise", "Brite Spark 2026", "Streamlit"],
     category: "cloud",
-    liveUrl: "https://github.com/KarreJohnHyde/Brite-Systems",
+    liveUrl: "https://brite-systems.streamlit.app/",
     githubUrl: "https://github.com/KarreJohnHyde/Brite-Systems",
-    status: "GitHub Active",
+    status: "Streamlit Live",
     icon: "terminal",
     tone: "cyan",
-    label: "ENTERPRISE · SUITE",
+    label: "HACKATHON · ENTERPRISE",
   },
   {
     number: "10",
@@ -271,10 +270,10 @@ const certifications: CertificationItem[] = [
 const educationHistory = [
   {
     degree: "B.E., Computer Science and Engineering (AI & ML)",
-    period: "2023 – 2027 (Present, Sem 6)",
+    period: "2023 – 2027 (6th Semester out of 8 total semesters)",
     institution:
       "Sathyabama Institute of Science and Technology, Chennai, Tamil Nadu",
-    score: "CGPA: 8.45",
+    score: "8.45 CGPA in my 6th Semester (out of 8 total semesters) for the 2023–2027 batch",
     type: "Undergraduate Degree · Full-time",
   },
   {
@@ -306,7 +305,7 @@ const journey = [
     year: "2026",
     title: "Cognitive Learning · Innoverse'26 Hackathon",
     detail:
-      "Built a 4-tier pipeline extracting 8+ behavioral metrics to classify students into 5 cognitive profiles using rule-based ML (K-Means, PCA) with adaptive recommendations on a live Streamlit dashboard.",
+      "Participated in the Innoverse'26 Hackathon: built, demonstrated, and submitted an adaptive ML dashboard with K-Means clustering and PCA dimensionality reduction classifying students into 5 cognitive profiles in 24 hours.",
   },
   {
     year: "2025",
@@ -324,7 +323,7 @@ const journey = [
     year: "2023 — 2027",
     title: "B.E., Computer Science and Engineering (AI & ML Specialization)",
     detail:
-      "Sathyabama Institute of Science and Technology, Chennai (Present, Sem 6). Maintaining 8.45 CGPA across algorithmic problem solving, machine learning systems, and software engineering.",
+      "Sathyabama Institute of Science and Technology, Chennai. Currently holding an 8.45 CGPA in my 6th Semester (out of 8 total semesters) for the 2023–2027 batch across algorithmic problem solving, machine learning systems, and software engineering.",
   },
   {
     year: "2020 — 2023",
@@ -359,49 +358,50 @@ const skills = [
 ]
 
 /* ═══════════════════════════════════════════════════════
-   SLACK-STYLE CARDS DATA
+   LIVE DEPLOYMENTS DATA
    ═══════════════════════════════════════════════════════ */
-const slackCards = [
+interface LiveDeployment {
+  name: string
+  platform: string
+  url: string
+  description: string
+}
+
+const liveDeployments: LiveDeployment[] = [
   {
-    channel: "#ai-engineering",
-    user: "John Hyde",
-    avatar: "JH",
-    time: "today at 2:14 PM",
-    message:
-      "Just shipped a new RAG pipeline with 94% retrieval accuracy using LangChain + FAISS. The vector embeddings are giving us incredible context-aware responses 🧠",
-    reactions: [
-      { emoji: "🔥", count: 12 },
-      { emoji: "🧠", count: 8 },
-      { emoji: "🚀", count: 5 },
-    ],
-    thread: 4,
+    name: "Brite Systems",
+    platform: "Streamlit",
+    url: "https://brite-systems.streamlit.app/",
+    description:
+      "Enterprise software operations and administrative suite submitted for the Brite Spark 2026 hackathon.",
   },
   {
-    channel: "#deployments",
-    user: "John Hyde",
-    avatar: "JH",
-    time: "yesterday at 11:30 AM",
-    message:
-      "Pushed Expense AI to production on Vercel. DynamoDB integration is clean, OCR pipeline handles receipts in < 200ms. Zero downtime deployment ✅",
-    reactions: [
-      { emoji: "✅", count: 9 },
-      { emoji: "⚡", count: 6 },
-    ],
-    thread: 7,
+    name: "Expense AI",
+    platform: "Vercel",
+    url: "https://expense-tracker-rho-olive-10.vercel.app",
+    description:
+      "Serverless financial intelligence application with automated receipt OCR, QR payments, and AWS DynamoDB ledgering.",
   },
   {
-    channel: "#hackathons",
-    user: "John Hyde",
-    avatar: "JH",
-    time: "2 days ago",
-    message:
-      "Won the Cognitive Learning track at Innoverse'26! Built an adaptive ML dashboard with K-Means clustering in 24 hours. The PCA visualization really sealed the demo 🏆",
-    reactions: [
-      { emoji: "🏆", count: 24 },
-      { emoji: "🎉", count: 18 },
-      { emoji: "💪", count: 11 },
-    ],
-    thread: 15,
+    name: "Cognitive Learning",
+    platform: "Streamlit",
+    url: "https://cognitivelearning-5zqpetkfjexgbjx5kdappgk.streamlit.app/",
+    description:
+      "Adaptive unsupervised ML dashboard with K-Means and PCA built and submitted for the Innoverse'26 hackathon.",
+  },
+  {
+    name: "Study2AI",
+    platform: "Hugging Face / Gradio",
+    url: "https://huggingface.co/spaces/Johnny2005/Final_Project",
+    description:
+      "Full-stack multimodal RAG system turning dense academic documents into grounded, context-aware interactive learning conversations.",
+  },
+  {
+    name: "Xen-01",
+    platform: "Vercel",
+    url: "https://xen-01.vercel.app",
+    description:
+      "Cyberpunk-inspired digital interface pushing modern CSS micro-animations, glassmorphic layout, and fluid typography.",
   },
 ]
 
@@ -1006,48 +1006,47 @@ function SectionLabel({
 }
 
 /* ═══════════════════════════════════════════════════════
-   SLACK-STYLE MESSAGE CARD
+   LIVE DEPLOYMENT STATUS CARD
    ═══════════════════════════════════════════════════════ */
-function SlackCard({
-  card,
+function DeploymentCard({
+  deployment,
   delay,
 }: {
-  card: typeof slackCards[0]
+  deployment: LiveDeployment
   delay: number
 }) {
   const { ref, isVisible } = useScrollReveal()
   return (
-    <div
-      className={`slack-card ${isVisible ? "is-revealed" : ""}`}
+    <article
+      className={`deployment-card ${isVisible ? "is-revealed" : ""}`}
       ref={ref}
       style={{ transitionDelay: `${delay}ms` }}
     >
-      <div className="slack-channel">
-        <span className="slack-hash">#</span>
-        {card.channel.slice(1)}
-      </div>
-      <div className="slack-body">
-        <div className="slack-avatar">{card.avatar}</div>
-        <div className="slack-content">
-          <div className="slack-meta">
-            <strong>{card.user}</strong>
-            <time>{card.time}</time>
+      <div>
+        <div className="deployment-status-bar">
+          <div className="deployment-online-badge">
+            <span className="deployment-pulse-dot" />
+            <span>ONLINE</span>
           </div>
-          <p>{card.message}</p>
-          <div className="slack-reactions">
-            {card.reactions.map((r) => (
-              <span className="slack-reaction" key={r.emoji}>
-                <span>{r.emoji}</span>
-                <span>{r.count}</span>
-              </span>
-            ))}
-            {card.thread > 0 && (
-              <span className="slack-thread">💬 {card.thread} replies</span>
-            )}
-          </div>
+          <span className="deployment-platform-badge">
+            {deployment.platform}
+          </span>
         </div>
+        <h3 className="deployment-title">{deployment.name}</h3>
+        <p className="deployment-desc">{deployment.description}</p>
       </div>
-    </div>
+      <div className="deployment-action-bar">
+        <a
+          className="deployment-link"
+          href={deployment.url}
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <span>Launch Environment</span>
+          <Icon name="external" size={13} />
+        </a>
+      </div>
+    </article>
   )
 }
 
@@ -1357,14 +1356,14 @@ function ResumeModal({
                       B.E., Computer Science and Engineering (AI &amp; ML) —
                       Full-time
                     </strong>
-                    <span>2023 – 2027 (Present, Sem 6)</span>
+                    <span>2023 – 2027 (6th Semester out of 8 total semesters)</span>
                   </div>
                   <div className="entry-sub">
                     <span>
                       Sathyabama Institute of Science and Technology, Chennai,
                       Tamil Nadu
                     </span>
-                    <strong>CGPA: 8.45</strong>
+                    <strong>8.45 CGPA in my 6th Semester (out of 8 total semesters) for the 2023–2027 batch</strong>
                   </div>
                 </div>
 
@@ -1898,6 +1897,7 @@ export default function App() {
           <span className="lenis-vel">{Math.abs(scrollVelocity)} PX/S</span>
         </div>
         <ParticleTrail />
+        <PixelGridTrail />
         <div className={`page-transition ${transitioning ? "is-active" : ""}`}>
           <span>KJH</span>
         </div>
@@ -2056,7 +2056,7 @@ export default function App() {
                 <div className="superpower-item">
                   <span>🎓</span>
                   <span>
-                    <span className="sp-val">8.45 CGPA</span> · Sathyabama IST
+                    <span className="sp-val">8.45 CGPA</span> · 6th Sem (of 8) · Sathyabama IST
                     (2023–2027)
                   </span>
                 </div>
@@ -2070,9 +2070,9 @@ export default function App() {
                 </div>
                 <span className="superpower-sep">|</span>
                 <div className="superpower-item">
-                  <span>🥇</span>
+                  <span>🏅</span>
                   <span>
-                    <span className="sp-val">Innoverse'26 Winner</span> ·
+                    <span className="sp-val">Innoverse'26 Participant</span> ·
                     Cognitive Learning
                   </span>
                 </div>
@@ -2231,22 +2231,6 @@ export default function App() {
                 />
               ))}
             </div>
-
-            {/* Interactive RAG Playground */}
-            <InteractiveRagVisualizer
-              onAskJohnny={(q) => {
-                setInitialJohnnyQuery(q)
-                setJohnnyModalOpen(true)
-              }}
-            />
-
-            {/* Interactive Multi-Platform Responsive Device Studio (Figma 6 Pillars) */}
-            <MultiPlatformDeviceStudio
-              onAskJohnny={(q) => {
-                setInitialJohnnyQuery(q)
-                setJohnnyModalOpen(true)
-              }}
-            />
           </section>
 
           {/* ABOUT ME SECTION */}
@@ -2317,7 +2301,7 @@ export default function App() {
 
             <div className="education-strip">
               <div>
-                <span>EDUCATION · 2023 — 2027 (SEM 6)</span>
+                <span>EDUCATION · 6TH SEMESTER (OUT OF 8) · 2023 — 2027 BATCH</span>
                 <strong>
                   B.E. Computer Science &amp; Engineering (AI &amp; ML)
                 </strong>
@@ -2327,7 +2311,7 @@ export default function App() {
               </div>
               <div className="metric">
                 <strong>8.45</strong>
-                <span>CURRENT CGPA</span>
+                <span>CURRENT CGPA (SEM 6/8)</span>
               </div>
               <div className="metric">
                 <strong>88%</strong>
@@ -2373,20 +2357,24 @@ export default function App() {
               </div>
             </div>
 
-            {/* SLACK-STYLE CARDS */}
+            {/* LIVE DEPLOYMENTS TRACKER */}
             <div className="slack-section">
               <div className="slack-heading">
                 <div className="slack-heading-icon">
                   <Icon name="terminal" size={20} />
                 </div>
                 <div>
-                  <span className="slack-heading-label">LIVE FEED</span>
-                  <strong>What I&apos;ve been shipping</strong>
+                  <span className="slack-heading-label">LIVE DEPLOYMENTS</span>
+                  <strong>Active production environments.</strong>
                 </div>
               </div>
-              <div className="slack-grid">
-                {slackCards.map((card, i) => (
-                  <SlackCard card={card} delay={i * 120} key={card.channel} />
+              <div className="deployments-grid">
+                {liveDeployments.map((deployment, i) => (
+                  <DeploymentCard
+                    deployment={deployment}
+                    delay={i * 80}
+                    key={deployment.name}
+                  />
                 ))}
               </div>
             </div>

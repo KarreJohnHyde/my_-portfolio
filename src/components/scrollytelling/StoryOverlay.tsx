@@ -155,7 +155,11 @@ export default function StoryOverlay({
       className={`story-overlay-pinned ${inspectMode ? "is-inspecting" : ""}`}
     >
       {/* 3D WebGL / R3F Canvas */}
-      <div className="story-canvas-container" ref={canvasContainerRef}>
+      <div
+        className="story-canvas-container"
+        ref={canvasContainerRef}
+        style={{ zIndex: 0, pointerEvents: inspectMode ? "auto" : "none" }}
+      >
         <NeuralTorusScene
           inspectMode={inspectMode}
           mouseX={mouseX}
@@ -222,8 +226,8 @@ export default function StoryOverlay({
             <span>SOFT SNAP {snapEnabled ? "ON" : "OFF"}</span>
           </button>
 
-          <span className="hud-telemetry-chip">2,400 PARTICLES</span>
-          <span className="hud-telemetry-chip">GLSL SHADER</span>
+          <span className="hud-telemetry-chip">CHROMATIC TORUS</span>
+          <span className="hud-telemetry-chip">REFRACTIVE GLASS</span>
         </div>
       </header>
 

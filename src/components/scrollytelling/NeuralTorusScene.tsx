@@ -1,408 +1,95 @@
-import React, { useEffect, useMemo, useRef } from "react"
-import { Canvas, useFrame, useThree } from "@react-three/fiber"
-import { OrbitControls } from "@react-three/drei"
+import React, { useRef } from "react"
+import { Canvas, useFrame } from "@react-three/fiber"
+import { MeshTransmissionMaterial, Environment, OrbitControls } from "@react-three/drei"
 import * as THREE from "three"
-import {
-  neuralVertexShader,
-  neuralFragmentShader,
-  energyBeamVertexShader,
-  energyBeamFragmentShader,
-} from "./shaders/neuralShaders"
 
-interface NeuralTorusMeshProps {
-  progress: number
-  inspectMode: boolean
-  mouseX: number
-  mouseY: number
-  lowPower: boolean
+interface ChromaticTorusProps {
+  progress?: number
+  mouseX?: number
+  mouseY?: number
 }
 
-const PARTICLE_COUNT = 2400
+function ChromaticTorus({ progress = 0, mouseX = 0, mouseY = 0 }: ChromaticTorusProps) {
+  const torusRef = useRef<THREE.Mesh>(null)
 
-interface RenderProfile {
-  dpr: number
-  lowPower: boolean
-}
+  // Subtle, continuous rotation for a modest animation
+  useFrame((_state, delta) => {
+    if (torusRef.current) {
+      torusRef.current.rotation.x += delta * 0.15
+      torusRef.current.rotation.y += delta * 0.1
 
-function getRenderProfile(): RenderProfile {
-  if (typeof window === "undefined") return { dpr: 1, lowPower: false }
-
-  const navigatorWithMemory = navigator as Navigator & { deviceMemory?: number }
-  const isCoarsePointer = window.matchMedia("(pointer: coarse)").matches
-  const hasLimitedMemory = (navigatorWithMemory.deviceMemory ?? 8) <= 4
-  const hasFewCores = (navigator.hardwareConcurrency ?? 8) <= 4
-  const prefersReducedMotion = window.matchMedia(
-    "(prefers-reduced-motion: reduce)",
-  ).matches
-  const lowPower =
-    isCoarsePointer || hasLimitedMemory || hasFewCores || prefersReducedMotion
-  const maximumDpr =
-    hasLimitedMemory || hasFewCores ? 1 : isCoarsePointer ? 1.25 : 2
-
-  return {
-    dpr: Math.min(window.devicePixelRatio || 1, maximumDpr),
-    lowPower,
-  }
-}
-
-function NeuralTorusParticles({
-  progress,
-  inspectMode,
-  mouseX,
-  mouseY,
-  lowPower,
-}: NeuralTorusMeshProps) {
-  const pointsRef = useRef<THREE.Points>(null)
-  const beamRef = useRef<THREE.Mesh>(null)
-  const torusWireframeRef = useRef<THREE.Mesh>(null)
-  const materialRef = useRef<THREE.ShaderMaterial>(null)
-  const beamMaterialRef = useRef<THREE.ShaderMaterial>(null)
-  const lastFrameTime = useRef(0)
-  const { camera, gl } = useThree()
-
-  // Generate 4 procedural mathematical topologies
-  const {
-    scatteredPoints,
-    torusPoints,
-    beamPoints,
-    latticePoints,
-    randoms,
-    sizes,
-  } = useMemo(() => {
-    const scattered = new Float32Array(PARTICLE_COUNT * 3)
-    const torus = new Float32Array(PARTICLE_COUNT * 3)
-    const beam = new Float32Array(PARTICLE_COUNT * 3)
-    const lattice = new Float32Array(PARTICLE_COUNT * 3)
-    const rnd = new Float32Array(PARTICLE_COUNT)
-    const sz = new Float32Array(PARTICLE_COUNT)
-
-    // Stage 2: 5 Centroid clusters on Torus for FAISS partitioning
-    const clusterAngles = [0, 1.25, 2.5, 3.75, 5.0]
-
-    for (let i = 0; i < PARTICLE_COUNT; i++) {
-      const i3 = i * 3
-
-      // 1. Stage 1: High-dimensional scattered vector cloud
-      const rCloud = 3.5 + Math.random() * 2.5
-      const thetaC = Math.random() * Math.PI * 2
-      const phiC = Math.acos(2 * Math.random() - 1)
-      scattered[i3] = rCloud * Math.sin(phiC) * Math.cos(thetaC)
-      scattered[i3 + 1] = rCloud * Math.sin(phiC) * Math.sin(thetaC)
-      scattered[i3 + 2] = rCloud * Math.cos(phiC)
-
-      // 2. Stage 2: Geometric Neural Torus (FAISS Vector Index)
-      const u = Math.random() * Math.PI * 2
-      const v = Math.random() * Math.PI * 2
-      const R = 3.1
-      const r = 1.05 + Math.sin(v * 2.0) * 0.25
-      const torusX = (R + r * Math.cos(v)) * Math.cos(u)
-      const torusY = (R + r * Math.cos(v)) * Math.sin(u)
-      const torusZ = r * Math.sin(v)
-
-      // Cluster weighting around 5 nearest neighbor centroids
-      const clusterBias = Math.random() < 0.4 ? clusterAngles[i % 5] : u
-      const blendedU = THREE.MathUtils.lerp(u, clusterBias, 0.4)
-      torus[i3] =
-        (R + r * Math.cos(v)) * Math.cos(blendedU) + (Math.random() - 0.5) * 0.2
-      torus[i3 + 1] =
-        (R + r * Math.cos(v)) * Math.sin(blendedU) + (Math.random() - 0.5) * 0.2
-      torus[i3 + 2] = torusZ + (Math.random() - 0.5) * 0.2
-
-      // 3. Stage 3: Context Injection Axial Beam & Excitation Nodes
-      if (i < PARTICLE_COUNT * 0.45) {
-        // High density axial query vector beam along Y axis
-        const beamY = (Math.random() - 0.5) * 8.0
-        const beamRadius = 0.25 + Math.random() * 0.55
-        const beamAngle = Math.random() * Math.PI * 2
-        beam[i3] = Math.cos(beamAngle) * beamRadius
-        beam[i3 + 1] = beamY
-        beam[i3 + 2] = Math.sin(beamAngle) * beamRadius
-      } else {
-        // Orbiting excited semantic nodes around the torus
-        beam[i3] = torusX * 1.15 + (Math.random() - 0.5) * 0.3
-        beam[i3 + 1] = torusY * 1.15 + (Math.random() - 0.5) * 0.3
-        beam[i3 + 2] = torusZ * 1.15 + (Math.random() - 0.5) * 0.3
-      }
-
-      // 4. Stage 4: Stabilized Crystalline Lattice (Production Deployment)
-      const side = Math.cbrt(PARTICLE_COUNT)
-      const ix = (i % side) - side / 2
-      const iy = (Math.floor(i / side) % side) - side / 2
-      const iz = Math.floor(i / (side * side)) - side / 2
-      const spacing = 0.42
-      lattice[i3] = ix * spacing + (Math.random() - 0.5) * 0.08
-      lattice[i3 + 1] = iy * spacing + (Math.random() - 0.5) * 0.08
-      lattice[i3 + 2] = iz * spacing + (Math.random() - 0.5) * 0.08
-
-      rnd[i] = Math.random()
-      sz[i] = 14.0 + Math.random() * 24.0
-    }
-
-    return {
-      scatteredPoints: scattered,
-      torusPoints: torus,
-      beamPoints: beam,
-      latticePoints: lattice,
-      randoms: rnd,
-      sizes: sz,
-    }
-  }, [])
-
-  // GLSL Uniforms
-  const uniforms = useMemo(
-    () => ({
-      uTime: { value: 0 },
-      uProgress: { value: 0 },
-      uNoiseFrequency: { value: 0.22 },
-      uDpr: { value: Math.min(window.devicePixelRatio, 2) },
-      uColorPrimary: { value: new THREE.Color("#00FF66") }, // Electric Lime
-      uColorSecondary: { value: new THREE.Color("#D4FF00") }, // Cyber Yellow
-    }),
-    [],
-  )
-
-  const beamUniforms = useMemo(
-    () => ({
-      uTime: { value: 0 },
-      uProgress: { value: 0 },
-      uColor: { value: new THREE.Color("#00F0FF") }, // Electric Cyan
-    }),
-    [],
-  )
-
-  // Smooth camera orchestration tied to scroll stages when NOT in manual inspect mode
-  useFrame((state, delta) => {
-    const time = state.clock.getElapsedTime()
-    const elapsedSinceLastUpdate = time - lastFrameTime.current
-
-    // Keep lower-end/mobile devices at a calmer ~30 FPS update cadence.
-    if (lowPower && elapsedSinceLastUpdate < 1 / 30) return
-    lastFrameTime.current = time
-    const animationDelta = lowPower ? elapsedSinceLastUpdate : delta
-
-    if (materialRef.current) {
-      materialRef.current.uniforms.uTime.value = time
-      materialRef.current.uniforms.uProgress.value = progress
-      materialRef.current.uniforms.uDpr.value = gl.getPixelRatio()
-    }
-
-    if (beamMaterialRef.current) {
-      beamMaterialRef.current.uniforms.uTime.value = time
-      beamMaterialRef.current.uniforms.uProgress.value = progress
-    }
-
-    if (torusWireframeRef.current) {
-      torusWireframeRef.current.rotation.z =
-        time * 0.05 + progress * Math.PI * 0.5
-      torusWireframeRef.current.rotation.x =
-        Math.PI / 2.5 + Math.sin(time * 0.2) * 0.04
-      // Fade wireframe in smoothly during Stage 2 & 3
-      const wireOpacity =
-        smoothstep(0.18, 0.4, progress) *
-        (1.0 - smoothstep(0.8, 0.98, progress)) *
-        0.16
-      const mat = torusWireframeRef.current.material as THREE.MeshBasicMaterial
-      if (mat) mat.opacity = wireOpacity
-    }
-
-    // Camera orbit & dolly zoom tied to narrative stage when NOT in manual Inspect Mode
-    if (!inspectMode) {
-      let targetZ = 8.8
-      let targetY = 0.0
-      let targetX = 0.0
-
-      if (progress < 0.25) {
-        // Stage 1: Wide, balanced overview of raw vector space
-        targetZ = 9.0 + Math.sin(progress * Math.PI * 2) * 0.25
-        targetY = 0.3
-        targetX = mouseX * 0.45
-      } else if (progress < 0.5) {
-        // Stage 2: Smooth dolly zoom pitching into a primary cluster
-        const p2 = (progress - 0.25) / 0.25
-        targetZ = THREE.MathUtils.lerp(9.0, 6.4, p2)
-        targetY = THREE.MathUtils.lerp(0.3, 1.0, p2)
-        targetX = THREE.MathUtils.lerp(0.0, 0.8, p2) + mouseX * 0.4
-      } else if (progress < 0.75) {
-        // Stage 3: Professional orbiting perspective following axial energy beam
-        const p3 = (progress - 0.5) / 0.25
-        const orbitAngle = p3 * Math.PI * 1.0
-        targetZ = 6.4 + Math.cos(orbitAngle) * 0.8
-        targetX = Math.sin(orbitAngle) * 1.4 + mouseX * 0.35
-        targetY = 0.7 + Math.sin(p3 * Math.PI) * 0.35
-      } else {
-        // Stage 4: Smooth pullback to neutral balanced perspective
-        const p4 = (progress - 0.75) / 0.25
-        targetZ = THREE.MathUtils.lerp(6.4, 8.4, p4)
-        targetY = THREE.MathUtils.lerp(0.7, 0.0, p4)
-        targetX = THREE.MathUtils.lerp(0.8, 0.0, p4) + mouseX * 0.3
-      }
-
-      camera.position.x = THREE.MathUtils.damp(
-        camera.position.x,
-        targetX,
-        2.8,
-        animationDelta,
-      )
-      camera.position.y = THREE.MathUtils.damp(
-        camera.position.y,
-        targetY + mouseY * 0.35,
-        2.8,
-        animationDelta,
-      )
-      camera.position.z = THREE.MathUtils.damp(
-        camera.position.z,
-        targetZ,
-        2.8,
-        animationDelta,
-      )
-      camera.lookAt(0, 0, 0)
+      // Subtle responsive tilt to mouse position and scroll progress
+      torusRef.current.rotation.z = progress * Math.PI * 0.5 + mouseX * 0.1
+      torusRef.current.position.x = mouseX * 0.2
+      torusRef.current.position.y = mouseY * 0.2
     }
   })
 
   return (
-    <>
-      {/* 2,400 Procedural Neural Particles with Custom GLSL Shaders */}
-      <points ref={pointsRef}>
-        <bufferGeometry>
-          <bufferAttribute
-            args={[scatteredPoints, 3]}
-            attach="attributes-position"
-          />
-          <bufferAttribute
-            args={[scatteredPoints, 3]}
-            attach="attributes-aRandomPoint"
-          />
-          <bufferAttribute
-            args={[torusPoints, 3]}
-            attach="attributes-aTorusPoint"
-          />
-          <bufferAttribute
-            args={[beamPoints, 3]}
-            attach="attributes-aBeamPoint"
-          />
-          <bufferAttribute
-            args={[latticePoints, 3]}
-            attach="attributes-aLatticePoint"
-          />
-          <bufferAttribute args={[randoms, 1]} attach="attributes-aRandom" />
-          <bufferAttribute args={[sizes, 1]} attach="attributes-aSize" />
-        </bufferGeometry>
-        <shaderMaterial
-          blending={THREE.AdditiveBlending}
-          depthWrite={false}
-          fragmentShader={neuralFragmentShader}
-          ref={materialRef}
-          transparent={true}
-          uniforms={uniforms}
-          vertexShader={neuralVertexShader}
-        />
-      </points>
-
-      {/* Central Pulsing Energy Beam (Activates on Stage 3) */}
-      <mesh ref={beamRef}>
-        <cylinderGeometry args={[0.06, 0.06, 12, 16]} />
-        <shaderMaterial
-          blending={THREE.AdditiveBlending}
-          depthWrite={false}
-          fragmentShader={energyBeamFragmentShader}
-          ref={beamMaterialRef}
-          transparent={true}
-          uniforms={beamUniforms}
-          vertexShader={energyBeamVertexShader}
-        />
-      </mesh>
-
-      {/* Geometric Torus Wireframe (Calculates Topological Retrieval) */}
-      <mesh ref={torusWireframeRef}>
-        <torusGeometry args={[3.1, 0.02, 16, 100]} />
-        <meshBasicMaterial
-          color="#00FF66"
-          opacity={0.0}
-          transparent={true}
-          wireframe={true}
-        />
-      </mesh>
-    </>
+    <mesh ref={torusRef}>
+      {/* 3D Torus matching the section's theme */}
+      <torusGeometry args={[2.5, 0.8, 64, 128]} />
+      <MeshTransmissionMaterial
+        backside
+        thickness={0.5} // Depth of the glass volume
+        roughness={0.05} // Slight blur for a premium frosted look
+        transmission={1} // Fully transmissive glass
+        ior={1.2} // Index of Refraction (bends light)
+        chromaticAberration={0.06} // Splits light into RGB spectrum at the edges
+        distortion={0.1} // Subtle surface warping
+        distortionScale={0.2}
+      />
+    </mesh>
   )
 }
 
-function smoothstep(min: number, max: number, value: number) {
-  const x = Math.max(0, Math.min(1, (value - min) / (max - min)))
-  return x * x * (3 - 2 * x)
-}
-
 export interface NeuralTorusSceneProps {
-  progress: number
-  inspectMode: boolean
-  mouseX: number
-  mouseY: number
+  progress?: number
+  inspectMode?: boolean
+  mouseX?: number
+  mouseY?: number
 }
 
 export default function NeuralTorusScene({
-  progress,
-  inspectMode,
-  mouseX,
-  mouseY,
+  progress = 0,
+  inspectMode = false,
+  mouseX = 0,
+  mouseY = 0,
 }: NeuralTorusSceneProps) {
-  const [renderProfile, setRenderProfile] =
-    React.useState<RenderProfile>(getRenderProfile)
-
-  useEffect(() => {
-    const updateRenderProfile = () => setRenderProfile(getRenderProfile())
-    const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)")
-
-    window.addEventListener("resize", updateRenderProfile, { passive: true })
-    window.addEventListener("orientationchange", updateRenderProfile, {
-      passive: true,
-    })
-    motionQuery.addEventListener("change", updateRenderProfile)
-
-    return () => {
-      window.removeEventListener("resize", updateRenderProfile)
-      window.removeEventListener("orientationchange", updateRenderProfile)
-      motionQuery.removeEventListener("change", updateRenderProfile)
-    }
-  }, [])
-
   return (
-    <Canvas
-      camera={{ position: [0, 0, 8.8], fov: 52, near: 0.1, far: 100 }}
-      className="neural-torus-canvas"
-      dpr={renderProfile.dpr}
-      gl={{
-        antialias: !renderProfile.lowPower,
-        alpha: true,
-        powerPreference: "high-performance",
+    <div
+      style={{
+        width: "100%",
+        height: "100%",
+        position: "absolute",
+        top: 0,
+        left: 0,
+        zIndex: -1,
+        pointerEvents: inspectMode ? "auto" : "none",
       }}
     >
-      <color args={["#0a0a0c"]} attach="background" />
-      <fog args={["#0a0a0c", 10, 22]} attach="fog" />
-
-      {/* Ambient Cyber Light */}
-      <ambientLight intensity={0.4} />
-
-      {/* 3D Scene Core */}
-      <NeuralTorusParticles
-        inspectMode={inspectMode}
-        mouseX={mouseX}
-        mouseY={mouseY}
-        lowPower={renderProfile.lowPower}
-        progress={progress}
-      />
-
-      {/* Interactive OrbitControls enabled ONLY when user activates Inspect 3D Mode */}
-      {inspectMode && (
-        <OrbitControls
-          dampingFactor={0.06}
-          enableDamping={true}
-          enablePan={false}
-          enableRotate={true}
-          enableZoom={true}
-          makeDefault={true}
-          maxDistance={14}
-          minDistance={3.5}
-        />
-      )}
-    </Canvas>
+      <Canvas
+        camera={{ position: [0, 0, 8], fov: 45 }}
+        gl={{ alpha: true, antialias: true, powerPreference: "high-performance" }}
+      >
+        <ambientLight intensity={0.5} />
+        <directionalLight position={[10, 10, 10]} intensity={1} />
+        {/* Environment map provides light for reflection and refraction */}
+        <Environment preset="city" />
+        <ChromaticTorus mouseX={mouseX} mouseY={mouseY} progress={progress} />
+        {inspectMode && (
+          <OrbitControls
+            dampingFactor={0.06}
+            enableDamping={true}
+            enablePan={false}
+            enableRotate={true}
+            enableZoom={true}
+            makeDefault={true}
+            maxDistance={14}
+            minDistance={3.5}
+          />
+        )}
+      </Canvas>
+    </div>
   )
 }
