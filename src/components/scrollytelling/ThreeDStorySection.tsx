@@ -52,7 +52,7 @@ export default function ThreeDStorySection() {
               delay: 0.18,
               ease: "power2.out",
             }
-          : false,
+          : undefined,
         onUpdate: (self) => {
           const p = Math.max(0, Math.min(1, self.progress))
           setProgress(p)
