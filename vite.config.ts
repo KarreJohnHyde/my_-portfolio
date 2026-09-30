@@ -41,10 +41,35 @@ export default defineConfig(({ mode }) => {
         "/chat": {
           target: "http://127.0.0.1:8000",
           changeOrigin: true,
+          configure: (proxy) => {
+            proxy.on("error", (_err, _req, res) => {
+              if (res && "writeHead" in res && !(res as any).headersSent) {
+                ;(res as any).writeHead(503, {
+                  "Content-Type": "application/json",
+                })
+                res.end(
+                  JSON.stringify({
+                    status: "offline",
+                    error: "Backend offline",
+                  }),
+                )
+              }
+            })
+          },
         },
         "/health": {
           target: "http://127.0.0.1:8000",
           changeOrigin: true,
+          configure: (proxy) => {
+            proxy.on("error", (_err, _req, res) => {
+              if (res && "writeHead" in res && !(res as any).headersSent) {
+                ;(res as any).writeHead(503, {
+                  "Content-Type": "application/json",
+                })
+                res.end(JSON.stringify({ status: "offline" }))
+              }
+            })
+          },
         },
         "/docs": {
           target: "http://127.0.0.1:8000",

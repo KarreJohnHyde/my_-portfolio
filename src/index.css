@@ -1,5 +1,5 @@
-@import "tailwindcss";
 @import url("https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Manrope:wght@400;500;600;700&family=Syne:wght@500;600;700&family=Noto+Sans:wght@400;500;600;700&display=swap");
+@import "tailwindcss";
 
 :root {
   --ink: #e8e9e4;
@@ -6664,6 +6664,7 @@ html.lenis body {
   margin: 0 0 10px 0;
   background: linear-gradient(135deg, #ffffff 40%, #cbd5e1 100%);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
