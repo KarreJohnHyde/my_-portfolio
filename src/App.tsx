@@ -1197,13 +1197,16 @@ function ProjectCard({
           title={`Ask Johnny AI about ${project.title}`}
         >
           <img
-            src={plushieAvatar}
+            src="/johnny-plushie.jpg"
+            onError={(e) => {
+              e.currentTarget.src = plushieAvatar
+            }}
             alt="Johnny"
             style={{
               width: "15px",
               height: "15px",
               borderRadius: "50%",
-              border: "1px solid #a3e635",
+              border: "1px solid #32CD32",
             }}
           />
           <span>Ask Johnny AI</span>
@@ -1948,7 +1951,10 @@ export default function App() {
               title="Open Johnny-Talks Personal Digital Twin & Advisory Engine"
             >
               <img
-                src={plushieAvatar}
+                src="/johnny-plushie.jpg"
+                onError={(e) => {
+                  e.currentTarget.src = plushieAvatar
+                }}
                 alt="Johnny Plushie"
                 className="johnny-nav-avatar"
               />
@@ -2029,13 +2035,16 @@ export default function App() {
                 >
                   <img
                     alt="Johnny Plushie"
-                    src={plushieAvatar}
+                    src="/johnny-plushie.jpg"
+                    onError={(e) => {
+                      e.currentTarget.src = plushieAvatar
+                    }}
                     style={{
                       width: "22px",
                       height: "22px",
                       borderRadius: "50%",
                       objectFit: "cover",
-                      border: "1.5px solid #a3e635",
+                      border: "1.5px solid #32CD32",
                     }}
                   />
                   <span>Consult Johnny-Talks AI</span>
@@ -2095,7 +2104,13 @@ export default function App() {
               <div className="portrait-halo" />
               <div className="portrait-grid" />
               <div className="portrait-frame">
-                <img alt="Karre John Hyde portrait" src={portrait} />
+                <img
+                  alt="Karre John Hyde portrait"
+                  src="/portrait.png"
+                  onError={(e) => {
+                    e.currentTarget.src = portrait
+                  }}
+                />
                 <div className="portrait-scan" />
               </div>
               <div className="orbit-label orbit-label-one">
@@ -2107,7 +2122,7 @@ export default function App() {
                 FULL STACK
               </div>
               <div className="floating-code">
-                <Icon name="code" />
+                <Icon name="code" size={13} />
                 <span>BUILD / DEPLOY / LEARN</span>
               </div>
             </div>
@@ -2502,8 +2517,8 @@ export default function App() {
             ref={contactReveal.ref}
           >
             <div className="contact-noise" aria-hidden="true" />
-            <div className="contact-kicker">
-              <span className="live-dot" />
+            <div className="contact-kicker" style={{ color: "#32CD32" }}>
+              <span className="live-dot" style={{ background: "#32CD32", boxShadow: "0 0 10px #32CD32" }} />
               OPEN TO INTERNSHIPS &amp; COLLABORATIONS · 2026
             </div>
             <div
@@ -2515,7 +2530,9 @@ export default function App() {
             >
               Have a problem worth
               <br />
-              <em className="wave-word">solving together?</em>
+              <em className="wave-word" style={{ color: "#32CD32" }}>
+                solving together?
+              </em>
             </div>
 
             <div className="contact-container">
@@ -2826,7 +2843,10 @@ export default function App() {
             <img
               alt="Johnny Plushie Avatar"
               className="floating-plushie-img"
-              src={plushieAvatar}
+              src="/johnny-plushie.jpg"
+              onError={(e) => {
+                e.currentTarget.src = plushieAvatar
+              }}
             />
             <span className="floating-pulse-ring" />
           </div>

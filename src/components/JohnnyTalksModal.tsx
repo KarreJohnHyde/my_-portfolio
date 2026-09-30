@@ -644,7 +644,13 @@ export default function JohnnyTalksModal({
                 >
                   {msg.role === "assistant" && (
                     <div className="msg-avatar">
-                      <img alt="Johnny" src={plushieAvatar} />
+                      <img
+                        alt="Johnny"
+                        src="/johnny-plushie.jpg"
+                        onError={(e) => {
+                          e.currentTarget.src = plushieAvatar
+                        }}
+                      />
                     </div>
                   )}
 
@@ -745,7 +751,13 @@ export default function JohnnyTalksModal({
               {loading && (
                 <div className="johnny-msg-row is-assistant is-thinking">
                   <div className="msg-avatar">
-                    <img alt="Johnny" src={plushieAvatar} />
+                    <img
+                      alt="Johnny"
+                      src="/johnny-plushie.jpg"
+                      onError={(e) => {
+                        e.currentTarget.src = plushieAvatar
+                      }}
+                    />
                   </div>
                   <div className="msg-bubble-container">
                     <div className="thinking-bubble">

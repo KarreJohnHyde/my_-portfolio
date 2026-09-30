@@ -614,15 +614,22 @@ em {
 
 .floating-code {
   position: absolute;
-  right: 3%;
-  bottom: 7%;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 14px;
   z-index: 3;
   display: flex;
   align-items: center;
-  gap: 10px;
-  color: var(--acid);
-  font: 400 8px/1 var(--font-mono);
-  letter-spacing: 0.08em;
+  gap: 8px;
+  color: #32CD32;
+  font: 600 11px/1 var(--font-mono);
+  letter-spacing: 0.14em;
+  white-space: nowrap;
+  background: rgba(9, 10, 10, 0.85);
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(50, 205, 50, 0.3);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), 0 0 12px rgba(50, 205, 50, 0.2);
 }
 
 .hero-side-note {
@@ -1539,6 +1546,7 @@ em {
   gap: 12px;
   font: 500 9px/1 var(--font-mono);
   letter-spacing: 0.12em;
+  color: #32CD32;
 }
 
 .contact-title {
@@ -1548,7 +1556,8 @@ em {
 }
 
 .contact-title em {
-  color: #a3e635;
+  color: #32CD32;
+  font-style: italic;
 }
 
 .contact-container {
@@ -4479,9 +4488,9 @@ html.lenis body {
 .contact-title em,
 .contact-title .wave-word,
 .contact-title.title-revealed .wave-word {
-  color: #4d7c0f !important;
+  color: #32CD32 !important;
   font-style: italic;
-  text-shadow: none !important;
+  text-shadow: 0 0 16px rgba(50, 205, 50, 0.35) !important;
   animation: none !important;
 }
 
