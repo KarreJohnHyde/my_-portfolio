@@ -1,5 +1,5 @@
-@import "tailwindcss";
 @import url("https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Manrope:wght@400;500;600;700&family=Syne:wght@500;600;700;800&display=swap");
+@import "tailwindcss";
 
 :root {
   --bg-canvas: #07080a;
@@ -234,6 +234,7 @@ body {
   color: var(--code-green);
   background: linear-gradient(135deg, #a3e635 0%, #4ade80 100%);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 

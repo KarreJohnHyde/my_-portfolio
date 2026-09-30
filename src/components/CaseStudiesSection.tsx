@@ -1,5 +1,20 @@
 import React, { useState } from "react"
 
+export interface DesignStep {
+  title: string
+  desc: string
+}
+
+export interface TestingTakeaway {
+  label: string
+  detail: string
+}
+
+export interface CaseStudyMetric {
+  value: string
+  label: string
+}
+
 export interface CaseStudy {
   id: string
   title: string
@@ -10,11 +25,11 @@ export interface CaseStudy {
   problemStatement: string
   problemPoints: string[]
   designProcess: string
-  designSteps: { title: string desc: string }[]
+  designSteps: DesignStep[]
   userTestingInsights: string
-  testingTakeaways: { label: string detail: string }[]
+  testingTakeaways: TestingTakeaway[]
   finalProductResults: string
-  metrics: { value: string label: string }[]
+  metrics: CaseStudyMetric[]
   githubUrl?: string
   liveUrl?: string
 }

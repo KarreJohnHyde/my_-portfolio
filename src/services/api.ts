@@ -30,6 +30,11 @@ export interface ChatResponse {
   conversationId?: number
 }
 
+export interface ChatHistoryMessage {
+  role: string
+  content: string
+}
+
 export function getSavedGeminiKey(): string {
   if (typeof window === "undefined") return ""
   return (
@@ -75,7 +80,7 @@ async function tryFetchEndpoint(
 async function tryCallGemini(
   apiKey: string,
   question: string,
-  chatHistory: { role: string content: string }[],
+  chatHistory: ChatHistoryMessage[],
   personaMode: PersonaMode,
   citations: Citation[],
 ): Promise<string | null> {
@@ -146,7 +151,7 @@ ${contextText}`
 
 export async function askJohnny(
   question: string,
-  chatHistory: { role: string content: string }[] = [],
+  chatHistory: ChatHistoryMessage[] = [],
   personaMode: PersonaMode = "conversational",
   scenarioMode: "all" | "greenfield" | "high_constraint" = "all",
 ): Promise<ChatResponse> {
