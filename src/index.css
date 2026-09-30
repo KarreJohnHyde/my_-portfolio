@@ -1515,6 +1515,7 @@ em {
   background: var(--ink);
   color: var(--night);
   text-align: center;
+  scroll-margin-top: 80px;
 }
 
 .contact-noise {
@@ -4471,9 +4472,17 @@ html.lenis body {
 .section-heading.title-revealed .wave-word,
 .about-statement.title-revealed .wave-word,
 .journey-heading.title-revealed .wave-word,
-.credentials-heading.title-revealed .wave-word,
-.contact-title.title-revealed .wave-word {
+.credentials-heading.title-revealed .wave-word {
   animation: title-lime-shimmer 1.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.contact-title em,
+.contact-title .wave-word,
+.contact-title.title-revealed .wave-word {
+  color: #4d7c0f !important;
+  font-style: italic;
+  text-shadow: none !important;
+  animation: none !important;
 }
 
 @keyframes title-lime-shimmer {

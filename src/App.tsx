@@ -2495,7 +2495,7 @@ export default function App() {
 
           {/* CONTACT SECTION */}
           <section
-            className={`contact section-frame ${
+            className={`contact ${
               contactReveal.isVisible ? "section-revealed" : ""
             }`}
             id="contact"
