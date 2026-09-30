@@ -1,4 +1,12 @@
 {
+  "build": {
+    "env": {
+      "UV_LINK_MODE": "copy"
+    }
+  },
+  "env": {
+    "UV_LINK_MODE": "copy"
+  },
   "framework": "vite",
   "buildCommand": "vite build",
   "outputDirectory": "dist",
@@ -13,3 +21,4 @@
     }
   ]
 }
+
