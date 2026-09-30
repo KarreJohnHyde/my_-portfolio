@@ -22,6 +22,7 @@ import CustomCursor from "./components/CustomCursor"
 import ProjectDetailPage from "./components/ProjectDetailPage"
 import JohnnyTalksModal from "./components/JohnnyTalksModal"
 import InteractiveRagVisualizer from "./components/InteractiveRagVisualizer"
+import MultiPlatformDeviceStudio from "./components/MultiPlatformDeviceStudio"
 import plushieAvatar from "./assets/johnny-plushie.jpg"
 
 type IconName = "arrow" | "brain" | "check" | "cloud" | "code" | "copy" | "cpu" | "download" | "external" | "github" | "globe" | "grid" | "linkedin" | "mail" | "mapPin" | "phone" | "server" | "spark" | "terminal" | "whatsapp"
@@ -2233,6 +2234,14 @@ export default function App() {
 
             {/* Interactive RAG Playground */}
             <InteractiveRagVisualizer
+              onAskJohnny={(q) => {
+                setInitialJohnnyQuery(q)
+                setJohnnyModalOpen(true)
+              }}
+            />
+
+            {/* Interactive Multi-Platform Responsive Device Studio (Figma 6 Pillars) */}
+            <MultiPlatformDeviceStudio
               onAskJohnny={(q) => {
                 setInitialJohnnyQuery(q)
                 setJohnnyModalOpen(true)

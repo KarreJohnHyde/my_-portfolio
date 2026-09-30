@@ -407,6 +407,43 @@ Grounding Rule: Clinical models must never generate unfalsifiable prognostic cla
 - Open for AI/ML, Full-Stack, and Cloud Engineering internship roles for Summer/Fall 2026.
 - Direct contact: johnnykarre@gmail.com | WhatsApp: +91 9100243535 | LinkedIn: Karre John Hyde.`,
   },
+  {
+    id: "figma-responsive-device-pillars",
+    source: "figma_multiplatform_responsive_systems.md",
+    category: "architecture",
+    title: "Figma Multi-Platform Responsive Systems: 6 Core Pillars",
+    page: 1,
+    chunkIndex: 0,
+    keywords: [
+      "figma",
+      "responsive",
+      "device frames",
+      "preset device",
+      "auto layout",
+      "constraints",
+      "ui kits",
+      "apple hig",
+      "material 3",
+      "fluent ui",
+      "variants",
+      "variables",
+      "modes",
+      "prototyping",
+      "bezel",
+      "dev mode",
+      "swiftui",
+      "compose",
+      "css",
+      "multiplatform",
+    ],
+    content: `Figma's 6 Foundational Pillars for Multi-Platform Responsive Systems:
+1. Preset Device Frames: Standardized viewport canvases (iPhone 16 Pro 393x852, Android 412x915, iPad 834x1194, MacBook 1728x1117, Desktop 1920x1080) eliminating manual screen dimension guesswork and matching physical pixels.
+2. Auto Layout & Constraints: Core responsive mechanics resembling CSS Flexbox with fluid flow, hug/fill content resizing, dynamic padding/gap controls, and directional pin constraints (e.g. Pin Top-Right or Stretch) for adaptive reflow.
+3. Platform-Specific UI Kits: Official pre-built design systems directly from platform creators—Apple Human Interface Guidelines (iOS/macOS), Google Material Design 3 (Android), and Microsoft Fluent UI (Windows) ensuring native status bars, toggles, and navigation semantics.
+4. Component Variants & Variables (Modes): Single unified component structures with variants for target viewports (Bottom Tab Bar for iOS, Top Navbar for PC, Sidebar for iPad/Desktop), paired with Variable Modes (Mobile vs Desktop, Dark vs Light mode) for tokenized instant theme switching.
+5. Prototyping & Real-Time Device Testing: Native interaction triggers (On Drag/Swipe for mobile vs On Click for desktop), Figma Mirror physical hardware screen testing, and realistic 3D/titanium device bezels.
+6. Dev Mode Multi-Platform Handoff: Direct visual-to-code translation exporting CSS/React for Web, SwiftUI for Apple platforms, and Jetpack Compose for Android with design tokens.`,
+  },
 ]
 
 // Simple token similarity matching with category boosting and MMR diversification
@@ -588,6 +625,27 @@ export function generateJohnnyAnswer(
     qLower.includes("languages") ||
     qLower.includes("tools") ||
     qLower.includes("framework")
+  const isFigmaOrResponsive =
+    qLower.includes("figma") ||
+    qLower.includes("responsive") ||
+    qLower.includes("device frame") ||
+    qLower.includes("preset device") ||
+    qLower.includes("auto layout") ||
+    qLower.includes("constraint") ||
+    qLower.includes("ui kit") ||
+    qLower.includes("fluent") ||
+    qLower.includes("apple hig") ||
+    qLower.includes("material design") ||
+    qLower.includes("material 3") ||
+    qLower.includes("dev mode") ||
+    qLower.includes("swiftui") ||
+    qLower.includes("jetpack compose") ||
+    qLower.includes("compose") ||
+    qLower.includes("prototype") ||
+    qLower.includes("bezel") ||
+    qLower.includes("multi-platform") ||
+    qLower.includes("multiplatform") ||
+    qLower.includes("device studio")
 
   let answer = ""
 
@@ -899,6 +957,69 @@ The guiding rule here was absolute safety: clinical AI models must never emit sp
 - **Cloud & Backend**: AWS (Lambda, DynamoDB, API Gateway, S3), FastAPI, Node.js, PostgreSQL, Docker.
 - **Frontend & Creative Tech**: React 19, TypeScript, Next.js, Tailwind CSS v4, ThreeJS / WebGL, HTML5 Canvas, GSAP.
 - **Tools & Systems**: Git, Linux, Vite, pnpm, Postman, Vercel.`
+  }
+  // -------------------------------------------------------------
+  // FIGMA MULTI-PLATFORM RESPONSIVE PILLARS & DEV MODE HANDOFF
+  // -------------------------------------------------------------
+  else if (isFigmaOrResponsive) {
+    if (personaMode === "quick_pitch") {
+      answer = `**Figma's 6 Multi-Platform Responsive Design Pillars:**
+
+1. 📱 **Preset Device Frames**: Exact pixel canvases for iPhone (393×852), Galaxy (412×915), iPad (834×1194), and MacBooks so designs match physical screens.
+2. 📐 **Auto Layout & Constraints**: Flexbox-style automatic reflow (gap, padding, hug/fill) + anchor pinning so elements stay locked to correct corners.
+3. 🎨 **Platform UI Kits**: Official design systems from Apple (HIG), Google (Material 3), and Microsoft (Fluent UI) for native platform fidelity.
+4. 🔀 **Variants & Variables (Modes)**: Adaptive component states (Bottom Tabs ↔ Desktop Navbar) and tokenized modes (Dark ↔ Light, Mobile ↔ Desktop).
+5. 📲 **Prototyping & Bezels**: Realistic hardware frames, touch/swipe triggers, and live testing via Figma Mirror.
+6. 💻 **Dev Mode Handoff**: Visual designs translated directly to production code: CSS for Web, SwiftUI for iOS, and Jetpack Compose for Android.`
+    } else if (personaMode === "architect") {
+      answer = `### Architectural Specification: Figma 6 Multi-Platform Pillars to Code Pipeline
+
+When translating cross-platform specifications from Figma into production architectures, I structure the design-to-code pipeline across these 6 foundational pillars:
+
+1. **Preset Device Viewports & Resolution Normalization**:
+   - Instead of arbitrary canvases, frames strictly target device points (e.g., iPhone 16 Pro at 393×852pt @3x, Pixel 9 at 412×915dp @2.6x).
+   - This prevents viewport clipping and ensures hardware cutouts (Dynamic Island, notches, sensor punch-holes) are accounted for in safe-area insets.
+
+2. **Auto Layout Mechanics & CSS Flexbox Mapping**:
+   - Auto Layout maps 1:1 with CSS Flexbox / SwiftUI \`VStack\`/\`HStack\` / Compose \`Row\`/\`Column\`.
+   - **Resizing primitives**: \`Hug\` → \`width: fit-content\`; \`Fill\` → \`flex: 1 1 0%\` or \`Modifier.weight(1f)\`.
+   - **Spatial Constraints**: Pinned anchors (Top-Right, Scale, Center) map directly to absolute layout rules and fluid container queries.
+
+3. **Platform UI Kits (HIG, Material 3, Fluent 2)**:
+   - Eliminates reinventing platform-native ergonomics.
+   - Apple HIG: SF Pro typography, glassmorphism materials (\`.ultraThinMaterial\`), native navigation bars.
+   - Google Material 3: Dynamic color extraction, tonal elevations, shape tokens, and pill FABs.
+   - Microsoft Fluent: Mica blur, subtle acrylic textures, and Segoe UI density.
+
+4. **Component Variants & Design Token Modes**:
+   - Single polymorphic component models with device variants: \`variant="mobile_tabs"\` for compact widths, \`variant="desktop_navbar"\` for wide viewports.
+   - Figma Variables establish design token contracts (\`--spacing-sm\`, \`--color-surface\`, \`--radius-bezel\`) toggled via variable modes (\`mode="dark"\` vs \`mode="light"\`).
+
+5. **Prototyping, Ergonomics & Real-Time Hardware Testing**:
+   - Triggers respect input modality: touch drag/swipe gestures for mobile vs mouse hover/click for desktop.
+   - Figma Mirror validates physical thumb ergonomics on real devices before committing to code.
+
+6. **Dev Mode Multi-Platform Code Handoff**:
+   - Visual tokens compile directly to deterministic platform code snippets:
+     - **Web**: React 19 + Tailwind v4 / pure CSS flexbox with CSS custom properties.
+     - **iOS / macOS**: Declarative SwiftUI views with native system icons (\`Image(systemName:)\`).
+     - **Android**: Jetpack Compose Composables with Material 3 token bindings.
+
+You can interactively test this in real-time in the **Multi-Platform Device Studio** embedded right above in my portfolio!`
+    } else {
+      answer = `I love this topic! Building modern multi-platform apps requires seamless harmony between design systems in Figma and production code in React, SwiftUI, or Jetpack Compose.
+
+Figma makes this possible through **6 foundational pillars**:
+
+1. **Preset Device Frames**: When you press 'F' in Figma, you don't guess viewport dimensions. You pick exact resolutions for the latest iPhone, Android devices, iPads, MacBooks, and Studio Displays so your base canvas matches the physical target device.
+2. **Auto Layout and Constraints**: Auto Layout acts just like CSS Flexbox—allowing buttons, cards, and navigation items to grow, shrink, and wrap naturally. Constraints pin elements (like anchoring a hamburger menu or action button to the 'Top Right') so layouts adapt fluidly between a phone and a 4K monitor.
+3. **Platform-Specific UI Kits**: Instead of building from scratch, you duplicate official kits from the Figma Community: **Apple's Human Interface Guidelines (HIG)**, **Google's Material Design 3**, and **Microsoft's Fluent UI**. These give you native status bars, switches, keyboards, and tabs.
+4. **Component Variants and Variables (Modes)**: You can build a single 'Navigation' component with variants (a bottom tab bar for iOS, and a top navbar for desktop). With Variables, you can switch between 'Mobile Mode' and 'Desktop Mode' or 'Dark' and 'Light' mode instantly with one click.
+5. **Prototyping and Real-Time Testing**: You set native triggers (clicks for mouse users, drags/swipes for mobile), preview designs with realistic hardware bezels, and use **Figma Mirror** on an actual phone to test thumb reachability in real-time.
+6. **Dev Mode for Multi-Platform Handoff**: When designs are ready to ship, Dev Mode translates visual styling into platform-specific code—generating CSS for web apps, SwiftUI for Apple platforms, and Compose for Android.
+
+I've even built an interactive **Multi-Platform Device Studio** right into my portfolio where you can toggle between these devices, adjust Auto Layout spacing, switch UI kits, and inspect generated code in real time!`
+    }
   }
   // -------------------------------------------------------------
   // GENERAL FALLBACK (Authentic, Grounded Voice)
