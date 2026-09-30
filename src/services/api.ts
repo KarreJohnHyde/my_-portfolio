@@ -75,7 +75,7 @@ async function tryFetchEndpoint(
 async function tryCallGemini(
   apiKey: string,
   question: string,
-  chatHistory: { role: string content: string }[],
+  chatHistory: { role: string; content: string }[],
   personaMode: PersonaMode,
   citations: Citation[],
 ): Promise<string | null> {
@@ -146,7 +146,7 @@ ${contextText}`
 
 export async function askJohnny(
   question: string,
-  chatHistory: { role: string content: string }[] = [],
+  chatHistory: { role: string; content: string }[] = [],
   personaMode: PersonaMode = "conversational",
   scenarioMode: "all" | "greenfield" | "high_constraint" = "all",
 ): Promise<ChatResponse> {

@@ -7,7 +7,7 @@ export interface StoryStageData {
   title: string
   kicker: string
   description: string
-  metrics: { value: string label: string }[]
+  metrics: { value: string; label: string }[]
   tags: string[]
   liveUrl?: string
   color: string

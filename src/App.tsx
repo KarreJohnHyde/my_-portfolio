@@ -405,7 +405,7 @@ const slackCards = [
   },
 ]
 
-function Icon({ name, size = 20 }: { name: IconName size?: number }) {
+function Icon({ name, size = 20 }: { name: IconName; size?: number }) {
   const paths: Record<IconName, ReactNode> = {
     arrow: (
       <>
@@ -1633,7 +1633,7 @@ export default function App() {
       const activeLenis = getGlobalLenis()
       if (activeLenis) {
         window.clearInterval(timer)
-        const handleScroll = (e: { progress?: number velocity?: number }) => {
+        const handleScroll = (e: { progress?: number; velocity?: number }) => {
           if (e && typeof e.velocity === "number") {
             setScrollVelocity(Math.round(e.velocity))
           }

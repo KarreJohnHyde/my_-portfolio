@@ -23,7 +23,7 @@ export interface DetailedProject {
     description: string
     tech: string[]
   }[]
-  keyMetrics: { value: string label: string }[]
+  keyMetrics: { value: string; label: string }[]
   highlights: string[]
 }
 
